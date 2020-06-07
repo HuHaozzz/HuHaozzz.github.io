@@ -48,9 +48,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -60,59 +60,6 @@
 </header>
       <div class="outer">
         <section id="main">
-  
-    <article id="c++11并发与多线程笔记（4）-创建多个线程、数据共享问题分析、案例代码" class="article article-type-c++11并发与多线程笔记（4）" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/07/创建多个线程、数据共享问题分析、案例代码/" class="article-date">
-  <time datetime="2020-06-07T11:43:41.000Z" itemprop="datePublished">2020-06-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/07/创建多个线程、数据共享问题分析、案例代码/">创建多个线程、数据共享问题分析、案例代码</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="第四节-创建多个线程、数据共享问题分析、案例代码"><a href="#第四节-创建多个线程、数据共享问题分析、案例代码" class="headerlink" title="第四节 创建多个线程、数据共享问题分析、案例代码"></a>第四节 创建多个线程、数据共享问题分析、案例代码</h2><p><img src="https://img-blog.csdnimg.cn/20200513100626104.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p><strong>一、创建和等待多个线程</strong></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">TextThread</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">     <span class="built_in">cout</span> &lt;&lt; <span class="string">"我是线程"</span> &lt;&lt; this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">     <span class="comment">/*  …  */</span></div><div class="line">     <span class="built_in">cout</span> &lt;&lt; <span class="string">"线程"</span> &lt;&lt; this_thread::get_id() &lt;&lt; <span class="string">"执行结束"</span> &lt;&lt; <span class="built_in">endl</span>; </div><div class="line">&#125;</div><div class="line"> <span class="comment">//main函数里     vector threadagg;</span></div><div class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</div><div class="line">     &#123;</div><div class="line">         threadagg.push_back(thread(TextThread));</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</div><div class="line">     &#123;</div><div class="line">         threadagg[i].join();</div><div class="line">     &#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>把thread对象放入到容器中管理，看起来像个thread对象数组，对一次创建大量的线程并对大量线程进行管理有好处</li>
-<li>多个线程执行顺序是乱的，跟操作系统内部对线程的运行调度机制有关</li>
-</ul>
-<p><strong>二：数据共享问题分析</strong><br><em>2.1 只读的数据</em></p>
-<ul>
-<li>是安全稳定的</li>
-</ul>
-<p><em>2.2 有读有写</em></p>
-<ul>
-<li>若不加处理，就会出错</li>
-<li>最简单的防止崩溃方法：读的时候不能写，写的时候不能读。</li>
-<li>写的动作分10小步，由于任务切换，导致各种诡异的事情发生（最可能的还是崩溃）</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/创建多个线程、数据共享问题分析、案例代码/" data-id="ckb50n3jw000n38vwqz3jej13" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
   
     <article id="c++11并发与多线程笔记（3）-线程传参详解，detach-大坑，成员函数做线程函数" class="article article-type-c++11并发与多线程笔记（3）" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -161,7 +108,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/线程传参详解，detach-大坑，成员函数做线程函数/" data-id="ckb50n3k8000u38vwq0dibtfg" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/线程传参详解，detach-大坑，成员函数做线程函数/" data-id="ckb5166bd000slsvwnhelkojh" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -208,7 +155,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/大数据/" data-id="ckb50n3k0000p38vwhjnusbm4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/大数据/" data-id="ckb5166ax000nlsvwu2z0qjsi" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -266,7 +213,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/线程启动、结束，创建线程多法、join，detach/" data-id="ckb50n3k5000s38vwmjeop1el" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/线程启动、结束，创建线程多法、join，detach/" data-id="ckb5166bd000tlsvw50a6afwi" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -336,7 +283,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/互斥量概念、用法、死锁演示及解决详解/" data-id="ckb50n3jr000k38vwltyoqzds" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/互斥量概念、用法、死锁演示及解决详解/" data-id="ckb5166ai000ilsvwdkwsbfp5" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -438,7 +385,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/并发基本概念及实现，进程、线程基本概念/" data-id="ckb50n3k3000r38vwfkxgyfnh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/并发基本概念及实现，进程、线程基本概念/" data-id="ckb5166ax000plsvwi5sr1wdp" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -519,7 +466,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/socket编程学习笔记（2）/" data-id="ckb50n3jf000d38vwrhvktq03" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/socket编程学习笔记（2）/" data-id="ckb5166a2000clsvwg48k3k20" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -567,7 +514,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/socket编程学习笔记（1）/" data-id="ckb50n3jg000e38vwr4ke56ja" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/socket编程学习笔记（1）/" data-id="ckb5166a2000dlsvwf1mzjvrk" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -630,7 +577,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/gcc和Makefile/" data-id="ckb50n3j8000938vwi4f7t8ox" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/gcc和Makefile/" data-id="ckb5166a2000blsvwcyzyzynf" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -672,7 +619,67 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/C++顶层const和底层const/" data-id="ckb50n3is000338vw7ssagphe" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/C++顶层const和底层const/" data-id="ckb51669m0004lsvwsj1dy19p" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-5G到底是什么" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/5G到底是什么/" class="article-date">
+  <time datetime="2020-06-07T11:31:02.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/5G到底是什么/">5G到底是什么</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>0G：军事上，在两个军事据点上利用AM和FM两个波段传输语音信号<br>1G (1980-1990) 代表产品是大哥大，是模拟信号，很容易被窃听<br>2G（1990-2000）：开始传送数字信号，可以加密和实现全球漫游，支持短信</p>
+<ul>
+<li>2.5G :GPRS技术</li>
+<li>2.75G:EDGE技术，可以收发邮件，浏览简单网页，聊QQ，发彩信</li>
+</ul>
+<p>3G (2000-2010):带动移动互联网兴起，苹果，安卓系统，微博，微信，支持在移动中上网</p>
+<ul>
+<li>3.5G和3.75G：HSPA和HSPA+技术，产品为WCDMA</li>
+</ul>
+<p>4G(2010-2020)：移动互联网成熟期，以传输数据为核心，数据延迟降低为二三十ms（上网看视频网速重要，即时性游戏延迟重要），大型对战手游空前发展，王者荣耀，吃鸡等</p>
+<ul>
+<li>4.5G：</li>
+<li>4.9G：LTE技术</li>
+</ul>
+<p>5G(2020-2030？)：</p>
+<ol>
+<li>速度是4G的10倍以上， </li>
+<li>延迟进一步降低，1毫秒左右，应用如：远程医疗，工业控制自动驾驶， </li>
+<li>低功耗，支持超过1万亿的设备同时接入，物联网智能家居等（以前被认为不能上网的东西可能可以上网，如水表电表，接入网络就不用每月人为的查看数据）</li>
+</ol>
+<p>5G的网络切片技术：对于每个连接到5G网络的设备，根据所需要的网络需求，定制所需要的网络。1)游戏用户关心的是延迟足够低，2)VR、8k高画质电影的用户，网速特别重要，2)一部分的物联网设备对网速和延迟都不重要，对成本要足够低，需要时要能够立即响应。</p>
+<p>很多年前就有人提出，在5G时代有可能会得到推广的技术：运算中心化，建立一个中心的超级计算机，手机和电脑都连接在超级计算机上，由超级计算机完成中心化的运算，再把运算结果返回给用户。</p>
+<p>高通设立的专利墙。收取的专利费会根据手机的零售价来定。中国在2G时代没有什么话语权，从3G开始有所进步。</p>
+<p>5G什么时候可以使用：采用了更短的波段，绕射能力很差，传播过程中衰减更大，所以需要更密集的基站，但基站成本比4G更低，更小，隐藏性更好，只有一台空调挂机那么大。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/5G到底是什么/" data-id="ckb5166970000lsvwsbn50kh8" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -711,7 +718,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
         
@@ -748,7 +755,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2020 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
