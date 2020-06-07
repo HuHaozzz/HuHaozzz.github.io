@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>补充知识、线程池浅谈、数量谈、总结 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第十三章 补充知识、线程池浅谈、数量谈、总结
+一、补充一些知识点1.1 虚假唤醒：notify_one或者notify_all唤醒wait()后，实际有些线程可能不满足唤醒的条件，就会造成虚假唤醒，可以在wait中再次进行判断解决虚假唤醒。解决：wait中要有第二个参数（lambda），并且这个lambda中要正确判断所处理的公共数据是否存在。
+2.2 atomic：
+123std::atomic">
+<meta property="og:type" content="article">
+<meta property="og:title" content="补充知识、线程池浅谈、数量谈、总结">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/补充知识、线程池浅谈、数量谈、总结/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第十三章 补充知识、线程池浅谈、数量谈、总结
+一、补充一些知识点1.1 虚假唤醒：notify_one或者notify_all唤醒wait()后，实际有些线程可能不满足唤醒的条件，就会造成虚假唤醒，可以在wait中再次进行判断解决虚假唤醒。解决：wait中要有第二个参数（lambda），并且这个lambda中要正确判断所处理的公共数据是否存在。
+2.2 atomic：
+123std::atomic">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020051311053270.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2020-06-07T11:58:13.514Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="补充知识、线程池浅谈、数量谈、总结">
+<meta name="twitter:description" content="第十三章 补充知识、线程池浅谈、数量谈、总结
+一、补充一些知识点1.1 虚假唤醒：notify_one或者notify_all唤醒wait()后，实际有些线程可能不满足唤醒的条件，就会造成虚假唤醒，可以在wait中再次进行判断解决虚假唤醒。解决：wait中要有第二个参数（lambda），并且这个lambda中要正确判断所处理的公共数据是否存在。
+2.2 atomic：
+123std::atomic">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/2020051311053270.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="c++11并发与多线程笔记（13）-补充知识、线程池浅谈、数量谈、总结" class="article article-type-c++11并发与多线程笔记（13）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/" class="article-date">
+  <time datetime="2020-06-07T11:57:51.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      补充知识、线程池浅谈、数量谈、总结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第十三章-补充知识、线程池浅谈、数量谈、总结"><a href="#第十三章-补充知识、线程池浅谈、数量谈、总结" class="headerlink" title="第十三章 补充知识、线程池浅谈、数量谈、总结"></a>第十三章 补充知识、线程池浅谈、数量谈、总结</h2><p><img src="https://img-blog.csdnimg.cn/2020051311053270.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、补充一些知识点</strong><br><em>1.1 虚假唤醒：</em><br>notify_one或者notify_all唤醒wait()后，实际有些线程可能不满足唤醒的条件，就会造成虚假唤醒，可以在wait中再次进行判断解决虚假唤醒。<br>解决：wait中要有第二个参数（lambda），并且这个lambda中要正确判断所处理的公共数据是否存在。</p>
+<p><em>2.2 atomic：</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::atomic&lt;<span class="keyword">int</span>&gt; atm = <span class="number">0</span>;</div><div class="line"> </div><div class="line"><span class="built_in">cout</span> &lt;&lt; atm &lt;&lt; <span class="built_in">endl</span>;</div></pre></td></tr></table></figure>
+<p>这里只有读取atm是原子操作，但是整个这一行代码 cout &lt;&lt; atm &lt;&lt; endl; 并不是原子操作，导致最终显示在屏幕上的值是一个“曾经值”。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::atomic&lt;<span class="keyword">int</span>&gt; atm = <span class="number">0</span>;</div><div class="line"> </div><div class="line"><span class="keyword">auto</span> atm2 = atm; <span class="comment">//不可以</span></div></pre></td></tr></table></figure>
+<p> 这种拷贝初始化不可以，会报错。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">atomic&lt;<span class="keyword">int</span>&gt; atm2(atm.load());</div></pre></td></tr></table></figure>
+<p>load()：以原子方式读atomic对象的值。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">atm2.store(<span class="number">12</span>);</div></pre></td></tr></table></figure>
+<p>原子操作实质上是：不允许在进行原子对象操作时进行CPU的上下文切换。</p>
+<p><strong>二、浅谈线程池：</strong><br>场景设想：服务器程序， 每来一个客户端，就创建一个新线程为这个客户提供服务。</p>
+<p>问题：</p>
+<p>1、2万个玩家，不可能给每个玩家创建一个新线程，此程序写法在这种场景下不通。</p>
+<p>2、程序稳定性问题：编写代码中，“时不时地突然”创建一个线程，这种写法，一般情况下不会出错，但是不稳定的；</p>
+<p>线程池：把一堆线程弄到一起，统一管理。这种统一管理调度，循环利用的方式，就叫做线程池。</p>
+<p>实现方式：程序启动时，一次性创建好一定数量的线程。这种方式让人更放心，觉得程序代码更稳定。</p>
+<p><strong>三、线程创建数量谈：</strong></p>
+<p>1、线程创建的数量极限的问题</p>
+<p>一般来讲，2000个线程基本就是极限；再创建就会崩溃。</p>
+<p>2、线程创建数量建议</p>
+<p>a、采用某些计数开发程序提供的建议，遵照建议和指示来确保程序高效执行。</p>
+<p>b、创建多线程完成业务；考虑可能被阻塞的线程数量，创建多余最大被阻塞线程数量的线程，如100个线程被阻塞再充值业务，开110个线程就是很合适的</p>
+<p>c、线程创建数量尽量不要超过500个，尽量控制在200个之内；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/补充知识、线程池浅谈、数量谈、总结/" data-id="ckb50n3ka000v38vwd13o2muh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          c++创建对象带括号和不带括号的区别
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">windows临界区、其他各种mutex互斥量</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>condition_variable、wait、notify_one、notify_all | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第八节 condition_variable、wait、notify_one、notify_all
+一、条件变量condition_variable、wait、notify_one、notify_allstd::condition_variable实际上是一个类，是一个和条件相关的类，说白了就是等待一个条件达成。
+123456789std::mutex mymutex1;std::unique_l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="condition_variable、wait、notify_one、notify_all">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/condition-variable、wait、notify-one、notify-all/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第八节 condition_variable、wait、notify_one、notify_all
+一、条件变量condition_variable、wait、notify_one、notify_allstd::condition_variable实际上是一个类，是一个和条件相关的类，说白了就是等待一个条件达成。
+123456789std::mutex mymutex1;std::unique_l">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020051310403813.png#pic_center">
+<meta property="og:updated_time" content="2020-06-07T11:52:25.786Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="condition_variable、wait、notify_one、notify_all">
+<meta name="twitter:description" content="第八节 condition_variable、wait、notify_one、notify_all
+一、条件变量condition_variable、wait、notify_one、notify_allstd::condition_variable实际上是一个类，是一个和条件相关的类，说白了就是等待一个条件达成。
+123456789std::mutex mymutex1;std::unique_l">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/2020051310403813.png#pic_center">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="c++11并发与多线程笔记（8）-condition-variable、wait、notify-one、notify-all" class="article article-type-c++11并发与多线程笔记（8）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/condition-variable、wait、notify-one、notify-all/" class="article-date">
+  <time datetime="2020-06-07T11:52:07.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      condition_variable、wait、notify_one、notify_all
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第八节-condition-variable、wait、notify-one、notify-all"><a href="#第八节-condition-variable、wait、notify-one、notify-all" class="headerlink" title="第八节 condition_variable、wait、notify_one、notify_all"></a>第八节 condition_variable、wait、notify_one、notify_all</h2><p><img src="https://img-blog.csdnimg.cn/2020051310403813.png#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、条件变量condition_variable、wait、notify_one、notify_all</strong><br>std::condition_variable实际上是一个类，是一个和条件相关的类，说白了就是等待一个条件达成。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::mutex mymutex1;</div><div class="line"><span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; sbguard1(mymutex1);</div><div class="line"><span class="built_in">std</span>::condition_variable condition;</div><div class="line">condition.wait(sbguard1, [<span class="keyword">this</span>] &#123;<span class="keyword">if</span> (!msgRecvQueue.empty())</div><div class="line">                                    <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">                                <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">                                &#125;);</div><div class="line"> </div><div class="line">condition.wait(sbguard1);</div></pre></td></tr></table></figure>
+<p>wait()用来等一个东西</p>
+<p>如果第二个参数的lambda表达式返回值是false，那么wait()将<strong>解锁互斥量，并阻塞到本行</strong><br>如果第二个参数的lambda表达式返回值是true，那么wait()直接返回并继续执行。</p>
+<p>阻塞到什么时候为止呢？阻塞到其他某个线程调用notify_one()成员函数为止；</p>
+<p>如果没有第二个参数，那么效果跟第二个参数lambda表达式返回false效果一样</p>
+<p>wait()将解锁互斥量，并阻塞到本行，阻塞到其他某个线程调用notify_one()成员函数为止。</p>
+<p>当其他线程用notify_one()将本线程wait()唤醒后，这个wait恢复后</p>
+<p>1、wait()不断尝试获取互斥量锁，如果获取不到那么流程就卡在wait()这里等待获取，如果获取到了，那么wait()就继续执行，获取到了锁</p>
+<p>2.1、如果wait有第二个参数就判断这个lambda表达式。</p>
+<ul>
+<li>a)如果表达式为false，那wait又对互斥量解锁，然后又休眠，等待再次被notify_one()唤醒</li>
+<li>b)如果lambda表达式为true，则wait返回，流程可以继续执行（此时互斥量已被锁住）。</li>
+</ul>
+<p>2.2、如果wait没有第二个参数，则wait返回，流程走下去。</p>
+<p>流程只要走到了wait()下面则互斥量一定被锁住了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;list&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"> </div><div class="line"><span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">inMsgRecvQueue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; ++i) </div><div class="line">        &#123;</div><div class="line">            <span class="built_in">cout</span> &lt;&lt; <span class="string">"inMsgRecvQueue插入一个元素"</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"></div><div class="line">            <span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; sbguard1(mymutex1);</div><div class="line">            msgRecvQueue.push_back(i); </div><div class="line">            <span class="comment">//尝试把wait()线程唤醒,执行完这行，</span></div><div class="line">            <span class="comment">//那么outMsgRecvQueue()里的wait就会被唤醒</span></div><div class="line">            <span class="comment">//只有当另外一个线程正在执行wait()时notify_one()才会起效，否则没有作用</span></div><div class="line">            condition.notify_one();</div><div class="line">        &#125;</div><div class="line">	&#125;</div><div class="line"> </div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">outMsgRecvQueue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> command = <span class="number">0</span>;</div><div class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</div><div class="line">            <span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; sbguard2(mymutex1);</div><div class="line">            <span class="comment">// wait()用来等一个东西</span></div><div class="line">            <span class="comment">// 如果第二个参数的lambda表达式返回值是false，那么wait()将解锁互斥量，并阻塞到本行</span></div><div class="line">            <span class="comment">// 阻塞到什么时候为止呢？阻塞到其他某个线程调用notify_one()成员函数为止；</span></div><div class="line">            <span class="comment">//当 wait() 被 notify_one() 激活时，会先执行它的 条件判断表达式 是否为 true，</span></div><div class="line">            <span class="comment">//如果为true才会继续往下执行</span></div><div class="line">            condition.wait(sbguard2, [<span class="keyword">this</span>] &#123;</div><div class="line">                <span class="keyword">if</span> (!msgRecvQueue.empty())</div><div class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">                <span class="keyword">return</span> <span class="literal">false</span>;&#125;);</div><div class="line">            command = msgRecvQueue.front();</div><div class="line">            msgRecvQueue.pop_front();</div><div class="line">            <span class="comment">//因为unique_lock的灵活性，我们可以随时unlock，以免锁住太长时间</span></div><div class="line">            sbguard2.unlock(); </div><div class="line">            <span class="built_in">cout</span> &lt;&lt; <span class="string">"outMsgRecvQueue()执行，取出第一个元素"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">        &#125;</div><div class="line">	&#125;</div><div class="line"> </div><div class="line"><span class="keyword">private</span>:</div><div class="line">	<span class="built_in">std</span>::<span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt; msgRecvQueue;</div><div class="line">	<span class="built_in">std</span>::mutex mymutex1;</div><div class="line">	<span class="built_in">std</span>::condition_variable condition;</div><div class="line">&#125;;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	A myobja;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">myoutobj</span><span class="params">(&amp;A::outMsgRecvQueue, &amp;myobja)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">myinobj</span><span class="params">(&amp;A::inMsgRecvQueue, &amp;myobja)</span></span>;</div><div class="line">	myinobj.join();</div><div class="line">	myoutobj.join();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>二、深入思考</strong></p>
+<p>上面的代码可能导致出现一种情况：<br>因为outMsgRecvQueue()与inMsgRecvQueue()并不是一对一执行的，所以当程序循环执行很多次以后，可能在msgRecvQueue 中已经有了很多消息，但是，outMsgRecvQueue还是被唤醒一次只处理一条数据。这时可以考虑把outMsgRecvQueue多执行几次，或者对inMsgRecvQueue进行限流。</p>
+<p><strong>三、notify_all()</strong></p>
+<p>notify_one()：通知一个线程的wait()</p>
+<p>notify_all()：通知所有线程的wait()</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/condition-variable、wait、notify-one、notify-all/" data-id="ckb50n3j9000a38vwqk9vuyn6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/async、future、packaged-task、promise/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          async、future、packaged_task、promise
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/单例设计模式共享数据分析、解决，call-once/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">单例设计模式共享数据分析、解决，call_once</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

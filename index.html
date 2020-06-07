@@ -61,10 +61,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-firstBlog" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-c++创建对象带括号和不带括号的区别" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/06/07/firstBlog/" class="article-date">
-  <time datetime="2020-06-07T10:49:39.000Z" itemprop="datePublished">2020-06-07</time>
+    <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/" class="article-date">
+  <time datetime="2020-06-07T11:59:52.000Z" itemprop="datePublished">2020-06-07</time>
 </a>
     
   </div>
@@ -75,7 +75,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/07/firstBlog/">C++默认初始化和值初始化、 直接初始化和拷贝初始化</a>
+      <a class="article-title" href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
     </h1>
   
 
@@ -83,28 +83,27 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="默认初始化和值初始化一一对应"><a href="#默认初始化和值初始化一一对应" class="headerlink" title="默认初始化和值初始化一一对应"></a>默认初始化和值初始化一一对应</h1><p><strong>前提知识</strong><br>声明： 在环境/上下文中指定一个变量的名字。也就是说，声明仅仅是让编译器知道，而没有实际分配空间。</p>
-<p>初始化：给一个声明后尚未初始化的变量一个有意义的初始值。</p>
-<p>赋值 ： 销毁一个变量原来的值，并赋予一个新值。相当于改变了一个变量的状态。</p>
-<h2 id="默认初始化："><a href="#默认初始化：" class="headerlink" title="默认初始化："></a>默认初始化：</h2><p>对象可能产生未定义的值（是否绝对尚待确定，例如类类型（定义了默认构造函数）的默认初始化是否属于值初始化等）。</p>
-<h2 id="值初始化："><a href="#值初始化：" class="headerlink" title="值初始化："></a>值初始化：</h2><p>对象的值是确定（预设）的。</p>
-<h2 id="值初始化出现场景："><a href="#值初始化出现场景：" class="headerlink" title="值初始化出现场景："></a>值初始化出现场景：</h2><p>1.数组初始化时初始值数量小于维度，剩下的元素会进行值初始化；<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123; <span class="keyword">int</span> <span class="built_in">array</span>[<span class="number">10</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;; &#125;</div></pre></td></tr></table></figure></p>
-<p>2.当我们不使用初始值定义一个静态变量；<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//未经初始化的全局静态变量和局部静态变量都会被自动初始化为0</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">int</span> n1;		<span class="comment">//n1值初始化为0</span></div><div class="line">&#123; <span class="keyword">static</span> <span class="keyword">int</span> n2; &#125;	<span class="comment">//n2值初始化为0</span></div></pre></td></tr></table></figure></p>
-<p>3.形如T()的表达式显示地请求值初始化；<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123; </div><div class="line">	<span class="built_in">std</span>::<span class="built_in">string</span> *pia1 = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>]();	<span class="comment">//动态分配10个值初始化为0的int</span></div><div class="line">	<span class="built_in">std</span>::<span class="built_in">string</span> *pia2 = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];	<span class="comment">//动态分配10个未初始化的int</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>4.只提供vector对象容纳的元素数量而略去初始值，此时库会创建一个值初始化的元素初值(c++ primer p88)<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; ivec(<span class="number">10</span>);	<span class="comment">//10个元素都被初始化为0</span></div></pre></td></tr></table></figure></p>
-<h2 id="默认初始化出现场景："><a href="#默认初始化出现场景：" class="headerlink" title="默认初始化出现场景："></a>默认初始化出现场景：</h2><p>1.块作用域内不使用任何初始值定义一个非静态变量；<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123; <span class="keyword">int</span> a; &#125;<span class="comment">//a的值是未定义的，但若在任何函数之外，会被初始化为0</span></div></pre></td></tr></table></figure></p>
-<p>2.类通过默认构造函数来控制默认初始化过程，默认构造函数以如下规则初始化类的数据成员</p>
-<ul>
-<li>如果存在类内初始值，用它来初始化成员 </li>
-<li>否则，默认初始化该成员</li>
-</ul>
-<h1 id="直接初始化和拷贝初始化一一对应"><a href="#直接初始化和拷贝初始化一一对应" class="headerlink" title="直接初始化和拷贝初始化一一对应"></a>直接初始化和拷贝初始化一一对应</h1><h2 id="直接初始化："><a href="#直接初始化：" class="headerlink" title="直接初始化："></a>直接初始化：</h2><p>直接调用与实参匹配的构造函数，形式如“T t(u)”。</p>
-<h2 id="拷贝初始化："><a href="#拷贝初始化：" class="headerlink" title="拷贝初始化："></a>拷贝初始化：</h2><p>拷贝初始化首先使用指定构造函数创建一个临时对象，然后用拷贝构造函数将那个临时对象复制到正在创建的对象”，形式如“T t=u”。</p>
+        <figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Test</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">　　Test() &#123;&#125;</div><div class="line">　　Test(<span class="keyword">int</span> a) &#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="1、栈上创建对象"><a href="#1、栈上创建对象" class="headerlink" title="1、栈上创建对象"></a>1、栈上创建对象</h2><p>1.1 无括号</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Test a; <span class="comment">// 调用默认构造函数，栈上分配内存创建对象</span></div></pre></td></tr></table></figure>
+<p>　　1.2 有括号</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//无任何意义，声明一个返回值为Test，参数为空，名字叫做a的函数</span></div><div class="line"><span class="function">Test <span class="title">a</span><span class="params">()</span></span>;</div></pre></td></tr></table></figure>
+<p>　　1.3 有括号+参数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//调用构造函数Test(int a)，栈上分配内存创建对象</span></div><div class="line"><span class="function">Test <span class="title">a</span><span class="params">(<span class="number">2</span>)</span></span>;</div></pre></td></tr></table></figure>
+<h2 id="2、堆上创建对象"><a href="#2、堆上创建对象" class="headerlink" title="2、堆上创建对象"></a>2、堆上创建对象</h2><p>2.1 无括号</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//调用默认构造函数（若由编译器生成则成员不初始化），堆上分配内存创建对象</span></div><div class="line">Test *a = <span class="keyword">new</span> Test;</div></pre></td></tr></table></figure>
+<p>　　2.2 有括号</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//调用默认构造函数（若由编译器生成则成员初始化），堆上分配内存创建对象</span></div><div class="line">Test *a = <span class="keyword">new</span> Test();</div></pre></td></tr></table></figure>
+<p>　　2.3 有括号+参数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Test *a = <span class="keyword">new</span> Test(<span class="number">2</span>); <span class="comment">// 调用构造函数Test(int a)，堆上分配内存创建对象</span></div></pre></td></tr></table></figure>
+<p>　　2.4 系统内置类型</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> <span class="keyword">int</span>;<span class="comment">// 分配内存，未初始化</span></div><div class="line"><span class="keyword">new</span> <span class="keyword">int</span>();<span class="comment">// 分配内存，初始化为0</span></div><div class="line"><span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">2</span>);<span class="comment">// 分配内存，初始化为2</span></div></pre></td></tr></table></figure>
+<p><a href="https://www.cnblogs.com/laogaoyang/p/5757453.html" target="_blank" rel="external">转载自其他网站</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/firstBlog/" data-id="ckb4yrx9800018ovwnqhthbdx" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/c++创建对象带括号和不带括号的区别/" data-id="ckb50n3j4000738vwfc3ctl8g" class="article-share-link">Share</a>
       
       
     </footer>
@@ -114,10 +113,10 @@
 
 
   
-    <article id="post-myFirstBlog" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="c++11并发与多线程笔记（13）-补充知识、线程池浅谈、数量谈、总结" class="article article-type-c++11并发与多线程笔记（13）" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/06/07/myFirstBlog/" class="article-date">
-  <time datetime="2020-06-07T10:21:13.000Z" itemprop="datePublished">2020-06-07</time>
+    <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/" class="article-date">
+  <time datetime="2020-06-07T11:57:51.000Z" itemprop="datePublished">2020-06-07</time>
 </a>
     
   </div>
@@ -128,7 +127,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/07/myFirstBlog/">分布式和集中式的版本控制的区别</a>
+      <a class="article-title" href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
     </h1>
   
 
@@ -136,16 +135,35 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog" data-mod="popu_307" data-dsm="post"><br>                    <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-e2445db1a8.css"><br>                        <div class="htmledit_views"></div></div></p>
-<p><div class="toc" style="color:rgb(51,51,51);font-size:14px;border:1px solid rgb(238,238,238);vertical-align:baseline;width:300px;line-height:15px;font-family:Arial, sans-serif;background:rgb(249,249,249);"></div></p>
-<p><ol class="dtree" style="border:0px;vertical-align:baseline;list-style:none;font-family:'PT Serif', Georgia, Times, 'Times New Roman', 'Heiti SC', 'Microsoft Yahei', '微软雅黑', '宋体', serif;background:transparent;"><li style="border:0px;vertical-align:baseline;line-height:1.8em;background:transparent;"><br>开始了解Git</li><li style="border:0px;vertical-align:baseline;line-height:1.8em;background:transparent;"></li></ol></p>
-<p><ol style="border:0px;vertical-align:baseline;list-style:none;background:transparent;"><li style="border:0px;vertical-align:baseline;line-height:1.8em;background:transparent;"><br><span class="tocnumber" style="border:0px;vertical-align:baseline;background:transparent;">1.&nbsp;</span><a href="http://www.nowamagic.net/academy/detail/48160203" rel="nofollow" style="color:rgb(0,153,204);text-decoration:none;border:0px;vertical-align:baseline;background:transparent;" target="_blank">先谈谈版本控制的一些事</a></li><li style="border:0px;vertical-align:baseline;line-height:1.8em;background:transparent;"><br><span class="tocnumber" style="border:0px;vertical-align:baseline;background:transparent;">2.&nbsp;</span><a href="http://www.nowamagic.net/academy/detail/48160205" rel="nofollow" style="color:rgb(0,153,204);text-decoration:none;border:0px;vertical-align:baseline;background:transparent;" target="_blank">Git诞生背后的一些故事</a></li><li style="border:0px;vertical-align:baseline;line-height:1.8em;background:transparent;"><br><span class="tocnumber" style="border:0px;vertical-align:baseline;background:transparent;">3.&nbsp;</span><a href="http://www.nowamagic.net/academy/detail/48160207" rel="nofollow" style="color:rgb(0,153,204);text-decoration:none;border:0px;vertical-align:baseline;background:transparent;" target="_blank">版本控制：集中式VS分布式</a></li><li style="border:0px;vertical-align:baseline;line-height:1.8em;background:transparent;"><br><span class="tocnumber" style="border:0px;vertical-align:baseline;background:transparent;">4.&nbsp;</span><a href="http://www.nowamagic.net/academy/detail/48160210" rel="nofollow" style="color:rgb(0,153,204);text-decoration:none;border:0px;vertical-align:baseline;background:transparent;" target="_blank">Git的思想和基本工作原理</a></li><li style="border:0px;vertical-align:baseline;line-height:1.8em;background:transparent;"><br><span class="tocnumber" style="border:0px;vertical-align:baseline;background:transparent;">5.&nbsp;</span><a href="http://www.nowamagic.net/academy/detail/48160213" rel="nofollow" style="color:rgb(0,153,204);text-decoration:none;border:0px;vertical-align:baseline;background:transparent;" target="_blank">Git在Windows下的安装</a></li></ol></p>
-<p><div class="aca_content" style="font-size:14px;border:0px;vertical-align:baseline;font-family:'PT Serif', Georgia, Times, 'Times New Roman', 'Heiti SC', 'Microsoft Yahei', '微软雅黑', '宋体', serif;color:rgb(26,37,54);line-height:21px;"></div></p>
-<p style="border:0px;vertical-align:baseline;line-height:22px;letter-spacing:1px;text-indent:2em;background:transparent;"><br></p><br><p style="border:0px;vertical-align:baseline;line-height:22px;letter-spacing:1px;text-indent:2em;background:transparent;"><br>先说<a href="http://www.nowamagic.net/academy/tag/%E9%9B%86%E4%B8%AD%E5%BC%8F" rel="nofollow" style="color:rgb(0,153,204);text-decoration:none;border:0px;vertical-align:baseline;background:transparent;" target="_blank">集中式</a>版本控制系统，版本库是集中存放在中央服务器的，而干活的时候，用的都是自己的电脑，所以要先从中央服务器取得最新的版本，然后开始干活，干完活了，再把自己的活推送给中央服务器。中央服务器就好比是一个图书馆，你要改一本书，必须先从图书馆借出来，然后回到家自己改，改完了，再放回图书馆。</p><br><div align="center" style="border:0px;vertical-align:baseline;background:transparent;"><br><img src="http://www.nowamagic.net/librarys/images/201401/2014_01_03_06.jpg" alt="" style="border:0px;vertical-align:baseline;background:transparent;"></div><br><p style="border:0px;vertical-align:baseline;line-height:22px;letter-spacing:1px;text-indent:2em;background:transparent;"><br>集中式版本控制系统最大的毛病就是必须联网才能工作，如果在局域网内还好，带宽够大，速度够快，可如果在互联网上，遇到网速慢的话，可能提交一个10M的文件就需要5分钟，这还不得把人给憋死啊。</p><br><p style="border:0px;vertical-align:baseline;line-height:22px;letter-spacing:1px;text-indent:2em;background:transparent;"><br>那<a href="http://www.nowamagic.net/academy/tag/%E5%88%86%E5%B8%83%E5%BC%8F" rel="nofollow" style="color:rgb(0,153,204);text-decoration:none;border:0px;vertical-align:baseline;background:transparent;" target="_blank">分布式</a>版本控制系统与集中式版本控制系统有何不同呢？首先，分布式版本控制系统根本没有“中央服务器”，每个人的电脑上都是一个完整的版本库，这样，你工作的时候，就不需要联网了，因为版本库就在你自己的电脑上。既然每个人电脑上都有一个完整的版本库，那多个人如何协作呢？比方说你在自己电脑上改了文件A，你的同事也在他的电脑上改了文件A，这时，你们俩之间只需把各自的修改推送给对方，就可以互相看到对方的修改了。</p><br><p style="border:0px;vertical-align:baseline;line-height:22px;letter-spacing:1px;text-indent:2em;background:transparent;"><br>和集中式版本控制系统相比，分布式版本控制系统的安全性要高很多，因为每个人电脑里都有完整的版本库，某一个人的电脑坏掉了不要紧，随便从其他人那里复制一个就可以了。而集中式版本控制系统的中央服务器要是出了问题，所有人都没法干活了。</p><br><p style="border:0px;vertical-align:baseline;line-height:22px;letter-spacing:1px;text-indent:2em;background:transparent;"><br>在实际使用分布式版本控制系统的时候，其实很少在两人之间的电脑上推送版本库的修改，因为可能你们俩不在一个局域网内，两台电脑互相访问不了，也可能今天你的同事病了，他的电脑压根没有开机。因此，分布式版本控制系统通常也有一台充当“中央服务器”的电脑，但这个服务器的作用仅仅是用来方便“交换”大家的修改，没有它大家也一样干活，只是交换修改不方便而已。</p><br><div align="center" style="border:0px;vertical-align:baseline;background:transparent;"><br><img src="http://www.nowamagic.net/librarys/images/201401/2014_01_03_07.jpg" alt="" style="border:0px;vertical-align:baseline;background:transparent;"></div><br><p style="border:0px;vertical-align:baseline;line-height:22px;letter-spacing:1px;text-indent:2em;background:transparent;"><br>当然，Git的优势不单是不必联网这么简单，后面我们还会看到Git极其强大的分支管理，把SVN等远远抛在了后面。</p><br><p style="border:0px;vertical-align:baseline;line-height:22px;letter-spacing:1px;text-indent:2em;background:transparent;"><br>CVS作为最早的开源而且免费的集中式版本控制系统，直到现在还有不少人在用。由于CVS自身设计的问题，会造成提交文件不完整，版本库莫名其妙损坏的情况。同样是开源而且免费的SVN修正了CVS的一些稳定性问题，是目前用得最多的集中式版本库控制系统。</p><br><p style="border:0px;vertical-align:baseline;line-height:22px;letter-spacing:1px;text-indent:2em;background:transparent;"><br>除了免费的外，还有收费的集中式版本控制系统，比如IBM的ClearCase（以前是Rational公司的，被IBM收购了），特点是安装比Windows还大，运行比蜗牛还慢，能用ClearCase的一般是世界500强，他们有个共同的特点是财大气粗，或者人傻钱多。</p><br><p style="border:0px;vertical-align:baseline;line-height:22px;letter-spacing:1px;text-indent:2em;background:transparent;"><br>微软自己也有一个集中式版本控制系统叫VSS，集成在Visual Studio中。由于其反人类的设计，连微软自己都不好意思用了。</p><br><p style="border:0px;vertical-align:baseline;line-height:22px;letter-spacing:1px;text-indent:2em;background:transparent;"><br>分布式版本控制系统除了Git以及促使Git诞生的BitKeeper外，还有类似Git的Mercurial和Bazaar等。这些分布式版本控制系统各有特点，但最快、最简单也最流行的依然是Git！</p>
+        <h2 id="第十三章-补充知识、线程池浅谈、数量谈、总结"><a href="#第十三章-补充知识、线程池浅谈、数量谈、总结" class="headerlink" title="第十三章 补充知识、线程池浅谈、数量谈、总结"></a>第十三章 补充知识、线程池浅谈、数量谈、总结</h2><p><img src="https://img-blog.csdnimg.cn/2020051311053270.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、补充一些知识点</strong><br><em>1.1 虚假唤醒：</em><br>notify_one或者notify_all唤醒wait()后，实际有些线程可能不满足唤醒的条件，就会造成虚假唤醒，可以在wait中再次进行判断解决虚假唤醒。<br>解决：wait中要有第二个参数（lambda），并且这个lambda中要正确判断所处理的公共数据是否存在。</p>
+<p><em>2.2 atomic：</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::atomic&lt;<span class="keyword">int</span>&gt; atm = <span class="number">0</span>;</div><div class="line"> </div><div class="line"><span class="built_in">cout</span> &lt;&lt; atm &lt;&lt; <span class="built_in">endl</span>;</div></pre></td></tr></table></figure>
+<p>这里只有读取atm是原子操作，但是整个这一行代码 cout &lt;&lt; atm &lt;&lt; endl; 并不是原子操作，导致最终显示在屏幕上的值是一个“曾经值”。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::atomic&lt;<span class="keyword">int</span>&gt; atm = <span class="number">0</span>;</div><div class="line"> </div><div class="line"><span class="keyword">auto</span> atm2 = atm; <span class="comment">//不可以</span></div></pre></td></tr></table></figure>
+<p> 这种拷贝初始化不可以，会报错。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">atomic&lt;<span class="keyword">int</span>&gt; atm2(atm.load());</div></pre></td></tr></table></figure>
+<p>load()：以原子方式读atomic对象的值。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">atm2.store(<span class="number">12</span>);</div></pre></td></tr></table></figure>
+<p>原子操作实质上是：不允许在进行原子对象操作时进行CPU的上下文切换。</p>
+<p><strong>二、浅谈线程池：</strong><br>场景设想：服务器程序， 每来一个客户端，就创建一个新线程为这个客户提供服务。</p>
+<p>问题：</p>
+<p>1、2万个玩家，不可能给每个玩家创建一个新线程，此程序写法在这种场景下不通。</p>
+<p>2、程序稳定性问题：编写代码中，“时不时地突然”创建一个线程，这种写法，一般情况下不会出错，但是不稳定的；</p>
+<p>线程池：把一堆线程弄到一起，统一管理。这种统一管理调度，循环利用的方式，就叫做线程池。</p>
+<p>实现方式：程序启动时，一次性创建好一定数量的线程。这种方式让人更放心，觉得程序代码更稳定。</p>
+<p><strong>三、线程创建数量谈：</strong></p>
+<p>1、线程创建的数量极限的问题</p>
+<p>一般来讲，2000个线程基本就是极限；再创建就会崩溃。</p>
+<p>2、线程创建数量建议</p>
+<p>a、采用某些计数开发程序提供的建议，遵照建议和指示来确保程序高效执行。</p>
+<p>b、创建多线程完成业务；考虑可能被阻塞的线程数量，创建多余最大被阻塞线程数量的线程，如100个线程被阻塞再充值业务，开110个线程就是很合适的</p>
+<p>c、线程创建数量尽量不要超过500个，尽量控制在200个之内；</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/myFirstBlog/" data-id="ckb4yrx9400008ovwa8d7i5xc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/补充知识、线程池浅谈、数量谈、总结/" data-id="ckb50n3ka000v38vwd13o2muh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -155,10 +173,10 @@
 
 
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="c++11并发与多线程笔记（12）-windows临界区、其他各种mutex互斥量" class="article article-type-c++11并发与多线程笔记（12）" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/06/07/hello-world/" class="article-date">
-  <time datetime="2020-06-07T09:24:39.382Z" itemprop="datePublished">2020-06-07</time>
+    <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/" class="article-date">
+  <time datetime="2020-06-07T11:56:57.000Z" itemprop="datePublished">2020-06-07</time>
 </a>
     
   </div>
@@ -169,7 +187,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/07/hello-world/">Hello World</a>
+      <a class="article-title" href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
     </h1>
   
 
@@ -177,91 +195,456 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><img src="https://portablehexo.bitmoe.cn/hexopp/hexop.png" alt=""></p>
-<blockquote>
-<p><strong>本版本仅适用于Win环境</strong><br>本文关键字： <strong>Hexo绿色版</strong>，<strong>Hexo便携版</strong>，<strong>Hexo配置</strong>，<strong>Hexo</strong>，<strong>U盘</strong></p>
-</blockquote>
-<p><a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>是一个快速、简洁且高效的博客框架，支持 GitHub Flavored Markdown 的所有功能；具有超快生成速度，让上百个页面在几秒内瞬间完成渲染；还拥有各式各样的插件等等。</p>
-<p>但是就像很多教程里面写的那样，搭建 Hexo 本地环境，需要安装 Node.js、Git 以及使用 npm 进行安装和配置。这对于毫无经验的新手来说，是一个很大的挑战。同时，由于这些环境的存在，导致如果需要更换计算机的时候，重新安装配置一个新的Hexo环境，又得花费一些功夫。</p>
-<p>所以呢，锵锵，我们整合了一个 Hexo 便携版，来简化本地环境的部署。</p>
-<p>####<strong>版本介绍</strong><br>那么所谓的便携版到底是什么？便携版就是将 Hexo 本地环境所需要的各种依赖环境的整合到一起，做成的不需要安装的版本。</p>
-<p>本便携版（Release 1.0.0）所包含的软件如下：</p>
-<blockquote>
+        <h2 id="第十二节-windows临界区、其他各种mutex互斥量"><a href="#第十二节-windows临界区、其他各种mutex互斥量" class="headerlink" title="第十二节 windows临界区、其他各种mutex互斥量"></a>第十二节 windows临界区、其他各种mutex互斥量</h2><p><img src="https://img-blog.csdnimg.cn/20200513110118344.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一和二、windows临界区</strong><br>Windows临界区，同一个线程是可以重复进入的，但是进入的次数与离开的次数必须相等。<br>C++互斥量则不允许同一个线程重复加锁。</p>
+<p>windows临界区是在windows编程中的内容，了解一下即可，效果几乎可以等同于c++11的mutex<br>包含#include <windows.h><br>windows中的临界区同mutex一样，可以保护一个代码段。但windows的临界区可以进入多次，离开多次，但是进入的次数与离开的次数必须相等，不会引起程序报异常出错。</windows.h></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;list&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> __WINDOWSJQ_</span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> A</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="comment">// 把收到的消息传入队列</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">inMsgRecvQueue</span><span class="params">()</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i)</div><div class="line">		&#123;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"收到消息，并放入队列 "</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span>  __WINDOWSJQ_</span></div><div class="line">			EnterCriticalSection(&amp;my_winsec);	<span class="comment">//	进入临界区</span></div><div class="line">			<span class="comment">//EnterCriticalSection(&amp;my_winsec);	//	可以再次进入临界区,程序不会出错</span></div><div class="line">			msgRecvQueue.push_back(i);</div><div class="line">			LeaveCriticalSection(&amp;my_winsec);	<span class="comment">//	离开临界区</span></div><div class="line">			<span class="comment">//LeaveCriticalSection(&amp;my_winsec);	//	如果进入两次，必须离开两次不会报错</span></div><div class="line"><span class="meta">#<span class="meta-keyword">elif</span></span></div><div class="line">			my_mutex.lock();</div><div class="line">			msgRecvQueue.push_back(i);</div><div class="line">			my_mutex.unlock();</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">//  __WINDOWSJQ_</span></span></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"消息入队结束"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 从队列中取出消息</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">outMsgRecvQueue</span><span class="params">()</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i)</div><div class="line">		&#123;</div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span>  __WINDOWSJQ_</span></div><div class="line">			EnterCriticalSection(&amp;my_winsec);	<span class="comment">//	进入临界区</span></div><div class="line">			<span class="keyword">if</span> (!msgRecvQueue.empty())</div><div class="line">			&#123;</div><div class="line">				<span class="comment">// 队列不为空</span></div><div class="line">				<span class="keyword">int</span> num = msgRecvQueue.front();</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"从消息队列中取出 "</span> &lt;&lt; num &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				msgRecvQueue.pop_front();</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span></div><div class="line">			&#123;</div><div class="line">				<span class="comment">// 消息队列为空</span></div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"消息队列为空 "</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			&#125;</div><div class="line">			LeaveCriticalSection(&amp;my_winsec);	<span class="comment">//	离开临界区</span></div><div class="line"><span class="meta">#<span class="meta-keyword">elif</span></span></div><div class="line">			my_mutex.lock();</div><div class="line">			<span class="keyword">if</span> (!msgRecvQueue.empty())</div><div class="line">			&#123;</div><div class="line">				<span class="comment">// 队列不为空</span></div><div class="line">				<span class="keyword">int</span> num = msgRecvQueue.front();</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"从消息队列中取出 "</span> &lt;&lt; num &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				msgRecvQueue.pop_front();</div><div class="line">				my_mutex.unlock();</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span></div><div class="line">			&#123;</div><div class="line">				<span class="comment">// 消息队列为空</span></div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"消息队列为空 "</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				my_mutex.unlock();</div><div class="line">			&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">//  __WINDOWSJQ_</span></span></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"消息出队结束"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	A()</div><div class="line">	&#123;</div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __WINDOWSJQ_</span></div><div class="line">		InitializeCriticalSection(&amp;my_winsec);	<span class="comment">//	用临界区之前要初始化</span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// __WINDOWSJQ_</span></span></div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">	<span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt; msgRecvQueue;</div><div class="line">	mutex my_mutex;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __WINDOWSJQ_</span></div><div class="line">	CRITICAL_SECTION my_winsec;	<span class="comment">//	windows中的临界区，非常类似C++11中的mutex</span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// __WINDOWSJQ_</span></span></div><div class="line"></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	A myobj;</div><div class="line">	<span class="function">thread	<span class="title">myInMsgObj</span><span class="params">(&amp;A::inMsgRecvQueue, &amp;myobj)</span></span>;</div><div class="line">	<span class="function">thread	<span class="title">myOutMsgObj</span><span class="params">(&amp;A::outMsgRecvQueue, &amp;myobj)</span></span>;</div><div class="line">	myInMsgObj.join();</div><div class="line">	myOutMsgObj.join();</div><div class="line"></div><div class="line">	getchar();</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>三、自动析构技术</strong><br>C++：lock_guard防止忘了释放信号量，自动释放<br>windows：可以写个类自动释放临界区：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> CWinLock &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    CWinLock(CRITICAL_SECTION *pCritmp)</div><div class="line">    &#123;</div><div class="line">        my_winsec =pCritmp;</div><div class="line">        EnterCriticalSection(my_winsec);</div><div class="line">    &#125;</div><div class="line">    ~CWinLock()</div><div class="line">    &#123;</div><div class="line">        LeaveCriticalSection(my_winsec)</div><div class="line">    &#125;;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">    CRITICAL_SECTION *my_winsec;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>上述这种类RAII类（Resource Acquisition is initialization），即资源获取及初始化。容器，智能指针属于这种类。</p>
+<p><strong>四、递归独占互斥量 std::recursive_mutex</strong><br>std::mutex 独占式互斥量</p>
+<p>std::recursive_mutex：允许在同一个线程中同一个互斥量多次被 lock() ，（但是递归加锁的次数是有限制的，太多可能会报异常），效率要比mutex低。</p>
+<p>如果你真的用了 recursive_mutex 要考虑代码是否有优化空间，如果能调用一次 lock()就不要调用多次。</p>
+<p><strong>五、带超时的互斥量 std::timed_mutex 和 std::recursive_timed_mutex</strong></p>
+<p><em>5.1 std::timed_mutex：是待超时的独占互斥量</em></p>
 <ul>
-<li>Git: 2.7.4</li>
-<li>Nodejs: 6.10.1</li>
-<li>Npm: 4.4.1</li>
-<li>Hexo: 3.2.2</li>
+<li>try_lock_for()：</li>
 </ul>
-</blockquote>
-<p>为了便携的需要，不能配置固定的环境变量，所以除此之外还有相应的批处理文件，下文将详细介绍。</p>
-<p>####<strong>从零开始，1分钟搭建Hexo写作环境</strong><br>说了这么多，我们这就开始教你如何在1分钟内，从零开始搭建Hexo写作环境！</p>
-<p>#####1 注册一个Github帐号</p>
-<p>1.1 进入<a href="https://github.com" target="_blank" rel="external">Github</a>，并在右边的3个框框中分别填写 用户名、邮箱地址、账户密码，并点击 <strong><code>Sign up for Github</code></strong>;</p>
-<p><img src="https://portablehexo.bitmoe.cn/hexopp/hexop2.png" alt="图1.1.1"></p>
-<p>1.2 进入欢迎页面后，点击<strong><code>Finish sign up</code></strong>;</p>
-<p><img src="https://portablehexo.bitmoe.cn/hexopp/hexop3.png" alt="图1.2.1"></p>
-<p>1.3 进入到这一步之后（<strong>图1.3.1</strong>），先别记着点任何东西，查看你的邮箱，应该会收到如下的邮件（<strong>图1.3.2</strong>），确认你的邮件。否则，你会看到错误页面（<strong>图1.3.3</strong>）。query完毕之后在<strong>图1.3.1</strong>所示的页面，点击<strong><code>+ New repository</code></strong>;</p>
-<p><img src="https://portablehexo.bitmoe.cn/hexopp/hexop5.png" alt="图1.3.1"></p>
-<p><img src="https://portablehexo.bitmoe.cn/hexopp/hexop6.png" alt="图1.3.2"></p>
-<p><img src="https://portablehexo.bitmoe.cn/hexopp/hexop7.png" alt="图1.3.3"></p>
-<p>1.4 请在红框中的 <strong><code>Repository name</code></strong> 里面输入 <strong><code>用户名.github.io</code></strong> ( <strong>用户名</strong> 就是你刚刚 <strong>步骤1.1</strong> 中注册的用户名)，然后点击 <strong><code>Create repository</code></strong>;</p>
-<p><img src="https://portablehexo.bitmoe.cn/hexopp/hexop8.png" alt="图1.4.1"></p>
-<p>1.5 至此，Github网页注册的部分完毕</p>
-<p>####2 下载HEXO Portable</p>
-<p>2.1 访问我们的 <a href="https://project.bitmoe.cn/PortableHexo/" target="_blank" rel="external">HEXO Portable</a> 页面，或者 <a href="https://github.com/Bitmoe/PortableHexo" target="_blank" rel="external">Github仓库</a> 下载最新的便携版；</p>
-<p>2.2 双击得到的自解压文件，解压到你需要安装博客的地方，可以选择硬盘或者U盘；</p>
-<p>####3 配置你的环境</p>
-<p>3.1 在你的博客的文件夹，你会发现很多批处理文件，我先介绍下各个文件的用途：</p>
-<blockquote>
+<p>等待一段时间，如果拿到了锁，或者超时了未拿到锁，就继续执行（有选择执行）如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">timeout</span><span class="params">(<span class="number">100</span>)</span></span>;</div><div class="line"><span class="keyword">if</span> (my_mymutex.try_lock_for(timeout))&#123;</div><div class="line">    <span class="comment">//......拿到锁返回ture</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span>&#123;</div><div class="line">    <span class="built_in">std</span>::chrono::milliseconds sleeptime(<span class="number">100</span>);</div><div class="line">    <span class="built_in">std</span>::this_thread::sleep_for(sleeptime);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
-<li>配置基本信息 &gt;&gt; 配置博客的基本环境</li>
-<li>配置Github部署 &gt;&gt; 配置博客的部署</li>
-<li>启动命令行 &gt;&gt; 启动带环境变量的Git-Bash，否则无法使用node、npm、git等命令</li>
-<li>新建文章 &gt;&gt; 新建一篇文章</li>
-<li>渲染并本地测试 &gt;&gt; 生成并本地预览</li>
-<li>渲染并部署 &gt;&gt; 生成并部署到GitHub</li>
-<li>重置配置文件 &gt;&gt; 重置_config.yml</li>
+<li>try_lock_until()：</li>
 </ul>
-</blockquote>
-<p>3.2 我们继续进行环境配置，双击<strong><code>配置基本信息</code></strong>并按顺序输入以下信息：</p>
-<blockquote>
-<ul>
-<li>主标题：顾名思义</li>
-<li>副标题：顾名思义</li>
-<li>描述：顾名思义</li>
-<li>作者：顾名思义</li>
-<li>网站地址：填写 <strong>用户名.github.io</strong> （此处的用户名为<strong>步骤1.1</strong>中填写的用户名）<br><strong>如果您已经购买了域名，可以参看相关的文章！</strong></li>
-</ul>
-</blockquote>
-<p>3.3 双击<strong><code>配置Github部署</code></strong>并按顺序输入以下信息：</p>
-<blockquote>
-<ul>
-<li>Github的用户名：此处的用户名为<strong>步骤1.1</strong>中填写的用户名</li>
-<li>Github注册邮箱：此处的注册邮箱为<strong>步骤1.1</strong>中填写的注册邮箱</li>
-</ul>
-</blockquote>
-<p>3.4 输入完毕之后，会进行测试部署，等待屏幕提示<strong>下面将进行部署测试，稍后将有一个openssh的对话框出现，请输入你的github用户密码。</strong>的时候，按回车继续；（此处的用户密码为<strong>步骤1.1</strong>中填写的用户密码）</p>
-<p>3.5 然后继续等待，此时屏幕会出现n多行，耐心等待即可；</p>
-<p>3.6 等待屏幕提示<strong>请访问 <a href="https://用户名.github.io" target="_blank" rel="external">https://用户名.github.io</a> 查看是否部署成功！</strong>的时候，在浏览器中输入<strong><a href="https://用户名.github.io" target="_blank" rel="external">https://用户名.github.io</a> </strong>，理论上可以看到你的Hexo站点！（此处的用户名为<strong>步骤1.1</strong>中填写的用户名）</p>
-<p>3.7 至此，你的Hexo环境就配置完成了，这样你的这个Hexo博客文件夹无论移动到哪一台电脑，都能通过<strong>启动命令行</strong>出现的bash命令行，或者其余便捷的批处理文件比如<strong>新建文章</strong>、<strong>渲染并本地测试</strong>、<strong>渲染并部署</strong>进行相应的操作。</p>
-<p>3.8 如果你在配置中出错，可以运行<strong>重置配置文件</strong>后，再重复<strong>3.1~3.6步骤</strong></p>
-<p>####4 开始享受纯粹的Hexo写作吧！</p>
-<p>####5 备注</p>
-<blockquote>
-<ul>
-<li>本便携版以及本文均使用 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="external">CC BY-NC-SA 4.0</a>协议；</li>
-<li>本文所有权归 <a href="http://qistchan.com" target="_blank" rel="external">QistChan</a> &amp; <a href="https://wwww.bitmoe.com" target="_blank" rel="external">Bitmoe Inc.</a> 所有；</li>
-<li>本便携版由 <a href="https://www.bitmoe.com" target="_blank" rel="external">Bitmoe Inc.</a> 维护并提供技术支持；</li>
-<li>需要技术支持可以在<a href="https://github.com/Bitmoe/PortableHexo" target="_blank" rel="external">Github仓库</a> 提交<strong><code>Issues</code></strong>；</li>
-<li>Written with <a href="https://stackedit.io/" target="_blank" rel="external">StackEdit</a>.</li>
-</ul>
-</blockquote>
+<p>参数是一个未来的时间点，在这个未来的时间没到的时间内，如果拿到了锁头，流程就走下来，如果时间到了没拿到锁，流程也可以走下来。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">timeout</span><span class="params">(<span class="number">100</span>)</span></span>;</div><div class="line"><span class="keyword">if</span> (my_mymutex.try_lock_until(chrono::steady_clock::now() + timeout))&#123;</div><div class="line">    <span class="comment">//......拿到锁返回ture</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span>&#123;</div><div class="line">    <span class="built_in">std</span>::chrono::milliseconds sleeptime(<span class="number">100</span>);</div><div class="line">    <span class="built_in">std</span>::this_thread::sleep_for(sleeptime);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>两者的区别就是一个参数是时间段，一个参数是时间点</p>
+<p><em>5.2 std::recursive_timed_mutex：是待超时的递归独占互斥量</em></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/06/07/hello-world/" data-id="ckb4yrx9h00028ovw0wfsuc8u" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/06/07/windows临界区、其他各种mutex互斥量/" data-id="ckb50n3jo000i38vwftnru75k" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="c++11并发与多线程笔记（11）-std-atomic续谈、std-async深入谈" class="article article-type-c++11并发与多线程笔记（11）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/std-atomic续谈、std-async深入谈/" class="article-date">
+  <time datetime="2020-06-07T11:55:50.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第十一节-std-atomic续谈、std-async深入谈"><a href="#第十一节-std-atomic续谈、std-async深入谈" class="headerlink" title="第十一节 std::atomic续谈、std::async深入谈"></a>第十一节 std::atomic续谈、std::async深入谈</h2><p><img src="https://img-blog.csdnimg.cn/20200513105654641.png#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、std::atomic续谈</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;atomic&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="built_in">std</span>::atomic&lt;<span class="keyword">int</span>&gt; g_count = <span class="number">0</span>; <span class="comment">//封装了一个类型为int的 对象（值）</span></div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">mythread1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</div><div class="line">		 <span class="comment">//虽然g_count使用了原子操作模板，但是这种写法既读又写，</span></div><div class="line">		 <span class="comment">//会导致计数错误</span></div><div class="line">             g_count = g_count + <span class="number">1</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t1</span><span class="params">(mythread1)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t2</span><span class="params">(mythread1)</span></span>;</div><div class="line">	t1.join();</div><div class="line">	t2.join();</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"正常情况下结果应该是200 0000次，实际是"</span> &lt;&lt; g_count &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105723318.png#pic_center" alt="在这里插入图片描述"></p>
+<p>一般atomic原子操作，针对++，–，+=，-=，&amp;=，|=，^=是支持的，其他操作不一定支持。</p>
+<p><strong>二、std::async深入理解</strong><br><em>2.1 std::async参数详述，async 用来创建一个异步任务</em></p>
+<p>延迟调用参数 std::launch::deferred【延迟调用】，std::launch::async【强制创建一个线程】</p>
+<p>std::async()我们一般不叫创建线程（他能够创建线程），我们一般叫它创建一个异步任务。</p>
+<p>std::async和std::thread最明显的不同，就是 async 有时候并不创建新线程。</p>
+<p>①如果用std::launch::deferred 来调用async？</p>
+<p>延迟到调用 get() 或者 wait() 时执行，如果不调用就不会执行</p>
+<p>②如果用std::launch::async来调用async？</p>
+<p>强制这个异步任务在新线程上执行，这意味着，系统必须要创建出新线程来运行入口函数。</p>
+<p>③如果同时用 std::launch::async | std::launch::deferred </p>
+<p>这里这个或者关系意味着async的行为可能是 std::launch::async 创建新线程立即执行， 也可能是 std::launch::deferred 没有创建新线程并且延迟到调用get()执行，由<strong>系统根据实际情况来决定采取</strong>哪种方案</p>
+<p>④不带额外参数 std::async(mythread)，只给async 一个入口函数名，此时的系统给的默认值是 std::launch::async | std::launch::deferred 和 ③  一样，有系统自行决定异步还是同步运行。</p>
+<p><em>2.2 std::async和std::thread()区别：</em></p>
+<p>std::thread()如果系统资源紧张可能出现创建线程失败的情况，如果创建线程失败那么程序就可能崩溃，而且不容易拿到函数返回值（不是拿不到）<br>std::async()创建异步任务。可能创建线程也可能不创建线程，并且容易拿到线程入口函数的返回值；</p>
+<p><em>由于系统资源限制：</em><br>①如果用std::thread创建的线程太多，则可能创建失败，系统报告异常，崩溃。</p>
+<p>②如果用std::async，一般就不会报异常，因为如果系统资源紧张，无法创建新线程的时候，async不加额外参数的调用方式就不会创建新线程。而是在后续调用get()请求结果时执行在这个调用get()的线程上。</p>
+<p>如果你强制async一定要创建新线程就要使用 std::launch::async 标记。承受的代价是，系统资源紧张时可能崩溃。</p>
+<p>③根据经验，一个程序中线程数量  不宜超过100~200 。</p>
+<p><em>2.3 async不确定性问题的解决</em><br>不加额外参数的async调用时让系统自行决定，是否创建新线程。</p>
+<p>std::future<int> result = std::async(mythread);<br>问题焦点在于这个写法，任务到底有没有被推迟执行。</int></p>
+<p>通过wait_for返回状态来判断：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::future_status status = result.wait_for(<span class="built_in">std</span>::chrono::seconds(<span class="number">6</span>));</div><div class="line"><span class="comment">//std::future_status status = result.wait_for(6s);</span></div><div class="line">	<span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::timeout) &#123;</div><div class="line">		<span class="comment">//超时：表示线程还没有执行完</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"超时了，线程还没有执行完"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::ready) &#123;</div><div class="line">		<span class="comment">//表示线程成功放回</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"线程执行成功，返回"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; result.get() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::deferred) &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"线程延迟执行"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; result.get() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/std-atomic续谈、std-async深入谈/" data-id="ckb50n3jh000f38vwyr2d2pyy" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="c++11并发与多线程笔记（10）-future其他成员函数、shared-future、atomic" class="article article-type-c++11并发与多线程笔记（10）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/future其他成员函数、shared-future、atomic/" class="article-date">
+  <time datetime="2020-06-07T11:53:27.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第十节-future其他成员函数、shared-future、atomic"><a href="#第十节-future其他成员函数、shared-future、atomic" class="headerlink" title="第十节 future其他成员函数、shared_future、atomic"></a>第十节 future其他成员函数、shared_future、atomic</h2><p><img src="https://img-blog.csdnimg.cn/20200513105001636.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、std::future 的成员函数</strong><br>1、<strong>std::future_status status</strong> = result.<strong>wait_for</strong>(std::chrono::seconds(几秒));<br>卡住当前流程，等待std::async()的异步任务运行一段时间，然后返回其状态std::future_status。如果std::async()的参数是std::launch::deferred（延迟执行），则不会卡住主流程。<br>std::future_status是枚举类型，表示异步任务的执行状态。类型的取值有<br><strong>std::future_status::timeout<br>std::future_status::ready<br>std::future_status::deferred</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;future&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">mythread</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() start"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">dura</span><span class="params">(<span class="number">5000</span>)</span></span>;</div><div class="line">	<span class="built_in">std</span>::this_thread::sleep_for(dura);</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() end"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">5</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"main"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::future&lt;<span class="keyword">int</span>&gt; result = <span class="built_in">std</span>::async(mythread);</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"continue........"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="comment">//cout &lt;&lt; result1.get() &lt;&lt; endl; //卡在这里等待mythread()执行完毕，拿到结果</span></div><div class="line">	<span class="comment">//等待1秒</span></div><div class="line">   <span class="built_in">std</span>::future_status status = result.wait_for(<span class="built_in">std</span>::chrono::seconds(<span class="number">1</span>));</div><div class="line">	<span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::timeout) &#123;</div><div class="line">		<span class="comment">//超时：表示线程还没有执行完</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"超时了，线程还没有执行完"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="comment">//类成员函数</span></div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105124529.png#pic_center" alt="在这里插入图片描述"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;future&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">mythread</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() start"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="comment">//std::chrono::milliseconds dura(5000);</span></div><div class="line">	<span class="comment">//std::this_thread::sleep_for(dura);</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() end"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">5</span>;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"main"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::future&lt;<span class="keyword">int</span>&gt; result = <span class="built_in">std</span>::async(<span class="built_in">std</span>::launch::deferred, mythread);</div><div class="line">	<span class="comment">//std::future&lt;int&gt; result = std::async(mythread);</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"continue........"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="comment">//cout &lt;&lt; result1.get() &lt;&lt; endl; //卡在这里等待mythread()执行完毕，拿到结果</span></div><div class="line">	<span class="built_in">std</span>::future_status status = result.wait_for(<span class="built_in">std</span>::chrono::seconds(<span class="number">6</span>));</div><div class="line">	<span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::timeout) &#123;</div><div class="line">		<span class="comment">//超时：表示线程还没有执行完</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"超时了，线程还没有执行完"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::ready) &#123;</div><div class="line">		<span class="comment">//表示线程成功放回</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"线程执行成功，返回"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; result.get() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::deferred) &#123;</div><div class="line">		<span class="comment">//如果设置 std::future&lt;int&gt; result = std::async(std::launch::deferred, mythread);，则本条件成立</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"线程延迟执行"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; result.get() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line"> </div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"good luck"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>get()只能使用一次，比如如果</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> a = result.get();</div><div class="line"><span class="built_in">cout</span> &lt;&lt; result.get() &lt;&lt; <span class="built_in">endl</span>;</div></pre></td></tr></table></figure>
+<p>就会报告异常<br>因为get()函数的设计是一个移动语义，相当于将result中的值移动到了a中，再次get就报告了异常。</p>
+<p><strong>二、std::shared_future：也是个类模板</strong><br>std::future的 get() 成员函数是转移数据</p>
+<p>std::shared_future 的 get()成员函数是复制数据</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">#include &lt;thread&gt;</div><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;future&gt;</div><div class="line">using namespace std;</div><div class="line"> </div><div class="line">int mythread() &#123;</div><div class="line">	cout &lt;&lt; "mythread() start" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	std::chrono::milliseconds dura(5000);</div><div class="line">	std::this_thread::sleep_for(dura);</div><div class="line">	cout &lt;&lt; "mythread() end" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	return 5;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main() &#123;</div><div class="line">	cout &lt;&lt; "main" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	std::packaged_task&lt;int()&gt; mypt(mythread);</div><div class="line">	std::thread t1(std::ref(mypt));</div><div class="line">	std::future&lt;int&gt; result = mypt.get_future();</div><div class="line">	</div><div class="line">	bool ifcanget = result.valid(); //判断future 中的值是不是一个有效值</div><div class="line">	std::shared_future&lt;int&gt; result_s(result.share()); //执行完毕后result_s里有值，而result里空了</div><div class="line">	//std::shared_future&lt;int&gt; result_s(std::move(result));</div><div class="line">   //通过get_future返回值直接构造一个shared_future对象</div><div class="line">   //std::shared_future&lt;int&gt; result_s(mypt.get_future());</div><div class="line">   t1.join();</div><div class="line">	</div><div class="line">	auto myresult1 = result_s.get();</div><div class="line">	auto myresult2 = result_s.get();</div><div class="line"> </div><div class="line">	cout &lt;&lt; "good luck" &lt;&lt; endl;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>三、std::atomic原子操作</strong></p>
+<p><em>3.1 原子操作概念引出范例：</em><br>互斥量：多线程编程中 用于保护共享数据：先锁住， 操作共享数据， 解锁。</p>
+<p>有两个线程，对一个变量进行操作，一个线程读这个变量的值，一个线程往这个变量中写值。</p>
+<p>即使是一个简单变量的读取和写入操作，如果不加锁，也有可能会导致读写值混乱（一条C语句会被拆成3、4条汇编语句来执行，所以仍然有可能混乱）</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> g_count = <span class="number">0</span>;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">mythread1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</div><div class="line">		g_count++;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t1</span><span class="params">(mythread1)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t2</span><span class="params">(mythread1)</span></span>;</div><div class="line">	t1.join();</div><div class="line">	t2.join();</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"正常情况下结果应该是200 0000次，实际是"</span> &lt;&lt; g_count &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105255690.png#pic_center" alt="在这里插入图片描述"></p>
+<p>使用mutex解决这个问题</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> g_count = <span class="number">0</span>;</div><div class="line"><span class="built_in">std</span>::mutex mymutex;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">mythread1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</div><div class="line">		<span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; u1(mymutex);</div><div class="line">		g_count++;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t1</span><span class="params">(mythread1)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t2</span><span class="params">(mythread1)</span></span>;</div><div class="line">	t1.join();</div><div class="line">	t2.join();</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"正常情况下结果应该是200 0000次，实际是"</span> &lt;&lt; g_count &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105322661.png#pic_center" alt="在这里插入图片描述"></p>
+<p><em>3.2 基本的std::atomic用法范例</em><br>大家可以把原子操作理解成一种：不需要用到互斥量加锁（无锁）技术的多线程并发编程方式。</p>
+<p>原子操作：在多线程中不会被打断的程序执行片段。</p>
+<p>从效率上来说，原子操作要比互斥量的方式效率要高。</p>
+<p>互斥量的加锁一般是针对一个代码段，而原子操作针对的一般都是一个变量。</p>
+<p>原子操作，一般都是指“不可分割的操作”；也就是说这种操作状态要么是完成的，要么是没完成的，不可能出现半完成状态。</p>
+<p>std::atomic来代表原子操作，是个类模板。其实std::atomic是用来封装某个类型的值的</p>
+<p>需要添加#include <atomic>头文件</atomic></p>
+<p>范例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;atomic&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="built_in">std</span>::atomic&lt;<span class="keyword">int</span>&gt; g_count = <span class="number">0</span>; <span class="comment">//封装了一个类型为int的 对象（值）</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">mythread1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</div><div class="line">		g_count++;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t1</span><span class="params">(mythread1)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t2</span><span class="params">(mythread1)</span></span>;</div><div class="line">	t1.join();</div><div class="line">	t2.join();</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"正常情况下结果应该是200 0000次，实际是"</span> &lt;&lt; g_count &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105403722.png#pic_center" alt="在这里插入图片描述"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;atomic&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="built_in">std</span>::atomic&lt;<span class="keyword">bool</span>&gt; g_ifEnd = <span class="literal">false</span>; <span class="comment">//封装了一个类型为bool的 对象（值）</span></div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">mythread</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">dura</span><span class="params">(<span class="number">1000</span>)</span></span>;</div><div class="line">	<span class="keyword">while</span> (g_ifEnd == <span class="literal">false</span>) &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"thread id = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="string">"运行中"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">std</span>::this_thread::sleep_for(dura);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"thread id = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="string">"运行结束"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t1</span><span class="params">(mythread)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t2</span><span class="params">(mythread)</span></span>;</div><div class="line">	<span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">dura</span><span class="params">(<span class="number">5000</span>)</span></span>;</div><div class="line">	<span class="built_in">std</span>::this_thread::sleep_for(dura);</div><div class="line">	g_ifEnd = <span class="literal">true</span>;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"程序执行完毕"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	t1.join();</div><div class="line">	t2.join();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105424860.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>总结：</strong><br>1、原子操作一般用于计数或者统计（如累计发送多少个数据包，累计接收到了多少个数据包），多个线程一起统计，这种情况如果不使用原子操作会导致统计发生混乱。</p>
+<p>2、写商业代码时，如果不确定结果的影响，最好自己先写一小段代码调试。或者不要使用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/future其他成员函数、shared-future、atomic/" data-id="ckb50n3jb000b38vw3yuzlhc6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="c++11并发与多线程笔记（9）-async、future、packaged-task、promise" class="article article-type-c++11并发与多线程笔记（9）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/async、future、packaged-task、promise/" class="article-date">
+  <time datetime="2020-06-07T11:52:46.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/async、future、packaged-task、promise/">async、future、packaged_task、promise</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第九节、async、future、packaged-task、promise"><a href="#第九节、async、future、packaged-task、promise" class="headerlink" title="第九节、async、future、packaged_task、promise"></a>第九节、async、future、packaged_task、promise</h2><p><img src="https://img-blog.csdnimg.cn/20200513104145145.png#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>本节内容需要包含头文件#include <future></future></strong></p>
+<p><strong>一、std::async、std::future创建后台任务并返回值</strong><br><strong>std::async</strong>是一个函数模板，用来启动一个异步任务，启动起来一个异步任务之后，它返回一个<strong>std::future</strong>对象，这个对象是个类模板。</p>
+<p>什么叫“启动一个异步任务”？就是自动创建一个线程，并开始 执行对应的线程入口函数，它返回一个std::future对象，这个std::future对象中就含有线程入口函数所返回的结果，我们可以通过调用future对象的成员函数get()来获取结果。</p>
+<p>“future”将来的意思，也有人称呼std::future提供了一种访问异步操作结果的机制，就是说这个结果你可能没办法马上拿到，但是在不久的将来，这个线程执行完毕的时候，你就能够拿到结果了，所以，大家这么理解：future中保存着一个值，这个值是在将来的某个时刻能够拿到。</p>
+<p>std::future对象的<strong>get()成员函数</strong>会等待线程执行结束并返回结果，拿不到结果它就会一直等待，感觉有点像join()但是，它是可以获取结果的。</p>
+<p>std::future对象的<strong>wait()成员函数</strong>，用于等待线程返回，本身并不返回结果，这个效果和 std::thread 的join()更像。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;future&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="keyword">int</span> <span class="title">mythread</span><span class="params">(<span class="keyword">int</span> mypar)</span> </span>&#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; mypar &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">return</span> mypar;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"> </div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">mythread</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() start"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">dura</span><span class="params">(<span class="number">5000</span>)</span></span>;</div><div class="line">	<span class="built_in">std</span>::this_thread::sleep_for(dura);</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() end"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">5</span>;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	A a;</div><div class="line">	<span class="keyword">int</span> tmp = <span class="number">12</span>;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"main"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::future&lt;<span class="keyword">int</span>&gt; result1 = <span class="built_in">std</span>::async(mythread);</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"continue........"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; result1.get() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//卡在这里等待mythread()执行完毕，拿到结果</span></div><div class="line">	</div><div class="line">	<span class="comment">//类成员函数</span></div><div class="line">	<span class="built_in">std</span>::future&lt;<span class="keyword">int</span>&gt; result2 = <span class="built_in">std</span>::async(&amp;A::mythread, &amp;a, tmp); <span class="comment">//第二个参数是对象引用才能保证线程里执行的是同一个对象</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; result2.get() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">   <span class="comment">//或者result2.wait();</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"good luck"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们通过向std::async()传递一个参数，改参数是std::launch类型（枚举类型），来达到一些特殊的目的：</p>
+<p><em>1、std::lunch::deferred：</em><br>（defer推迟，延期）表示线程入口函数的调用会被延迟，一直到std::future的wait()或者get()函数被调用时（由主线程调用）才会执行；如果wait()或者get()没有被调用，则不会执行。<br>实际上根本就没有创建新线程。std::lunch::deferred意思时延迟调用，并没有创建新线程，是在主线程中调用的线程入口函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;future&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">mythread</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() start"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">dura</span><span class="params">(<span class="number">5000</span>)</span></span>;</div><div class="line">	<span class="built_in">std</span>::this_thread::sleep_for(dura);</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() end"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">5</span>;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"main"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::future&lt;<span class="keyword">int</span>&gt; result1 = <span class="built_in">std</span>::async(<span class="built_in">std</span>::launch::deferred ,mythread);</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"continue........"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; result1.get() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//卡在这里等待mythread()执行完毕，拿到结果</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"good luck"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/2020051310433493.png#pic_center" alt="在这里插入图片描述"></p>
+<p>永远都会先打印出continue……..，然后才会打印出mythread() start和mythread() end等信息。</p>
+<p><em>2、std::launch::async，在调用async函数的时候就开始创建新线程。</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"main"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::future&lt;<span class="keyword">int</span>&gt; result1 = <span class="built_in">std</span>::async(<span class="built_in">std</span>::launch::async ,mythread);</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"continue........"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; result1.get() &lt;&lt; <span class="built_in">endl</span>; </div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"good luck"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>二、std::packaged_task：打包任务，把任务包装起来。</strong><br>类模板，它的模板参数是各种可调用对象，通过packaged_task把各种可调用对象包装起来，方便将来作为线程入口函数来调用。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">#include &lt;thread&gt;</div><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;future&gt;</div><div class="line">using namespace std;</div><div class="line"> </div><div class="line">int mythread(int mypar) &#123;</div><div class="line">	cout &lt;&lt; mypar &lt;&lt; endl;</div><div class="line">	cout &lt;&lt; "mythread() start" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	std::chrono::milliseconds dura(5000);</div><div class="line">	std::this_thread::sleep_for(dura);</div><div class="line">	cout &lt;&lt; "mythread() end" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	return 5;</div><div class="line">&#125;</div><div class="line"> </div><div class="line">int main() &#123;</div><div class="line">	cout &lt;&lt; "main" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	//我们把函数mythread通过packaged_task包装起来</div><div class="line">   //参数是一个int，返回值类型是int</div><div class="line">   std::packaged_task&lt;int(int)&gt; mypt(mythread);</div><div class="line">	std::thread t1(std::ref(mypt), 1);</div><div class="line">	t1.join();</div><div class="line">	std::future&lt;int&gt; result = mypt.get_future(); </div><div class="line">	//std::future对象里包含有线程入口函数的返回结果，这里result保存mythread返回的结果。</div><div class="line">	cout &lt;&lt; result.get() &lt;&lt; endl;</div><div class="line">   </div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><em>可调用对象可由函数换成lambda表达式</em></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">int main() &#123;</div><div class="line">	cout &lt;&lt; "main" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	std::packaged_task&lt;int(int)&gt; mypt([](int mypar) &#123;</div><div class="line">		cout &lt;&lt; mypar &lt;&lt; endl;</div><div class="line">		cout &lt;&lt; "mythread() start" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">		std::chrono::milliseconds dura(5000);</div><div class="line">		std::this_thread::sleep_for(dura);</div><div class="line">		cout &lt;&lt; "mythread() end" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">		return 5;</div><div class="line">	&#125;); </div><div class="line">	</div><div class="line">	std::thread t1(std::ref(mypt), 1);</div><div class="line">	t1.join();</div><div class="line">	std::future&lt;int&gt; result = mypt.get_future(); </div><div class="line">	//std::future对象里包含有线程入口函数的返回结果，这里result保存mythread返回的结果。</div><div class="line">	</div><div class="line">	cout &lt;&lt; result.get() &lt;&lt; endl;</div><div class="line"> </div><div class="line">	cout &lt;&lt; "good luck" &lt;&lt; endl;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>packaged_task包装起来的可调用对象还可以直接调用，从这个角度来讲，packaged_task对象也是一个可调用对象<br><em>lambda的直接调用</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"main"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::packaged_task&lt;<span class="keyword">int</span>(<span class="keyword">int</span>)&gt; mypt([](<span class="keyword">int</span> mypar) &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; mypar &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() start"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">std</span>::chrono::milliseconds dura(<span class="number">5000</span>);</div><div class="line">		<span class="built_in">std</span>::this_thread::sleep_for(dura);</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() end"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">return</span> <span class="number">5</span>;</div><div class="line">	&#125;); </div><div class="line"> </div><div class="line">	mypt(<span class="number">1</span>);</div><div class="line">	<span class="built_in">std</span>::future&lt;<span class="keyword">int</span>&gt; result = mypt.get_future();</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; result.get() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><em>std::promise，类模板</em><br>我们能够在某个线程中给它赋值，然后我们可以在其他线程中，把这个值取出来</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#include &lt;thread&gt;</div><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;future&gt;</div><div class="line">using namespace std;</div><div class="line"> </div><div class="line">void mythread(std::promise&lt;int&gt; &amp;tmp, int clac) &#123;</div><div class="line">	cout &lt;&lt; "mythread() start" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	std::chrono::milliseconds dura(5000);</div><div class="line">	std::this_thread::sleep_for(dura);</div><div class="line">	cout &lt;&lt; "mythread() end" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	int result = clac;</div><div class="line">	tmp.set_value(result); //结果保存到了tmp这个对象中</div><div class="line">	return;</div><div class="line">&#125;</div><div class="line"> </div><div class="line">vector&lt;std::packaged_task&lt;int(int)&gt;&gt; task_vec;</div><div class="line"> </div><div class="line">int main() &#123;</div><div class="line">	std::promise&lt;int&gt; myprom;</div><div class="line">	std::thread t1(mythread, std::ref(myprom), 180);</div><div class="line">	t1.join(); //在这里线程已经执行完了</div><div class="line">	std::future&lt;int&gt; fu1 = myprom.get_future(); //promise和future绑定，用于获取线程返回值</div><div class="line">	auto result = fu1.get();</div><div class="line">	cout &lt;&lt; "result = " &lt;&lt; result &lt;&lt; endl;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>总结：通过promise保存一个值，在将来某个时刻我们通过吧一个future绑定到这个promise上，来得到绑定的值</p>
+<p>注意：使用thread时，必须 join() 或者 detach() 否则程序会报异常</p>
+<p><strong>小结：</strong></p>
+<p>我们学习这些东西的目的并不是，要把他们都用到实际开发中。</p>
+<p>相反，如果我们能够用最少的东西写出一个稳定的，高效的多线程程序，更值得赞赏。</p>
+<p>我们为了成长必须阅读一些高手写的代码，从而实现自己代码的积累；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/async、future、packaged-task、promise/" data-id="ckb50n3j2000638vwdolpxlm0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="c++11并发与多线程笔记（8）-condition-variable、wait、notify-one、notify-all" class="article article-type-c++11并发与多线程笔记（8）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/condition-variable、wait、notify-one、notify-all/" class="article-date">
+  <time datetime="2020-06-07T11:52:07.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/condition-variable、wait、notify-one、notify-all/">condition_variable、wait、notify_one、notify_all</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第八节-condition-variable、wait、notify-one、notify-all"><a href="#第八节-condition-variable、wait、notify-one、notify-all" class="headerlink" title="第八节 condition_variable、wait、notify_one、notify_all"></a>第八节 condition_variable、wait、notify_one、notify_all</h2><p><img src="https://img-blog.csdnimg.cn/2020051310403813.png#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、条件变量condition_variable、wait、notify_one、notify_all</strong><br>std::condition_variable实际上是一个类，是一个和条件相关的类，说白了就是等待一个条件达成。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::mutex mymutex1;</div><div class="line"><span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; sbguard1(mymutex1);</div><div class="line"><span class="built_in">std</span>::condition_variable condition;</div><div class="line">condition.wait(sbguard1, [<span class="keyword">this</span>] &#123;<span class="keyword">if</span> (!msgRecvQueue.empty())</div><div class="line">                                    <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">                                <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">                                &#125;);</div><div class="line"> </div><div class="line">condition.wait(sbguard1);</div></pre></td></tr></table></figure>
+<p>wait()用来等一个东西</p>
+<p>如果第二个参数的lambda表达式返回值是false，那么wait()将<strong>解锁互斥量，并阻塞到本行</strong><br>如果第二个参数的lambda表达式返回值是true，那么wait()直接返回并继续执行。</p>
+<p>阻塞到什么时候为止呢？阻塞到其他某个线程调用notify_one()成员函数为止；</p>
+<p>如果没有第二个参数，那么效果跟第二个参数lambda表达式返回false效果一样</p>
+<p>wait()将解锁互斥量，并阻塞到本行，阻塞到其他某个线程调用notify_one()成员函数为止。</p>
+<p>当其他线程用notify_one()将本线程wait()唤醒后，这个wait恢复后</p>
+<p>1、wait()不断尝试获取互斥量锁，如果获取不到那么流程就卡在wait()这里等待获取，如果获取到了，那么wait()就继续执行，获取到了锁</p>
+<p>2.1、如果wait有第二个参数就判断这个lambda表达式。</p>
+<ul>
+<li>a)如果表达式为false，那wait又对互斥量解锁，然后又休眠，等待再次被notify_one()唤醒</li>
+<li>b)如果lambda表达式为true，则wait返回，流程可以继续执行（此时互斥量已被锁住）。</li>
+</ul>
+<p>2.2、如果wait没有第二个参数，则wait返回，流程走下去。</p>
+<p>流程只要走到了wait()下面则互斥量一定被锁住了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;list&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"> </div><div class="line"><span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">inMsgRecvQueue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; ++i) </div><div class="line">        &#123;</div><div class="line">            <span class="built_in">cout</span> &lt;&lt; <span class="string">"inMsgRecvQueue插入一个元素"</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"></div><div class="line">            <span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; sbguard1(mymutex1);</div><div class="line">            msgRecvQueue.push_back(i); </div><div class="line">            <span class="comment">//尝试把wait()线程唤醒,执行完这行，</span></div><div class="line">            <span class="comment">//那么outMsgRecvQueue()里的wait就会被唤醒</span></div><div class="line">            <span class="comment">//只有当另外一个线程正在执行wait()时notify_one()才会起效，否则没有作用</span></div><div class="line">            condition.notify_one();</div><div class="line">        &#125;</div><div class="line">	&#125;</div><div class="line"> </div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">outMsgRecvQueue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> command = <span class="number">0</span>;</div><div class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</div><div class="line">            <span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; sbguard2(mymutex1);</div><div class="line">            <span class="comment">// wait()用来等一个东西</span></div><div class="line">            <span class="comment">// 如果第二个参数的lambda表达式返回值是false，那么wait()将解锁互斥量，并阻塞到本行</span></div><div class="line">            <span class="comment">// 阻塞到什么时候为止呢？阻塞到其他某个线程调用notify_one()成员函数为止；</span></div><div class="line">            <span class="comment">//当 wait() 被 notify_one() 激活时，会先执行它的 条件判断表达式 是否为 true，</span></div><div class="line">            <span class="comment">//如果为true才会继续往下执行</span></div><div class="line">            condition.wait(sbguard2, [<span class="keyword">this</span>] &#123;</div><div class="line">                <span class="keyword">if</span> (!msgRecvQueue.empty())</div><div class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">                <span class="keyword">return</span> <span class="literal">false</span>;&#125;);</div><div class="line">            command = msgRecvQueue.front();</div><div class="line">            msgRecvQueue.pop_front();</div><div class="line">            <span class="comment">//因为unique_lock的灵活性，我们可以随时unlock，以免锁住太长时间</span></div><div class="line">            sbguard2.unlock(); </div><div class="line">            <span class="built_in">cout</span> &lt;&lt; <span class="string">"outMsgRecvQueue()执行，取出第一个元素"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">        &#125;</div><div class="line">	&#125;</div><div class="line"> </div><div class="line"><span class="keyword">private</span>:</div><div class="line">	<span class="built_in">std</span>::<span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt; msgRecvQueue;</div><div class="line">	<span class="built_in">std</span>::mutex mymutex1;</div><div class="line">	<span class="built_in">std</span>::condition_variable condition;</div><div class="line">&#125;;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	A myobja;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">myoutobj</span><span class="params">(&amp;A::outMsgRecvQueue, &amp;myobja)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">myinobj</span><span class="params">(&amp;A::inMsgRecvQueue, &amp;myobja)</span></span>;</div><div class="line">	myinobj.join();</div><div class="line">	myoutobj.join();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>二、深入思考</strong></p>
+<p>上面的代码可能导致出现一种情况：<br>因为outMsgRecvQueue()与inMsgRecvQueue()并不是一对一执行的，所以当程序循环执行很多次以后，可能在msgRecvQueue 中已经有了很多消息，但是，outMsgRecvQueue还是被唤醒一次只处理一条数据。这时可以考虑把outMsgRecvQueue多执行几次，或者对inMsgRecvQueue进行限流。</p>
+<p><strong>三、notify_all()</strong></p>
+<p>notify_one()：通知一个线程的wait()</p>
+<p>notify_all()：通知所有线程的wait()</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/condition-variable、wait、notify-one、notify-all/" data-id="ckb50n3j9000a38vwqk9vuyn6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="c++11并发与多线程笔记（7）-单例设计模式共享数据分析、解决，call-once" class="article article-type-c++11并发与多线程笔记（7）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/单例设计模式共享数据分析、解决，call-once/" class="article-date">
+  <time datetime="2020-06-07T11:51:01.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/单例设计模式共享数据分析、解决，call-once/">单例设计模式共享数据分析、解决，call_once</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第七节-单例设计模式共享数据分析、解决，call-once"><a href="#第七节-单例设计模式共享数据分析、解决，call-once" class="headerlink" title="第七节 单例设计模式共享数据分析、解决，call_once"></a>第七节 单例设计模式共享数据分析、解决，call_once</h2><p><img src="https://img-blog.csdnimg.cn/2020051310305989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>1.设计模式</strong></p>
+<ul>
+<li>程序灵活，维护起来可能方便，用设计模式理念写出来的代码很晦涩，但是别人接管、阅读代码都会很痛苦</li>
+<li>老外应付特别大的项目时，把项目的开发经验、模块划分经验，总结整理成设计模式</li>
+<li>中国零几年设计模式刚开始火时，总喜欢拿一个设计模式往上套，导致一个小小的项目总要加几个设计模式，本末倒置</li>
+<li>设计模式有其独特的优点，要活学活用，不要深陷其中，生搬硬套</li>
+</ul>
+<p><strong>2.单例设计模式：</strong><br>整个项目中，有某个或者某些特殊的类，只能创建一个属于该类的对象。<br>单例类：只能生成一个对象。</p>
+<p><strong>3.单例设计模式共享数据分析、解决</strong><br>面临问题：需要在自己创建的线程中来创建单例类的对象，这种线程可能不止一个。我们可能面临GetInstance()这种成员函数需要互斥。<br>可以在加锁前判断m_instance是否为空，否则每次调用Singelton::getInstance()都要加锁，十分影响效率。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;	</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span>	<span class="built_in">std</span>;</div><div class="line"></div><div class="line">mutex myMutex;</div><div class="line"><span class="comment">//懒汉模式</span></div><div class="line"><span class="keyword">class</span> Singelton</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="keyword">static</span> Singelton * <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">         <span class="comment">//双重锁定 提高效率</span></div><div class="line">		<span class="keyword">if</span> (instance == <span class="literal">NULL</span>) &#123;</div><div class="line">			lock_guard&lt;mutex&gt; myLockGua(myMutex);</div><div class="line">			<span class="keyword">if</span> (instance == <span class="literal">NULL</span>) &#123;</div><div class="line">				instance = <span class="keyword">new</span> Singelton;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> instance;</div><div class="line">	&#125;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	Singelton() &#123;&#125;</div><div class="line">	<span class="keyword">static</span> Singelton *instance;</div><div class="line">&#125;;</div><div class="line">Singelton * Singelton::instance = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line"><span class="comment">//饿汉模式</span></div><div class="line"><span class="keyword">class</span> Singelton2 &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="keyword">static</span> Singelton2* <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> instance;</div><div class="line">	&#125;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	Singelton2() &#123;&#125;</div><div class="line">	<span class="keyword">static</span> Singelton2 * instance;</div><div class="line">&#125;;</div><div class="line">Singelton2 * Singelton2::instance = <span class="keyword">new</span> Singelton2;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">	Singelton * singer = Singelton::getInstance();</div><div class="line">	Singelton * singer2 = Singelton::getInstance();</div><div class="line">	<span class="keyword">if</span> (singer == singer2)</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"二者是同一个实例"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">else</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"二者不是同一个实例"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"----------		以下 是 饿汉式	------------"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	Singelton2 * singer3 = Singelton2::getInstance();</div><div class="line">	Singelton2 * singer4 = Singelton2::getInstance();</div><div class="line">	<span class="keyword">if</span> (singer3 == singer4)</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"二者是同一个实例"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">else</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"二者不是同一个实例"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果觉得在单例模式new了一个对象，而没有自己delete掉，这样不合理。可以增加一个类中类CGarhuishou，new一个单例类时创建一个静态的CGarhuishou对象，这样在程序结束时会调用CGarhuishou的析构函数，释放掉new出来的单例对象。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Singelton</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="keyword">static</span> Singelton * <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">         <span class="keyword">if</span> (instance == <span class="literal">NULL</span>) &#123;</div><div class="line">		<span class="keyword">static</span> CGarhuishou huishou;</div><div class="line">		instance = <span class="keyword">new</span> Singelton;</div><div class="line">         &#125;</div><div class="line">         <span class="keyword">return</span> instance;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">class</span> CGarhuishou &#123;</div><div class="line">	<span class="keyword">public</span>:</div><div class="line">		~CGarhuishou()</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">if</span> (Singelton::instance)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">delete</span> Singelton::instance;</div><div class="line">				Singelton::instance = <span class="literal">NULL</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	Singelton() &#123;&#125;</div><div class="line">	<span class="keyword">static</span> Singelton *instance;</div><div class="line">&#125;;</div><div class="line">Singelton * Singelton::instance = <span class="literal">NULL</span>;</div></pre></td></tr></table></figure>
+<p><strong>4.std::call_once()：</strong><br>函数模板，该函数的第一个参数为标记，第二个参数是一个函数名（如a()）。<br>功能：能够保证函数a()只被调用一次。具备互斥量的能力，而且比互斥量消耗的资源更少，更高效。<br>call_once()需要与一个标记结合使用，这个标记为std::once_flag；其实once_flag是一个结构，call_once()就是通过标记来决定函数是否执行，调用成功后，就把标记设置为一种已调用状态。</p>
+<p>多个线程同时执行时，一个线程会等待另一个线程先执行。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">once_flag g_flag;</div><div class="line"><span class="keyword">class</span> Singelton</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CreateInstance</span><span class="params">()</span><span class="comment">//call_once保证其只被调用一次</span></span></div><div class="line">    &#123;</div><div class="line">        instance = <span class="keyword">new</span> Singelton;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//两个线程同时执行到这里，其中一个线程要等另外一个线程执行完毕</span></div><div class="line">	<span class="function"><span class="keyword">static</span> Singelton * <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">         call_once(g_flag, CreateInstance);</div><div class="line">         <span class="keyword">return</span> instance;</div><div class="line">	&#125;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	Singelton() &#123;&#125;</div><div class="line">	<span class="keyword">static</span> Singelton *instance;</div><div class="line">&#125;;</div><div class="line">Singelton * Singelton::instance = <span class="literal">NULL</span>;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/单例设计模式共享数据分析、解决，call-once/" data-id="ckb50n3jy000o38vwac6i7aib" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="c++11并发与多线程笔记（6）-unique-lock（类模板）详解" class="article article-type-c++11并发与多线程笔记（6）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/unique-lock（类模板）详解/" class="article-date">
+  <time datetime="2020-06-07T11:48:53.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/unique-lock（类模板）详解/">unique_lock（类模板）详解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第六节-unique-lock（类模板）详解"><a href="#第六节-unique-lock（类模板）详解" class="headerlink" title="第六节 unique_lock（类模板）详解"></a>第六节 unique_lock（类模板）详解</h2><p><img src="https://img-blog.csdnimg.cn/20200513101831493.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>1.unique_lock取代lock_guard</strong><br>unique_lock比lock_guard灵活很多（多出来很多用法），效率差一点。<br>unique_lock<mutex> myUniLock(myMutex);</mutex></p>
+<p><strong>2.unique_lock的第二个参数</strong><br><em>2.1 std::adopt_lock：</em></p>
+<ul>
+<li>表示这个互斥量已经被lock()，即不需要在构造函数中lock这个互斥量了。</li>
+<li>前提：必须提前lock</li>
+<li>lock_guard中也可以用这个参数</li>
+</ul>
+<p><em>2.2 std::try_to_lock：</em></p>
+<ul>
+<li>尝试用mutx的lock()去锁定这个mutex，但如果没有锁定成功，会立即返回，不会阻塞在那里；</li>
+<li>使用try_to_lock的原因是防止其他的线程锁定mutex太长时间，导致本线程一直阻塞在lock这个地方</li>
+<li>前提：不能提前lock();</li>
+<li>owns_locks()方法判断是否拿到锁，如拿到返回true</li>
+</ul>
+<p><em>2.3 std::defer_lock：</em></p>
+<ul>
+<li>如果没有第二个参数就对mutex进行加锁，加上defer_lock是始化了一个没有加锁的mutex</li>
+<li>不给它加锁的目的是以后可以调用unique_lock的一些方法 </li>
+<li>前提：不能提前lock</li>
+</ul>
+<p><strong>3.unique_lock的成员函数（前三个与std::defer_lock联合使用）</strong><br><em>3.1 lock()：加锁。</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">unique_lock&lt;mutex&gt; myUniLock(myMutex， defer_lock);</div><div class="line">myUniLock.lock();</div></pre></td></tr></table></figure>
+<p>不用自己unlock();</p>
+<p><em>3.2 unlock()：解锁。</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">unique_lock&lt;mutex&gt; myUniLock(myMutex， defer_lock);</div><div class="line">myUniLock.lock();</div><div class="line"><span class="comment">//处理一些共享代码</span></div><div class="line">myUniLock.unlock();</div><div class="line"><span class="comment">//处理一些非共享代码</span></div><div class="line">myUniLock.lock();</div><div class="line"><span class="comment">//处理一些共享代码</span></div></pre></td></tr></table></figure>
+<p>因为一些非共享代码要处理，可以暂时先unlock()，用其他线程把它们处理了，处理完后再lock()。</p>
+<p><em>3.3 try_lock()：尝试给互斥量加锁</em><br>如果拿不到锁，返回false，否则返回true。</p>
+<p><em>3.4 release()：</em></p>
+<ul>
+<li>unique_lock<mutex><br>myUniLock(myMutex);相当于把myMutex和myUniLock绑定在了一起，release()就是解除绑定，返回它所管理的mutex对象的指针，并释放所有权</mutex></li>
+<li>mutex* ptx =<br>myUniLock.release();所有权由ptx接管，如果原来mutex对象处理加锁状态，就需要ptx在以后进行解锁了。</li>
+</ul>
+<p>lock的代码段越少，执行越快，整个程序的运行效率越高。<br>a.锁住的代码少，叫做粒度细，执行效率高；<br>b.锁住的代码多，叫做粒度粗，执行效率低；</p>
+<p><strong>4.unique_lock所有权的传递</strong><br>unique_lock<mutex> myUniLock(myMutex);把myMutex和myUniLock绑定在了一起，也就是myUniLock拥有myMutex的所有权<br><em>1. 使用move转移</em></mutex></p>
+<ul>
+<li>myUniLock拥有myMutex的所有权，myUniLock可以把自己对myMutex的所有权转移，但是不能复制。</li>
+<li>unique_lock<mutex> myUniLock2(std::move(myUniLock));<br>现在myUniLock2拥有myMutex的所有权。</mutex></li>
+</ul>
+<p><em>2. 在函数中return一个临时变量，即可以实现转移</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">unique_lock&lt;mutex&gt; aFunction()</div><div class="line">&#123;</div><div class="line">    unique_lock&lt;mutex&gt; myUniLock(myMutex);</div><div class="line">    <span class="comment">//移动构造函数那里讲从函数返回一个局部的unique_lock对象是可以的</span></div><div class="line">    <span class="comment">//返回这种局部对象会导致系统生成临时的unique_lock对象，并调用unique_lock的移动构造函数</span></div><div class="line">    <span class="keyword">return</span> myUniLock;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/unique-lock（类模板）详解/" data-id="ckb50n3jj000g38vwwbc76ypf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="##-互斥量概念、用法、死锁演示及解决详解-1" class="article article-type-##" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/互斥量概念、用法、死锁演示及解决详解-1/" class="article-date">
+  <time datetime="2020-06-07T11:48:35.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/互斥量概念、用法、死锁演示及解决详解-1/">互斥量概念、用法、死锁演示及解决详解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/互斥量概念、用法、死锁演示及解决详解-1/" data-id="ckb50n3jm000h38vwariq0wj9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -272,6 +655,10 @@
 
   
 
+
+  <nav id="page-nav">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">__('next') &raquo;</a>
+  </nav>
 </section>
         
           <aside id="sidebar">
@@ -301,15 +688,23 @@
       <ul>
         
           <li>
-            <a href="/2020/06/07/firstBlog/">C++默认初始化和值初始化、 直接初始化和拷贝初始化</a>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
           </li>
         
           <li>
-            <a href="/2020/06/07/myFirstBlog/">分布式和集中式的版本控制的区别</a>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
           </li>
         
           <li>
-            <a href="/2020/06/07/hello-world/">Hello World</a>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
           </li>
         
       </ul>

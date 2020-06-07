@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>创建多个线程、数据共享问题分析、案例代码 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第四节 创建多个线程、数据共享问题分析、案例代码
+一、创建和等待多个线程
+123456789101112131415void TextThread()&amp;#123;     cout &amp;lt;&amp;lt; &quot;我是线程&quot; &amp;lt;&amp;lt; this_thread::get_id() &amp;lt;&amp;lt; endl;     /*  …  */     cout &amp;lt;&amp;lt; &quot;线程&quot; &amp;lt;&amp;lt; t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="创建多个线程、数据共享问题分析、案例代码">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/创建多个线程、数据共享问题分析、案例代码/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第四节 创建多个线程、数据共享问题分析、案例代码
+一、创建和等待多个线程
+123456789101112131415void TextThread()&amp;#123;     cout &amp;lt;&amp;lt; &quot;我是线程&quot; &amp;lt;&amp;lt; this_thread::get_id() &amp;lt;&amp;lt; endl;     /*  …  */     cout &amp;lt;&amp;lt; &quot;线程&quot; &amp;lt;&amp;lt; t">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513100626104.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2020-06-07T11:44:07.858Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="创建多个线程、数据共享问题分析、案例代码">
+<meta name="twitter:description" content="第四节 创建多个线程、数据共享问题分析、案例代码
+一、创建和等待多个线程
+123456789101112131415void TextThread()&amp;#123;     cout &amp;lt;&amp;lt; &quot;我是线程&quot; &amp;lt;&amp;lt; this_thread::get_id() &amp;lt;&amp;lt; endl;     /*  …  */     cout &amp;lt;&amp;lt; &quot;线程&quot; &amp;lt;&amp;lt; t">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200513100626104.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="c++11并发与多线程笔记（4）-创建多个线程、数据共享问题分析、案例代码" class="article article-type-c++11并发与多线程笔记（4）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/创建多个线程、数据共享问题分析、案例代码/" class="article-date">
+  <time datetime="2020-06-07T11:43:41.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      创建多个线程、数据共享问题分析、案例代码
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第四节-创建多个线程、数据共享问题分析、案例代码"><a href="#第四节-创建多个线程、数据共享问题分析、案例代码" class="headerlink" title="第四节 创建多个线程、数据共享问题分析、案例代码"></a>第四节 创建多个线程、数据共享问题分析、案例代码</h2><p><img src="https://img-blog.csdnimg.cn/20200513100626104.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、创建和等待多个线程</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">TextThread</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">     <span class="built_in">cout</span> &lt;&lt; <span class="string">"我是线程"</span> &lt;&lt; this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">     <span class="comment">/*  …  */</span></div><div class="line">     <span class="built_in">cout</span> &lt;&lt; <span class="string">"线程"</span> &lt;&lt; this_thread::get_id() &lt;&lt; <span class="string">"执行结束"</span> &lt;&lt; <span class="built_in">endl</span>; </div><div class="line">&#125;</div><div class="line"> <span class="comment">//main函数里     vector threadagg;</span></div><div class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</div><div class="line">     &#123;</div><div class="line">         threadagg.push_back(thread(TextThread));</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</div><div class="line">     &#123;</div><div class="line">         threadagg[i].join();</div><div class="line">     &#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>把thread对象放入到容器中管理，看起来像个thread对象数组，对一次创建大量的线程并对大量线程进行管理有好处</li>
+<li>多个线程执行顺序是乱的，跟操作系统内部对线程的运行调度机制有关</li>
+</ul>
+<p><strong>二：数据共享问题分析</strong><br><em>2.1 只读的数据</em></p>
+<ul>
+<li>是安全稳定的</li>
+</ul>
+<p><em>2.2 有读有写</em></p>
+<ul>
+<li>若不加处理，就会出错</li>
+<li>最简单的防止崩溃方法：读的时候不能写，写的时候不能读。</li>
+<li>写的动作分10小步，由于任务切换，导致各种诡异的事情发生（最可能的还是崩溃）</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/创建多个线程、数据共享问题分析、案例代码/" data-id="ckb50n3jw000n38vwqz3jej13" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/互斥量概念、用法、死锁演示及解决详解-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          互斥量概念、用法、死锁演示及解决详解
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/线程传参详解，detach-大坑，成员函数做线程函数/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">线程传参详解，detach()大坑，成员函数做线程函数</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>unique_lock（类模板）详解 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第六节 unique_lock（类模板）详解
+1.unique_lock取代lock_guardunique_lock比lock_guard灵活很多（多出来很多用法），效率差一点。unique_lock myUniLock(myMutex);
+2.unique_lock的第二个参数2.1 std::adopt_lock：
+
+表示这个互斥量已经被lock()，即不需要在构造函数中lock这个互斥量了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="unique_lock（类模板）详解">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/unique-lock（类模板）详解/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第六节 unique_lock（类模板）详解
+1.unique_lock取代lock_guardunique_lock比lock_guard灵活很多（多出来很多用法），效率差一点。unique_lock myUniLock(myMutex);
+2.unique_lock的第二个参数2.1 std::adopt_lock：
+
+表示这个互斥量已经被lock()，即不需要在构造函数中lock这个互斥量了">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513101831493.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2020-06-07T11:49:45.907Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="unique_lock（类模板）详解">
+<meta name="twitter:description" content="第六节 unique_lock（类模板）详解
+1.unique_lock取代lock_guardunique_lock比lock_guard灵活很多（多出来很多用法），效率差一点。unique_lock myUniLock(myMutex);
+2.unique_lock的第二个参数2.1 std::adopt_lock：
+
+表示这个互斥量已经被lock()，即不需要在构造函数中lock这个互斥量了">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200513101831493.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="c++11并发与多线程笔记（6）-unique-lock（类模板）详解" class="article article-type-c++11并发与多线程笔记（6）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/unique-lock（类模板）详解/" class="article-date">
+  <time datetime="2020-06-07T11:48:53.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      unique_lock（类模板）详解
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第六节-unique-lock（类模板）详解"><a href="#第六节-unique-lock（类模板）详解" class="headerlink" title="第六节 unique_lock（类模板）详解"></a>第六节 unique_lock（类模板）详解</h2><p><img src="https://img-blog.csdnimg.cn/20200513101831493.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>1.unique_lock取代lock_guard</strong><br>unique_lock比lock_guard灵活很多（多出来很多用法），效率差一点。<br>unique_lock<mutex> myUniLock(myMutex);</mutex></p>
+<p><strong>2.unique_lock的第二个参数</strong><br><em>2.1 std::adopt_lock：</em></p>
+<ul>
+<li>表示这个互斥量已经被lock()，即不需要在构造函数中lock这个互斥量了。</li>
+<li>前提：必须提前lock</li>
+<li>lock_guard中也可以用这个参数</li>
+</ul>
+<p><em>2.2 std::try_to_lock：</em></p>
+<ul>
+<li>尝试用mutx的lock()去锁定这个mutex，但如果没有锁定成功，会立即返回，不会阻塞在那里；</li>
+<li>使用try_to_lock的原因是防止其他的线程锁定mutex太长时间，导致本线程一直阻塞在lock这个地方</li>
+<li>前提：不能提前lock();</li>
+<li>owns_locks()方法判断是否拿到锁，如拿到返回true</li>
+</ul>
+<p><em>2.3 std::defer_lock：</em></p>
+<ul>
+<li>如果没有第二个参数就对mutex进行加锁，加上defer_lock是始化了一个没有加锁的mutex</li>
+<li>不给它加锁的目的是以后可以调用unique_lock的一些方法 </li>
+<li>前提：不能提前lock</li>
+</ul>
+<p><strong>3.unique_lock的成员函数（前三个与std::defer_lock联合使用）</strong><br><em>3.1 lock()：加锁。</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">unique_lock&lt;mutex&gt; myUniLock(myMutex， defer_lock);</div><div class="line">myUniLock.lock();</div></pre></td></tr></table></figure>
+<p>不用自己unlock();</p>
+<p><em>3.2 unlock()：解锁。</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">unique_lock&lt;mutex&gt; myUniLock(myMutex， defer_lock);</div><div class="line">myUniLock.lock();</div><div class="line"><span class="comment">//处理一些共享代码</span></div><div class="line">myUniLock.unlock();</div><div class="line"><span class="comment">//处理一些非共享代码</span></div><div class="line">myUniLock.lock();</div><div class="line"><span class="comment">//处理一些共享代码</span></div></pre></td></tr></table></figure>
+<p>因为一些非共享代码要处理，可以暂时先unlock()，用其他线程把它们处理了，处理完后再lock()。</p>
+<p><em>3.3 try_lock()：尝试给互斥量加锁</em><br>如果拿不到锁，返回false，否则返回true。</p>
+<p><em>3.4 release()：</em></p>
+<ul>
+<li>unique_lock<mutex><br>myUniLock(myMutex);相当于把myMutex和myUniLock绑定在了一起，release()就是解除绑定，返回它所管理的mutex对象的指针，并释放所有权</mutex></li>
+<li>mutex* ptx =<br>myUniLock.release();所有权由ptx接管，如果原来mutex对象处理加锁状态，就需要ptx在以后进行解锁了。</li>
+</ul>
+<p>lock的代码段越少，执行越快，整个程序的运行效率越高。<br>a.锁住的代码少，叫做粒度细，执行效率高；<br>b.锁住的代码多，叫做粒度粗，执行效率低；</p>
+<p><strong>4.unique_lock所有权的传递</strong><br>unique_lock<mutex> myUniLock(myMutex);把myMutex和myUniLock绑定在了一起，也就是myUniLock拥有myMutex的所有权<br><em>1. 使用move转移</em></mutex></p>
+<ul>
+<li>myUniLock拥有myMutex的所有权，myUniLock可以把自己对myMutex的所有权转移，但是不能复制。</li>
+<li>unique_lock<mutex> myUniLock2(std::move(myUniLock));<br>现在myUniLock2拥有myMutex的所有权。</mutex></li>
+</ul>
+<p><em>2. 在函数中return一个临时变量，即可以实现转移</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">unique_lock&lt;mutex&gt; aFunction()</div><div class="line">&#123;</div><div class="line">    unique_lock&lt;mutex&gt; myUniLock(myMutex);</div><div class="line">    <span class="comment">//移动构造函数那里讲从函数返回一个局部的unique_lock对象是可以的</span></div><div class="line">    <span class="comment">//返回这种局部对象会导致系统生成临时的unique_lock对象，并调用unique_lock的移动构造函数</span></div><div class="line">    <span class="keyword">return</span> myUniLock;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/unique-lock（类模板）详解/" data-id="ckb50n3jj000g38vwwbc76ypf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/单例设计模式共享数据分析、解决，call-once/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          单例设计模式共享数据分析、解决，call_once
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/互斥量概念、用法、死锁演示及解决详解-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">互斥量概念、用法、死锁演示及解决详解</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

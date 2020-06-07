@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>gcc和Makefile | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="makefile的作用就是帮助我们便捷的编译。
+掌握makefile首先要略懂gcc编译的一些简单指令
+gcc的编译选项可以记做          ESc（很像我们的离开键）
+1.预处理，生成预编译文件（i.文件）：
+    gcc –E hello.c –o hello.i
+2.编译，生成汇编代码（.s文件）：
+    gcc –S hello.i –o hello.s
+3.汇编，生成目标文件（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gcc和Makefile">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/gcc和Makefile/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="makefile的作用就是帮助我们便捷的编译。
+掌握makefile首先要略懂gcc编译的一些简单指令
+gcc的编译选项可以记做          ESc（很像我们的离开键）
+1.预处理，生成预编译文件（i.文件）：
+    gcc –E hello.c –o hello.i
+2.编译，生成汇编代码（.s文件）：
+    gcc –S hello.i –o hello.s
+3.汇编，生成目标文件（">
+<meta property="og:updated_time" content="2020-06-07T11:33:51.942Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="gcc和Makefile">
+<meta name="twitter:description" content="makefile的作用就是帮助我们便捷的编译。
+掌握makefile首先要略懂gcc编译的一些简单指令
+gcc的编译选项可以记做          ESc（很像我们的离开键）
+1.预处理，生成预编译文件（i.文件）：
+    gcc –E hello.c –o hello.i
+2.编译，生成汇编代码（.s文件）：
+    gcc –S hello.i –o hello.s
+3.汇编，生成目标文件（">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-gcc和Makefile" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/gcc和Makefile/" class="article-date">
+  <time datetime="2020-06-07T11:33:39.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      gcc和Makefile
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>makefile的作用就是帮助我们便捷的编译。</p>
+<p>掌握makefile首先要略懂gcc编译的一些简单指令</p>
+<p>gcc的编译选项可以记做          ESc（很像我们的离开键）</p>
+<pre><code>1.预处理，生成预编译文件（i.文件）：
+    gcc –E hello.c –o hello.i
+2.编译，生成汇编代码（.s文件）：
+    gcc –S hello.i –o hello.s
+3.汇编，生成目标文件（.o文件）：
+    gcc –c hello.s –o hello.o
+4.链接，生成可执行文件：
+    gcc hello.o –o hello
+</code></pre><p>如果不想搞这些东西当然也可以一步搞定，什么参数都不加，<br>gcc -o hello hello.c 或 gcc hello.c -o hello</p>
+<p>其实makefile就是让我们把这些东西写到一个文件里，并且你要有自己的逻辑顺序和关系，makefile根据这些逻辑关系决定执行哪些指令。</p>
+<p>还是以上面那个例子说明</p>
+<p>假设我们还是hello.c文件生成的目标文件是hello，如果使用makefile要这样做：<br>1.vim Makefile  或 gedit Makefile </p>
+<p>2.Makefile中这么写<br>hello:hello.c</p>
+<p><tab>gcc hello.c -o hello</tab></p>
+<p>3.make</p>
+<p>注意gcc前面是一个tab键,上面两行的意思是，（hello依赖hello.c文件，执行下一行命令）</p>
+<p>命令不止可以写一行，如我们在后面再加一行，touch hello（touch命令用于修改文件或者目录的时间属性，包括存取时间和更改时间。若文件不存在，系统会建立一个新的文件），虽然看起来是和编译毫不相干的命令，但是还是会执行</p>
+<pre><code> hello:hello.c                              #标签：依赖
+ &lt;tab&gt;gcc hello.c -o hello                     （tab） 终端要执行的命令（可以有多行）
+&lt;tab&gt; touch hello
+</code></pre><p>我们可以看到目录下面多了一个hello文件。</p>
+<p>现在我们懂了，makefile第一行  标签：依赖  的意思就是，生成标签 ,查看标签的依赖，如果依赖不是最新，编译该依赖的命令，如果依赖已经是最新，则执行这一个标签下的命令。</p>
+<p>如果我们make后面不接参数，则默认第一个标签。</p>
+<p>当然，makefile还有许多高级用法，如变量，函数之类，但是不是这里要细讲的内容，总之明白makefile的本质，并且精通gcc的命令，就可以建立一些小的工程。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/gcc和Makefile/" data-id="ckb50n3j8000938vwi4f7t8ox" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/socket编程学习笔记（1）/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          socket编程学习笔记（1）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/C++顶层const和底层const/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">C++顶层const和底层const</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

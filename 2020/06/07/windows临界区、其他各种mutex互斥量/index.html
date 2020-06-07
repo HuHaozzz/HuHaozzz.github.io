@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>windows临界区、其他各种mutex互斥量 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第十二节 windows临界区、其他各种mutex互斥量
+一和二、windows临界区Windows临界区，同一个线程是可以重复进入的，但是进入的次数与离开的次数必须相等。C++互斥量则不允许同一个线程重复加锁。
+windows临界区是在windows编程中的内容，了解一下即可，效果几乎可以等同于c++11的mutex包含#include windows中的临界区同mutex一样，可以保护一个代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="windows临界区、其他各种mutex互斥量">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/windows临界区、其他各种mutex互斥量/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第十二节 windows临界区、其他各种mutex互斥量
+一和二、windows临界区Windows临界区，同一个线程是可以重复进入的，但是进入的次数与离开的次数必须相等。C++互斥量则不允许同一个线程重复加锁。
+windows临界区是在windows编程中的内容，了解一下即可，效果几乎可以等同于c++11的mutex包含#include windows中的临界区同mutex一样，可以保护一个代码">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513110118344.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2020-06-07T11:57:18.525Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="windows临界区、其他各种mutex互斥量">
+<meta name="twitter:description" content="第十二节 windows临界区、其他各种mutex互斥量
+一和二、windows临界区Windows临界区，同一个线程是可以重复进入的，但是进入的次数与离开的次数必须相等。C++互斥量则不允许同一个线程重复加锁。
+windows临界区是在windows编程中的内容，了解一下即可，效果几乎可以等同于c++11的mutex包含#include windows中的临界区同mutex一样，可以保护一个代码">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200513110118344.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="c++11并发与多线程笔记（12）-windows临界区、其他各种mutex互斥量" class="article article-type-c++11并发与多线程笔记（12）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/" class="article-date">
+  <time datetime="2020-06-07T11:56:57.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      windows临界区、其他各种mutex互斥量
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第十二节-windows临界区、其他各种mutex互斥量"><a href="#第十二节-windows临界区、其他各种mutex互斥量" class="headerlink" title="第十二节 windows临界区、其他各种mutex互斥量"></a>第十二节 windows临界区、其他各种mutex互斥量</h2><p><img src="https://img-blog.csdnimg.cn/20200513110118344.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一和二、windows临界区</strong><br>Windows临界区，同一个线程是可以重复进入的，但是进入的次数与离开的次数必须相等。<br>C++互斥量则不允许同一个线程重复加锁。</p>
+<p>windows临界区是在windows编程中的内容，了解一下即可，效果几乎可以等同于c++11的mutex<br>包含#include <windows.h><br>windows中的临界区同mutex一样，可以保护一个代码段。但windows的临界区可以进入多次，离开多次，但是进入的次数与离开的次数必须相等，不会引起程序报异常出错。</windows.h></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;list&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> __WINDOWSJQ_</span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> A</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="comment">// 把收到的消息传入队列</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">inMsgRecvQueue</span><span class="params">()</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i)</div><div class="line">		&#123;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"收到消息，并放入队列 "</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span>  __WINDOWSJQ_</span></div><div class="line">			EnterCriticalSection(&amp;my_winsec);	<span class="comment">//	进入临界区</span></div><div class="line">			<span class="comment">//EnterCriticalSection(&amp;my_winsec);	//	可以再次进入临界区,程序不会出错</span></div><div class="line">			msgRecvQueue.push_back(i);</div><div class="line">			LeaveCriticalSection(&amp;my_winsec);	<span class="comment">//	离开临界区</span></div><div class="line">			<span class="comment">//LeaveCriticalSection(&amp;my_winsec);	//	如果进入两次，必须离开两次不会报错</span></div><div class="line"><span class="meta">#<span class="meta-keyword">elif</span></span></div><div class="line">			my_mutex.lock();</div><div class="line">			msgRecvQueue.push_back(i);</div><div class="line">			my_mutex.unlock();</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">//  __WINDOWSJQ_</span></span></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"消息入队结束"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 从队列中取出消息</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">outMsgRecvQueue</span><span class="params">()</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i)</div><div class="line">		&#123;</div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span>  __WINDOWSJQ_</span></div><div class="line">			EnterCriticalSection(&amp;my_winsec);	<span class="comment">//	进入临界区</span></div><div class="line">			<span class="keyword">if</span> (!msgRecvQueue.empty())</div><div class="line">			&#123;</div><div class="line">				<span class="comment">// 队列不为空</span></div><div class="line">				<span class="keyword">int</span> num = msgRecvQueue.front();</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"从消息队列中取出 "</span> &lt;&lt; num &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				msgRecvQueue.pop_front();</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span></div><div class="line">			&#123;</div><div class="line">				<span class="comment">// 消息队列为空</span></div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"消息队列为空 "</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			&#125;</div><div class="line">			LeaveCriticalSection(&amp;my_winsec);	<span class="comment">//	离开临界区</span></div><div class="line"><span class="meta">#<span class="meta-keyword">elif</span></span></div><div class="line">			my_mutex.lock();</div><div class="line">			<span class="keyword">if</span> (!msgRecvQueue.empty())</div><div class="line">			&#123;</div><div class="line">				<span class="comment">// 队列不为空</span></div><div class="line">				<span class="keyword">int</span> num = msgRecvQueue.front();</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"从消息队列中取出 "</span> &lt;&lt; num &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				msgRecvQueue.pop_front();</div><div class="line">				my_mutex.unlock();</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span></div><div class="line">			&#123;</div><div class="line">				<span class="comment">// 消息队列为空</span></div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"消息队列为空 "</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">				my_mutex.unlock();</div><div class="line">			&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">//  __WINDOWSJQ_</span></span></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"消息出队结束"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	A()</div><div class="line">	&#123;</div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __WINDOWSJQ_</span></div><div class="line">		InitializeCriticalSection(&amp;my_winsec);	<span class="comment">//	用临界区之前要初始化</span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// __WINDOWSJQ_</span></span></div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">	<span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt; msgRecvQueue;</div><div class="line">	mutex my_mutex;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __WINDOWSJQ_</span></div><div class="line">	CRITICAL_SECTION my_winsec;	<span class="comment">//	windows中的临界区，非常类似C++11中的mutex</span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// __WINDOWSJQ_</span></span></div><div class="line"></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	A myobj;</div><div class="line">	<span class="function">thread	<span class="title">myInMsgObj</span><span class="params">(&amp;A::inMsgRecvQueue, &amp;myobj)</span></span>;</div><div class="line">	<span class="function">thread	<span class="title">myOutMsgObj</span><span class="params">(&amp;A::outMsgRecvQueue, &amp;myobj)</span></span>;</div><div class="line">	myInMsgObj.join();</div><div class="line">	myOutMsgObj.join();</div><div class="line"></div><div class="line">	getchar();</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>三、自动析构技术</strong><br>C++：lock_guard防止忘了释放信号量，自动释放<br>windows：可以写个类自动释放临界区：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> CWinLock &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    CWinLock(CRITICAL_SECTION *pCritmp)</div><div class="line">    &#123;</div><div class="line">        my_winsec =pCritmp;</div><div class="line">        EnterCriticalSection(my_winsec);</div><div class="line">    &#125;</div><div class="line">    ~CWinLock()</div><div class="line">    &#123;</div><div class="line">        LeaveCriticalSection(my_winsec)</div><div class="line">    &#125;;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">    CRITICAL_SECTION *my_winsec;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>上述这种类RAII类（Resource Acquisition is initialization），即资源获取及初始化。容器，智能指针属于这种类。</p>
+<p><strong>四、递归独占互斥量 std::recursive_mutex</strong><br>std::mutex 独占式互斥量</p>
+<p>std::recursive_mutex：允许在同一个线程中同一个互斥量多次被 lock() ，（但是递归加锁的次数是有限制的，太多可能会报异常），效率要比mutex低。</p>
+<p>如果你真的用了 recursive_mutex 要考虑代码是否有优化空间，如果能调用一次 lock()就不要调用多次。</p>
+<p><strong>五、带超时的互斥量 std::timed_mutex 和 std::recursive_timed_mutex</strong></p>
+<p><em>5.1 std::timed_mutex：是待超时的独占互斥量</em></p>
+<ul>
+<li>try_lock_for()：</li>
+</ul>
+<p>等待一段时间，如果拿到了锁，或者超时了未拿到锁，就继续执行（有选择执行）如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">timeout</span><span class="params">(<span class="number">100</span>)</span></span>;</div><div class="line"><span class="keyword">if</span> (my_mymutex.try_lock_for(timeout))&#123;</div><div class="line">    <span class="comment">//......拿到锁返回ture</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span>&#123;</div><div class="line">    <span class="built_in">std</span>::chrono::milliseconds sleeptime(<span class="number">100</span>);</div><div class="line">    <span class="built_in">std</span>::this_thread::sleep_for(sleeptime);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>try_lock_until()：</li>
+</ul>
+<p>参数是一个未来的时间点，在这个未来的时间没到的时间内，如果拿到了锁头，流程就走下来，如果时间到了没拿到锁，流程也可以走下来。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">timeout</span><span class="params">(<span class="number">100</span>)</span></span>;</div><div class="line"><span class="keyword">if</span> (my_mymutex.try_lock_until(chrono::steady_clock::now() + timeout))&#123;</div><div class="line">    <span class="comment">//......拿到锁返回ture</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span>&#123;</div><div class="line">    <span class="built_in">std</span>::chrono::milliseconds sleeptime(<span class="number">100</span>);</div><div class="line">    <span class="built_in">std</span>::this_thread::sleep_for(sleeptime);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>两者的区别就是一个参数是时间段，一个参数是时间点</p>
+<p><em>5.2 std::recursive_timed_mutex：是待超时的递归独占互斥量</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/windows临界区、其他各种mutex互斥量/" data-id="ckb50n3jo000i38vwftnru75k" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          补充知识、线程池浅谈、数量谈、总结
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/std-atomic续谈、std-async深入谈/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">std::atomic续谈、std::async深入谈</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

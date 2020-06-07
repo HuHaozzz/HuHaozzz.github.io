@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>矩阵伪逆的opencv实现 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1、矩阵的逆定义：设A是数域上的一个n阶方阵，若在相同数域上存在另一个n阶矩阵B，使得： AB=BA=I。 则我们称B是A的逆矩阵，而A则被称为可逆矩阵。
+可逆条件：A是可逆矩阵的充分必要条件是，即可逆矩阵就是非奇异矩阵。（当 时，A称为奇异矩阵）
+性质：-矩阵A可逆的充要条件是A的行列式不等于0。-可逆矩阵一定是方阵。-如果矩阵A是可逆的，A的逆矩阵是唯一的。-可逆矩阵也被称为非奇异矩阵、满秩矩">
+<meta property="og:type" content="article">
+<meta property="og:title" content="矩阵伪逆的opencv实现">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/矩阵伪逆的opencv实现/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1、矩阵的逆定义：设A是数域上的一个n阶方阵，若在相同数域上存在另一个n阶矩阵B，使得： AB=BA=I。 则我们称B是A的逆矩阵，而A则被称为可逆矩阵。
+可逆条件：A是可逆矩阵的充分必要条件是，即可逆矩阵就是非奇异矩阵。（当 时，A称为奇异矩阵）
+性质：-矩阵A可逆的充要条件是A的行列式不等于0。-可逆矩阵一定是方阵。-如果矩阵A是可逆的，A的逆矩阵是唯一的。-可逆矩阵也被称为非奇异矩阵、满秩矩">
+<meta property="og:updated_time" content="2020-06-07T11:22:34.515Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="矩阵伪逆的opencv实现">
+<meta name="twitter:description" content="1、矩阵的逆定义：设A是数域上的一个n阶方阵，若在相同数域上存在另一个n阶矩阵B，使得： AB=BA=I。 则我们称B是A的逆矩阵，而A则被称为可逆矩阵。
+可逆条件：A是可逆矩阵的充分必要条件是，即可逆矩阵就是非奇异矩阵。（当 时，A称为奇异矩阵）
+性质：-矩阵A可逆的充要条件是A的行列式不等于0。-可逆矩阵一定是方阵。-如果矩阵A是可逆的，A的逆矩阵是唯一的。-可逆矩阵也被称为非奇异矩阵、满秩矩">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-矩阵伪逆的opencv实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/矩阵伪逆的opencv实现/" class="article-date">
+  <time datetime="2020-06-07T11:22:13.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      矩阵伪逆的opencv实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>1、矩阵的逆</strong><br>定义：<br>设A是数域上的一个n阶方阵，若在相同数域上存在另一个n阶矩阵B，使得： AB=BA=I。 则我们称B是A的逆矩阵，而A则被称为可逆矩阵。</p>
+<p>可逆条件：<br>A是可逆矩阵的充分必要条件是，即可逆矩阵就是非奇异矩阵。（当 时，A称为奇异矩阵）</p>
+<p>性质：<br>-矩阵A可逆的充要条件是A的行列式不等于0。<br>-可逆矩阵一定是方阵。<br>-如果矩阵A是可逆的，A的逆矩阵是唯一的。<br>-可逆矩阵也被称为非奇异矩阵、满秩矩阵。<br>-两个可逆矩阵的乘积依然可逆。<br>-可逆矩阵的转置矩阵也可逆。<br>-矩阵可逆当且仅当它是满秩矩阵。</p>
+<p><strong>2、矩阵的伪逆</strong><br>伪逆矩阵：<br>伪逆矩阵是逆矩阵的广义形式。由于奇异矩阵或非方阵的矩阵不存在逆矩阵，但在matlab里可以用函数pinv(A)求其伪逆矩阵。基本语法为X=pinv(A),X=pinv(A,tol),其中tol为误差,pinv为pseudo-inverse的缩写：max(size(A))<em>norm(A)</em>eps。函数返回一个与A的转置矩阵A’ 同型的矩阵X，并且满足：AXA=A,XAX=X.此时，称矩阵X为矩阵A的伪逆，也称为广义逆矩阵。pinv(A)具有inv(A)的部分特性，但不与inv(A)完全等同。如果A为非奇异方阵，pinv(A)=inv(A)，但却会耗费大量的计算时间，相比较而言，inv(A)花费更少的时间。</p>
+<p><strong>3、opencv函数invert（）介绍</strong></p>
+<p>double invert(InputArray src, OutputArraydst, int flags=DECOMP_LU);</p>
+<p>功能：用以求取一个矩阵的逆或者伪逆。</p>
+<p>src： 输入，浮点型（32位或者64位）的M×N的矩阵，当参数3的使用方法为DECOMP_CHOLESKY  DECOMP_LU  DECOMP_EIG时函数功能为求逆，此时需保证M=N（参见参数flag）。</p>
+<p>dst： 输出，与输入矩阵类型一致的N×M的矩阵。</p>
+<p>flag：求逆方法，提供4种可选择的方法：DECOMP_CHOLESKY（基于CHOLESKY分解的方法），  DECOMP_LU（基于LU分解的方法），  DECOMP_EIG（基于特征值分解的方法）， DECOMP_SVD（基于奇异值分解的方法）。其中，前三种方法要求输入的矩阵必须为方阵，此时计算结果为矩阵的逆；最后一种方法为对非方阵的伪逆计算，对矩阵的形状没有要求。函数接口的默认参数为DECOMP_LU方法（应该是效率较高的一种方法）。</p>
+<p><strong>4、实现代码</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;opencv2/opencv.hpp&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> cv;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">	<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">float</span>&gt;&gt; vec&#123; &#123; <span class="number">0.68f</span>, <span class="number">0.597f</span>, <span class="number">-0.211</span>f &#125;,</div><div class="line">						&#123; <span class="number">0.823f</span>, <span class="number">0.566f</span>, <span class="number">-0.605</span>f &#125; &#125;;</div><div class="line">	<span class="keyword">const</span> <span class="keyword">int</span> rows&#123; <span class="number">2</span> &#125;, cols&#123; <span class="number">3</span> &#125;;</div><div class="line"></div><div class="line">	<span class="built_in">printf</span>(<span class="string">"source matrix:\n"</span>);</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; vec.size(); i++)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; vec[i].size(); j++)</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; vec[i][j] &lt;&lt; <span class="string">'\t'</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"\nopencv implement pseudoinverse:\n"</span>);</div><div class="line">	<span class="function">Mat <span class="title">mat</span><span class="params">(rows, cols, CV_32FC1)</span></span>;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> y = <span class="number">0</span>; y &lt; rows; ++y) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> x = <span class="number">0</span>; x &lt; cols; ++x) &#123;</div><div class="line">			mat.at&lt;<span class="keyword">float</span>&gt;(y, x) = vec[y][x];</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	Mat pinv2;</div><div class="line">	invert(mat, pinv2, cv::DECOMP_SVD);</div><div class="line">	</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> y = <span class="number">0</span>; y &lt; pinv2.rows; ++y)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> x = <span class="number">0</span>; x &lt; pinv2.cols; ++x)</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; pinv2.at&lt;<span class="keyword">float</span>&gt;(y, x) &lt;&lt; <span class="string">'\t'</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	system(<span class="string">"pause"</span>);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/矩阵伪逆的opencv实现/" data-id="ckb50n3k6000t38vwg53084va" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/压缩感知SL0图像重建算法的opencv实现/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          压缩感知SL0图像重建算法的opencv实现
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/分水岭算法及其实现/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">分水岭算法及其实现</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

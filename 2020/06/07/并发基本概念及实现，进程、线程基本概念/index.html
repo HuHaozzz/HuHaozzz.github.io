@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>并发基本概念及实现，进程、线程基本概念 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一 并发基本概念及实现，进程、线程基本概念
+一、并发、进程、线程的基本概念和综述并发，线程，进程要求必须掌握
+1.1 并发
+
+两个或者更多的任务（独立的活动）同时发生（进行）：一个程序同时执行多个独立的任务；
+以往计算机，单核cpu（中央处理器）：某一个时刻只能执行一个任务，由操作系统调度，每秒钟进行多次所谓的“任务切换”。并发的假象（不是真正的并发），切换（上下文切换）时要保存变量的状态、执行进">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并发基本概念及实现，进程、线程基本概念">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/并发基本概念及实现，进程、线程基本概念/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一 并发基本概念及实现，进程、线程基本概念
+一、并发、进程、线程的基本概念和综述并发，线程，进程要求必须掌握
+1.1 并发
+
+两个或者更多的任务（独立的活动）同时发生（进行）：一个程序同时执行多个独立的任务；
+以往计算机，单核cpu（中央处理器）：某一个时刻只能执行一个任务，由操作系统调度，每秒钟进行多次所谓的“任务切换”。并发的假象（不是真正的并发），切换（上下文切换）时要保存变量的状态、执行进">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020051309500927.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513094504846.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513094548675.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513094600721.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2020-06-07T11:40:08.535Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="并发基本概念及实现，进程、线程基本概念">
+<meta name="twitter:description" content="一 并发基本概念及实现，进程、线程基本概念
+一、并发、进程、线程的基本概念和综述并发，线程，进程要求必须掌握
+1.1 并发
+
+两个或者更多的任务（独立的活动）同时发生（进行）：一个程序同时执行多个独立的任务；
+以往计算机，单核cpu（中央处理器）：某一个时刻只能执行一个任务，由操作系统调度，每秒钟进行多次所谓的“任务切换”。并发的假象（不是真正的并发），切换（上下文切换）时要保存变量的状态、执行进">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/2020051309500927.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="c++11并发与多线程笔记（1）-并发基本概念及实现，进程、线程基本概念" class="article article-type-c++11并发与多线程笔记（1）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/并发基本概念及实现，进程、线程基本概念/" class="article-date">
+  <time datetime="2020-06-07T11:37:42.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      并发基本概念及实现，进程、线程基本概念
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一-并发基本概念及实现，进程、线程基本概念"><a href="#一-并发基本概念及实现，进程、线程基本概念" class="headerlink" title="一 并发基本概念及实现，进程、线程基本概念"></a>一 并发基本概念及实现，进程、线程基本概念</h2><p><img src="https://img-blog.csdnimg.cn/2020051309500927.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、并发、进程、线程的基本概念和综述</strong><br>并发，线程，进程要求必须掌握</p>
+<p><em>1.1 并发</em></p>
+<ul>
+<li>两个或者更多的任务（独立的活动）同时发生（进行）：一个程序同时执行多个独立的任务；</li>
+<li>以往计算机，单核cpu（中央处理器）：某一个时刻只能执行一个任务，由操作系统调度，每秒钟进行多次所谓的“任务切换”。并发的假象（不是真正的并发），切换（上下文切换）时要保存变量的状态、执行进度等，存在时间开销；</li>
+<li>随着硬件发展，出现了多处理器计算机：用于服务器和高性能计算领域。台式机：在一块芯片上有多核（一个CPU内有多个运算核心，对于操作系统来说，每个核心都是作为单独的CPU对待的）：双核，4核，8核，10核（自己的笔记本是4核8线程的）。能够实现真正的并行执行多个任务（硬件并发）</li>
+<li>使用并发的原因：主要就是同时可以干多个事，提高性能</li>
+</ul>
+<p><em>1.2 可执行程序</em> </p>
+<ul>
+<li>磁盘上的一个文件，windows下，扩展名为.exe；linux下，ls -la，rwx（可读可写可执行）</li>
+</ul>
+<p><em>1.3 进程</em></p>
+<ul>
+<li>运行一个可执行程序，在windows下，可双击；在linux下，./文件名</li>
+<li>进行，一个可执行程序运行起来了，就叫创建了一个进程。进程就是运行起来的可执行程序。</li>
+</ul>
+<p><em>1.4 线程</em><br>①</p>
+<ul>
+<li>a)每个进程（执行起来的可执行程序），都有唯一的一个主线程</li>
+<li>b)当执行可执行程序时，产生一个进程后，这个主线程就随着这个进程默默启动起来了</li>
+<li>ctrl+F5运行这个程序的时候，实际上是进程的主线程来执行（调用）这个main函数中的代码</li>
+<li>线程：用来执行代码的。线程这个东西，可以理解为一条代码的执行通路<br><img src="https://img-blog.csdnimg.cn/20200513094504846.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
+</ul>
+<p>②</p>
+<ul>
+<li>除了主线程之外，可以通过写代码来创建其他线程，其他线程走的是别的道路，甚至区不同的地方</li>
+<li>每创建一个新线程，就可以在同一时刻，多干一个不同的事（多走一条不同的代码执行路径）</li>
+</ul>
+<p>③</p>
+<ul>
+<li>多线程（并发）</li>
+<li>线程并不是越多越好，每个线程，都需要一个独立的堆栈空间（大约1M），线程之间的切换要保存很多中间状态，切换也会耗费本该属于程序运行的时间</li>
+</ul>
+<p>必须使用多线程的案例<br><img src="https://img-blog.csdnimg.cn/20200513094548675.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200513094600721.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><em>1.5 学习心得</em></p>
+<ul>
+<li>开发多线程程序：一个是实力的体现，一个是商用的必须需求</li>
+<li>线程开发有一定难度</li>
+<li>C++线程会设计很多新概念</li>
+<li>网络方向：网络通讯、网络服务器，多线程是绝对绕不开的</li>
+</ul>
+<p><strong>二、并发的实现方法</strong></p>
+<p>实现并发的手段：<br>a）通过多个进程实现并发<br>b）在单独的进程中，写代码创建除了主线程之外的其他线程来实现并发</p>
+<p><em>2.1 多进程并发</em></p>
+<ul>
+<li>比如账号服务器一个进程，游戏服务器一个进程。</li>
+<li>服务器进程之间存在通信（同一个电脑上：管道，文件，消息队列，共享内存）；（不同电脑上：socket通信技术）</li>
+</ul>
+<p><em>2.2 多线程并发</em></p>
+<ul>
+<li>线程：感觉像是轻量级的进程。每个进程有自己独立的运行路径，但一个进程中的所有线程共享地址空间（共享内存），全局变量、全局内存、全局引用都可以在线程之间传递，所以多线程开销远远小于多进程</li>
+<li>多进程并发核多线程并发可以混合使用，但建议优先考虑多线程技术</li>
+<li>本课程中只讲多线程并发技术</li>
+</ul>
+<p><strong>三、C++11新标准线程库</strong><br><em>以往</em></p>
+<ul>
+<li>windows：CreateThread(), _beginthread(),_beginthreadexe()创建线程；linux：pthread_create()创建线程；不能跨平台</li>
+<li>临界区，互斥量</li>
+<li>POSIX thread(pthread):跨平台，但要做一番配置，也不方便</li>
+</ul>
+<p><em>C++11</em></p>
+<ul>
+<li>从C++11新标准，C++语言本身增加对多线程的支持，意味着可移植性（跨平台），这大大减少开发人员的工作量</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/并发基本概念及实现，进程、线程基本概念/" data-id="ckb50n3k3000r38vwfkxgyfnh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/互斥量概念、用法、死锁演示及解决详解/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          并发基本概念及实现，进程、线程基本概念
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/socket编程学习笔记（2）/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">socket编程学习笔记（2）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

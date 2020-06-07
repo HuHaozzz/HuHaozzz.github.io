@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>压缩感知SL0图像重建算法的opencv实现 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近研究生的项目中涉及到压缩感知的SL0图像重建算法，需要对其进行C++实现。
+按照压缩感知的理论框架，可以将它分为三个部分：图像的稀疏表示，即寻找一个正交基使原始图像尽可能的稀疏，图像的稀疏表示越充分，就越有利于图像的重建；测量矩阵的设计，为了重构稀疏信号，编码采样测量矩阵必须满足约束等距性RIP(Restricted isometry property)条件， 即将编码采样视为对原有信号的一种">
+<meta property="og:type" content="article">
+<meta property="og:title" content="压缩感知SL0图像重建算法的opencv实现">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/压缩感知SL0图像重建算法的opencv实现/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="最近研究生的项目中涉及到压缩感知的SL0图像重建算法，需要对其进行C++实现。
+按照压缩感知的理论框架，可以将它分为三个部分：图像的稀疏表示，即寻找一个正交基使原始图像尽可能的稀疏，图像的稀疏表示越充分，就越有利于图像的重建；测量矩阵的设计，为了重构稀疏信号，编码采样测量矩阵必须满足约束等距性RIP(Restricted isometry property)条件， 即将编码采样视为对原有信号的一种">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191206112412956.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191206152025928.png">
+<meta property="og:updated_time" content="2020-06-07T11:23:52.535Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="压缩感知SL0图像重建算法的opencv实现">
+<meta name="twitter:description" content="最近研究生的项目中涉及到压缩感知的SL0图像重建算法，需要对其进行C++实现。
+按照压缩感知的理论框架，可以将它分为三个部分：图像的稀疏表示，即寻找一个正交基使原始图像尽可能的稀疏，图像的稀疏表示越充分，就越有利于图像的重建；测量矩阵的设计，为了重构稀疏信号，编码采样测量矩阵必须满足约束等距性RIP(Restricted isometry property)条件， 即将编码采样视为对原有信号的一种">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20191206112412956.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-压缩感知SL0图像重建算法的opencv实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/压缩感知SL0图像重建算法的opencv实现/" class="article-date">
+  <time datetime="2020-06-07T11:23:39.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      压缩感知SL0图像重建算法的opencv实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近研究生的项目中涉及到压缩感知的SL0图像重建算法，需要对其进行C++实现。</p>
+<p>按照压缩感知的理论框架，可以将它分为三个部分：图像的稀疏表示，即寻找一个正交基使原始图像尽可能的稀疏，图像的稀疏表示越充分，就越有利于图像的重建；测量矩阵的设计，为了重构稀疏信号，编码采样测量矩阵必须满足约束等距性RIP(Restricted isometry property)条件， 即将编码采样视为对原有信号的一种映射变换；图像重建，即通过测量信号重构原始信号。</p>
+<p>重建算法相当于信号测量过程的逆过程，设一个长度为N的原始信号经过测量矩阵得到一个长度为M(M&lt;N)的测量值信号，高分辨率成像重建的过程是通过测量向量y重构原始信号x的过程，由于方程个数远少于求解未知量个数，必须解一个欠定方程，很难直接求解。但由于原始信号是稀疏的或者能够稀疏表示，所以通常会加一个稀疏表达作为正则项，而稀疏表达通常用求解最小L0范数的方式加以表示，如下式所示：</p>
+<p>$$<br>\hat{x}=\arg \min |x|_{0} \quad \text { s.t. } \quad \Phi x=y<br>$$</p>
+<p>但求解最小L0范数通常很困难，是一个NP难问题，比如长度为N的稀疏信号中有K个非零值，则稀疏信号有$\mathrm{C}_{\mathrm{N}}^{\mathrm{K}}$种排列可能，要找到最接近于原始信号的最优排列，计算复杂度非常高。因此为了高分辨率成像重建的高效进行，常常会规避零范数问题，比如会选择以最小L1范数法为代表的次最优解算法以及以正交匹配追踪算法为代表的的贪婪算法进行求解，此外还常用迭代阈值法和最小全变分法。也可以用一种渐近逼近L0范数的高分辨率成像重建算法，通过渐近化解非凸优化求解的困难，通过L0约束确保信号的稀疏度。</p>
+<p>信号重构算法是指由长度为M测量向量的y重构长度为N(M&lt;N)的稀疏信号s的过程。</p>
+<p>$$<br>\hat{\mathrm{s}}=\operatorname{argmin}|\mathrm{x}|_{0} \quad \text { s.t. } \mathrm{y}=\Theta \mathrm{s}<br>$$</p>
+<p>项目中涉及到的SL0算法是由最小L2范数向最小L0范数的逐渐逼近，上式中Θ是传感矩阵，$|\mathrm{x}|_{0}$表示的是L0范数，研究首先定义一个逼近函数模型：</p>
+<p>$$<br>\mathrm{f}<em>{\sigma}(s)=1-\exp \left(-s^{2} / 2 \sigma^{2}\right) \quad \mathrm{f}</em>{\sigma}\left(s<em>{i}\right)=1-\exp \left(-s</em>{i}^{2} / 2 \sigma^{2}\right)<br>$$</p>
+<p>从而有$\mathrm{F}<em>{\sigma}(\mathrm{s})=\sum</em>{\mathrm{i}=1}^{\mathrm{n}} \mathrm{f}<em>{\sigma}\left(\mathrm{s}</em>{\mathrm{i}}\right)$，其中，n为稀疏信号向量s的长度，si为稀疏信号向量s对应的第i个元素，σ为逼近L0范数的调制参数，$\mathrm{F}<em>{\sigma}(\mathrm{s})$近似表示s非零较大项的数目。逼近函数$\mathrm{f}</em>{\sigma}\left(\mathrm{s}<em>{\mathrm{i}}\right)$和$\mathrm{s}</em>{\mathrm{i}}$、σ的关系如下图所示：</p>
+<div align="center"><img src="https://img-blog.csdnimg.cn/20191206112412956.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70"></div>
+
+<p>当σ较大时，$\mathrm{F}<em>{\sigma}(\mathrm{s})$可以近似表示为L2范数。根据渐进思想，当σ取值逐渐减小时，$\mathrm{F}</em>{\sigma}(\mathrm{s})$逐渐逼近L0范数，向量s的L0范数准则的优化问题可近似表示为$|\mathrm{s}|<em>{0}=\mathrm{F}</em>{\sigma}(\mathrm{s})$。另外从上图可知，由于逼近的L0范数的函数曲线是光滑可导的，因此被称为逼近光滑L0范数算法（简称为SL0）。</p>
+<p>由此，稀疏表示$|\mathrm{x}|<em>{0}$极小问题，转化为连续函数$\mathrm{F}</em>{\sigma}(\mathrm{s})$的极小。从而重建式转化为一种全新的稀疏表示模型：</p>
+<p>$$<br>\hat{\mathbf{s}}=\arg \min \mathrm{F}_{\sigma}(\mathrm{s}) \text { s.t } \Theta \mathrm{s}=\mathrm{y}<br>$$</p>
+<p>此模型通常只针对于普通的稀疏表示，对于图像重构这一类的逆问题，稀疏表示通常用来作为先验正则项，所以为了求解图像重构问题的最优解，增加了一个重构逼近项的约束优化问题。在模型的基础上，增加了重构的残差项，进而形成了光滑L0范数稀疏表示加误差逼近的完整的压缩感知图像重构模型： </p>
+<p>$$<br>\mathrm{J}(\mathrm{s})=\arg \min \left{\mathrm{F}<em>{\sigma}(\mathrm{s})+\lambda|\Theta \mathrm{s}-\mathrm{y}|</em>{2}^{2}\right}<br>$$</p>
+<p>式中λ为权重平衡参数。上述模型中的稀疏表示先验项以稀疏信号s为处理内容，而误差逼近项是重构图像投影测量值与实际值的残差极小为整幅图像的全局优化。由于是逼近最小L0范数的算法求解方式，$\mathrm{F}<em>{\sigma}(\mathrm{s})$中的σ参数是逐步减小的，因此逼近最小L0范数稀疏表示的优化问题可采用梯度下降的迭代计算方式来解决，即对式中s进行求导，在梯度方向$\Delta \mathrm{J}(\mathrm{s})$进行迭代：<br>$$<br>\Delta J(s)=d=2 \lambda\left(\Theta^{T}(\Theta s-y)\right)+\left(1 / \sigma^{2}\right)^{*}\left[s</em>{1} \exp \left(-s<em>{i}^{2} \sigma^{2} / 2\right), \cdots, s</em>{m} \exp \left(-s_{m}^{2} \sigma^{2} / 2\right)\right]^{\mathrm{T}}<br>$$</p>
+<p>基于梯度下降的逼近最小L0范数算法的伪代码过程如下：<br>1) 变量名的物理含义：传感矩阵Θ，测量值y，原始信号的稀疏表示s；<br>2) 初始化：$\hat{\mathrm{s}}<em>{0}=\Theta^{\perp} \mathrm{y}, \Theta^{\perp}$为Θ的伪逆阵，$\Theta^{\perp}=\left(\Theta^{\mathrm{T}} \Theta\right)^{-1} \Theta^{\mathrm{T}}$，设增长序列$\sigma=\left[\sigma</em>{1}, \ldots, \sigma<em>{k}\right]$、λ和梯度下降步长µ；<br>3) 循环σ序列k：<br>a) $\sigma=\sigma</em>{\mathrm{k}}, \quad \widehat{\mathrm{s}}=\widehat{\mathrm{s}}<em>{\mathrm{k}-1}$；<br>b) 梯度下降法迭代L次：<br>a.梯度下降方向：<br>$$<br>d=2 \lambda\left(\Theta^{T}(\Theta s-y)\right)+\left(1 / \sigma^{2}\right)^{*}\left[s</em>{1} \exp \left(-s<em>{i}^{2} \sigma^{2} / 2\right), \cdots, s</em>{m} \exp \left(-S<em>{m}^{2} \sigma^{2} / 2\right)\right]^{\mathrm{T}}<br>$$b.梯度方向更新：$\widehat{\mathrm{s}}=\widehat{\mathrm{s}}-\mu \mathrm{d}$<br>c.约束正交投影：$\widehat{\mathrm{s}}=\widehat{\mathrm{s}}-\Theta^{\perp}(\Theta \widehat{\mathrm{s}}-\mathrm{y})$<br>c) $\hat{\mathrm{s}}</em>{\mathrm{k}}=\hat{\mathrm{s}}, \quad \mathrm{k}=\mathrm{k}+1$；<br>4) 结束循环：输出$\widehat{\mathrm{s}}_{\mathrm{k}}$为最终求得的稀疏信号s。 </p>
+<p>值得注意的是，在算法求解过程中，随着迭代的进行，误差$|\Theta s-y|<em>{2}^{2}$越来越小，使稀疏表示正则项$\mathrm{F}</em>{\sigma}(\mathrm{s})=\sum<em>{\mathrm{i}=1}^{\mathrm{n}} \mathrm{f}</em>{\sigma}\left(\mathrm{s}<em>{\mathrm{i}}\right)$越来越逼近于L0范数，同时可以让误差$|\Theta s-y|</em>{2}^{2}$所占权重逐渐减小，逼近L0范数的稀疏表示正则项$\mathrm{F}<em>{\sigma}(\mathrm{s})$所占权重逐渐增大。因此λ设置成递增序列，σ设置成递减序列，从而在迭代过程中可以根据误差$|\Theta s-y|</em>{2}^{2}$的大小能够自适应地去调整λ和σ的值。</p>
+<p>由逼近图可知，随着σ的逐渐减小，稀疏表示正则项$\mathrm{F}_{\sigma}(\mathrm{s})$越来越光滑地逼近近似的L0范数，在逐渐降低了重构稀疏信号的稀疏度的同时以更大效率逐渐逼近我们需要的全局最优解，从而降低了算法复杂度和提高了图像重建的精度，从而更加利于高分辨率图像的重建。</p>
+<p><strong>简单的实验验证</strong></p>
+<p>例如对于矩阵的乘法$\Theta^{*} \mathrm{s}=y$</p>
+<p>$$<br>\left[\begin{array}{ccccc}{0.245} &amp; {-0.053} &amp; {4.478} &amp; {-3.426} &amp; {3.487} &amp; {2.85} \ {-1.205} &amp; {3.42} &amp; {-2.39} &amp; {-2.752} &amp; {4.49} &amp; {11.676}\end{array}\right] *\left[\begin{array}{c}{0} \ {0} \ {-8.361} \ {0} \ {0} \ {-12.982}\end{array}\right]=\left[\begin{array}{c}{-74.4383} \ {-131.5950}\end{array}\right]<br>$$</p>
+<p>其中Θ为传感矩阵，s为原始信号在变换域中的稀疏表达，y为维度更低的测量信号。由2维的y来恢复6维的s是一个欠定问题，但如测量矩阵满足RIP条件，将s的稀疏性作为正则项，就有较大的概率重构出原始信号。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></div><div class="line">&#123;</div><div class="line">	Mat A = (Mat_&lt;<span class="keyword">double</span>&gt;(<span class="number">2</span>, <span class="number">6</span>) &lt;&lt; <span class="number">0.245f</span>, <span class="number">-0.053</span>f, <span class="number">4.478f</span>, <span class="number">-3.426</span>f, <span class="number">3.487f</span>, <span class="number">2.85f</span>, </div><div class="line">							       <span class="number">-1.205</span>f, <span class="number">3.42f</span>, <span class="number">-2.39</span>f, <span class="number">-2.752</span>f, <span class="number">4.49f</span>, <span class="number">11.676f</span>);</div><div class="line">	Mat y = (Mat_&lt;<span class="keyword">double</span>&gt;(<span class="number">2</span>, <span class="number">1</span>) &lt;&lt; <span class="number">-74.4393</span>f, <span class="number">-131.5950</span>f);</div><div class="line">	<span class="function">Mat <span class="title">s</span><span class="params">(<span class="number">6</span>, <span class="number">1</span>, CV_64FC1)</span></span>;</div><div class="line">	<span class="comment">/*sigma_min为sigma迭代终止的条件，sigma_min越小，重构结果就越精确*/</span></div><div class="line">	<span class="keyword">double</span> sigma_min = <span class="number">0.001</span>;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (SL0(A, y, sigma_min, s))</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"传感矩阵为："</span> &lt;&lt; <span class="built_in">endl</span> &lt;&lt; A &lt;&lt; <span class="built_in">endl</span> &lt;&lt; <span class="built_in">endl</span>;;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"生成向量为："</span> &lt;&lt; <span class="built_in">endl</span> &lt;&lt; y &lt;&lt; <span class="built_in">endl</span> &lt;&lt; <span class="built_in">endl</span>;;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"重构出更高维的原始向量的稀疏表示为："</span> &lt;&lt; <span class="built_in">endl</span> &lt;&lt; s &lt;&lt; <span class="built_in">endl</span> &lt;&lt; <span class="built_in">endl</span>;;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span></div><div class="line">		<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Error in calling SL0 function.\nsigma_min = %f"</span>, </div><div class="line">				sigma_min);</div><div class="line"></div><div class="line">	system(<span class="string">"pause"</span>);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>验证结果为</p>
+<center><img src="https://img-blog.csdnimg.cn/20191206152025928.png"></center>
+
+
+<p>SL0算法的实现</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">MyDelta</span><span class="params">(<span class="keyword">const</span> Mat s, <span class="keyword">const</span> <span class="keyword">double</span> sigma, Mat &amp;delta)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.rows; ++i)</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; s.cols; ++j)</div><div class="line">			delta.at&lt;<span class="keyword">double</span>&gt;(i, j)  = s.at&lt;<span class="keyword">double</span>&gt;(i, j) *</div><div class="line">			<span class="built_in">exp</span>(<span class="number">-1</span> * s.at&lt;<span class="keyword">double</span>&gt;(i, j) * s.at&lt;<span class="keyword">double</span>&gt;(i, j) / (<span class="number">2</span> * sigma * sigma));</div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">SL0</span><span class="params">(<span class="keyword">const</span> Mat A, <span class="keyword">const</span> Mat y, <span class="keyword">const</span> <span class="keyword">double</span> sigma_min, Mat &amp;s)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">double</span> iteration_factor = <span class="number">0.5</span>;</div><div class="line">	<span class="keyword">double</span> lamdba = <span class="number">0.1</span>;</div><div class="line">	<span class="keyword">double</span> sigma;</div><div class="line">	<span class="keyword">int</span> mu_0 = <span class="number">2</span>;</div><div class="line">	<span class="keyword">int</span> L = <span class="number">3</span>;</div><div class="line">	</div><div class="line">	<span class="comment">//A_pinv为矩阵A的伪逆</span></div><div class="line">	Mat A_pinv;</div><div class="line">	invert(A, A_pinv, cv::DECOMP_SVD);</div><div class="line">	</div><div class="line">	<span class="comment">//向量s和增长序列sigma的初始化</span></div><div class="line">	s = A_pinv * y;</div><div class="line">	<span class="keyword">double</span> minVal, maxVal;</div><div class="line">	minMaxLoc(s, &amp;minVal, &amp;maxVal);</div><div class="line">	sigma = <span class="built_in">abs</span>(minVal) &gt; <span class="built_in">abs</span>(maxVal) ? <span class="built_in">abs</span>(minVal) : <span class="built_in">abs</span>(maxVal);</div><div class="line">	sigma *= <span class="number">2</span>;</div><div class="line"></div><div class="line">	<span class="comment">//到达指定的停机准则就退出，siama_min越小，重建结果越精确</span></div><div class="line">	<span class="keyword">while</span> (sigma &gt; sigma_min)</div><div class="line">	&#123;</div><div class="line">		<span class="comment">//迭代下降法迭代L次</span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i != L; ++ i)</div><div class="line">		&#123;</div><div class="line">			<span class="comment">//delta为梯度下降方向</span></div><div class="line">			Mat delta = Mat::zeros(s.size(), s.type());</div><div class="line"></div><div class="line">			<span class="keyword">if</span> (MyDelta(s, sigma, delta))</div><div class="line">				delta += <span class="number">2</span> * lamdba * (A.t() * (A * s - y));</div><div class="line">			<span class="keyword">else</span></div><div class="line">				<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Error in calculating delta"</span>);</div><div class="line">			s = s - mu_0 * delta;		<span class="comment">//梯度方向更新</span></div><div class="line">			s = s - A_pinv * (A * s - y);		<span class="comment">//约束正交投影</span></div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">//迭代过程中，误差所占权重逐渐减小，自适应的调整lamdba和siama的值</span></div><div class="line">		sigma = sigma * iteration_factor;</div><div class="line">		lamdba = lamdba * (<span class="number">1</span> / iteration_factor);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/压缩感知SL0图像重建算法的opencv实现/" data-id="ckb50n3k1000q38vwsx5vcirc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/C++ string的substr操作需要注意的地方/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          C++string的substr操作需要注意的地方
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/矩阵伪逆的opencv实现/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">矩阵伪逆的opencv实现</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

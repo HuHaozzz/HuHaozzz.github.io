@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>线程启动、结束，创建线程多法、join，detach | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第二节 线程启动、结束，创建线程多法、join，detach
+一、范例演示线程运行的开始
+
+程序运行起来，生成一个进程，该进程所属的主线程开始自动运行；当主线程从main（）函数返回，则整个进程执行完毕
+主线程从main（）开始执行，那么我们自己创建的线程，也需要从一个函数开始运行（初始函数），一旦这个函数运行完毕，线程也结束运行
+整个进程是否执行完毕的标志是：主线程是否执行完，如果主线程执行完毕">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程启动、结束，创建线程多法、join，detach">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/线程启动、结束，创建线程多法、join，detach/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第二节 线程启动、结束，创建线程多法、join，detach
+一、范例演示线程运行的开始
+
+程序运行起来，生成一个进程，该进程所属的主线程开始自动运行；当主线程从main（）函数返回，则整个进程执行完毕
+主线程从main（）开始执行，那么我们自己创建的线程，也需要从一个函数开始运行（初始函数），一旦这个函数运行完毕，线程也结束运行
+整个进程是否执行完毕的标志是：主线程是否执行完，如果主线程执行完毕">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513095221587.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2020-06-07T11:41:29.152Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="线程启动、结束，创建线程多法、join，detach">
+<meta name="twitter:description" content="第二节 线程启动、结束，创建线程多法、join，detach
+一、范例演示线程运行的开始
+
+程序运行起来，生成一个进程，该进程所属的主线程开始自动运行；当主线程从main（）函数返回，则整个进程执行完毕
+主线程从main（）开始执行，那么我们自己创建的线程，也需要从一个函数开始运行（初始函数），一旦这个函数运行完毕，线程也结束运行
+整个进程是否执行完毕的标志是：主线程是否执行完，如果主线程执行完毕">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200513095221587.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="c++11并发与多线程笔记（2）-线程启动、结束，创建线程多法、join，detach" class="article article-type-c++11并发与多线程笔记（2）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/线程启动、结束，创建线程多法、join，detach/" class="article-date">
+  <time datetime="2020-06-07T11:41:04.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      线程启动、结束，创建线程多法、join，detach
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第二节-线程启动、结束，创建线程多法、join，detach"><a href="#第二节-线程启动、结束，创建线程多法、join，detach" class="headerlink" title="第二节 线程启动、结束，创建线程多法、join，detach"></a>第二节 线程启动、结束，创建线程多法、join，detach</h2><p><img src="https://img-blog.csdnimg.cn/20200513095221587.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、范例演示线程运行的开始</strong></p>
+<ul>
+<li>程序运行起来，生成一个进程，该进程所属的主线程开始自动运行；当主线程从main（）函数返回，则整个进程执行完毕</li>
+<li>主线程从main（）开始执行，那么我们自己创建的线程，也需要从一个函数开始运行（初始函数），一旦这个函数运行完毕，线程也结束运行</li>
+<li>整个进程是否执行完毕的标志是：主线程是否执行完，如果主线程执行完毕了，就代表整个进程执行完毕了，此时如果其他子线程还没有执行完，也会被强行终止【此条有例外，以后会解释】</li>
+</ul>
+<p>创建一个线程：</p>
+<ol>
+<li>包含头文件thread </li>
+<li>写初始函数 </li>
+<li>在main中创建thread</li>
+</ol>
+<p>必须要明白：有两个线程在跑，相当于整个程序中有两条线在同时走，即使一条被阻塞，另一条也能运行</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">myPrint</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程开始运行"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="comment">//-------------</span></div><div class="line">	<span class="comment">//-------------</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程运行完毕"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="comment">//(1)创建了线程，线程执行起点（入口）是myPrint；(2)执行线程</span></div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(myPrint)</span></span>;</div><div class="line"></div><div class="line">	<span class="comment">//(2)阻塞主线程并等待myPrint执行完，当myPrint执行完毕，join()就执行完毕，主线程继续往下执行</span></div><div class="line">	<span class="comment">//join意为汇合，子线程和主线程回合</span></div><div class="line">	myThread.join();</div><div class="line"></div><div class="line">	<span class="comment">//设置断点可看到主线程等待子线程的过程</span></div><div class="line">	<span class="comment">//F11逐语句，就是每次执行一行语句，如果碰到函数调用，它就会进入到函数里面</span></div><div class="line">	<span class="comment">//F10逐过程，碰到函数时，不进入函数，把函数调用当成一条语句执行</span></div><div class="line"></div><div class="line">	<span class="comment">//(3)传统多线程程序中，主线程要等待子线程执行完毕，然后自己才能向下执行</span></div><div class="line">	<span class="comment">//detach:分离，主线程不再与子线程汇合，不再等待子线程</span></div><div class="line">	<span class="comment">//detach后，子线程和主线程失去关联，驻留在后台，由C++运行时库接管</span></div><div class="line">	<span class="comment">//myThread.detach();</span></div><div class="line"></div><div class="line">	<span class="comment">//(4)joinable()判断是否可以成功使用join()或者detach()</span></div><div class="line">	<span class="comment">//如果返回true，证明可以调用join()或者detach()</span></div><div class="line">	<span class="comment">//如果返回false，证明调用过join()或者detach()，join()和detach()都不能再调用了</span></div><div class="line">	<span class="keyword">if</span> (myThread.joinable())</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"可以调用可以调用join()或者detach()"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span></div><div class="line">	&#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"不能调用可以调用join()或者detach()"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello World!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="重要补充："><a href="#重要补充：" class="headerlink" title="重要补充："></a>重要补充：</h2><p><strong>线程类参数是一个可调用对象。</strong><br>一组可执行的语句称为可调用对象，c++中的可调用对象可以是<strong>函数、函数指针、lambda表达式、bind创建的对象或者重载了函数调用运算符的类对象。</strong></p>
+<p><strong>二、其他创建线程的方法</strong><br>①创建一个类，并编写圆括号重载函数，初始化一个该类的对象，把该对象作为线程入口地址</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Ta</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">()</span> <span class="comment">//不能带参数</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程开始运行"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="comment">//-------------</span></div><div class="line">		<span class="comment">//-------------</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程运行完毕"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">//main函数里的：</span></div><div class="line">	Ta ta;</div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(ta)</span></span>;</div><div class="line">	myThread.join();</div></pre></td></tr></table></figure>
+<p>②lambda表达式创建线程</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//main函数中</span></div><div class="line"><span class="keyword">auto</span> lambdaThread = [] &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程开始执行了"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="comment">//-------------</span></div><div class="line">		<span class="comment">//-------------</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程开始执行了"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;;</div><div class="line"></div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(lambdaThread)</span></span>;</div><div class="line">	myThread.join();</div></pre></td></tr></table></figure>
+<p>③把某个类中的某个函数作为线程的入口地址</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Data_</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">GetMsg</span><span class="params">()</span></span>&#123;&#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">SaveMsh</span><span class="params">()</span></span>&#123;&#125;</div><div class="line">&#125;;</div><div class="line"><span class="comment">//main函数里</span></div><div class="line">    Data_ s;</div><div class="line">    <span class="comment">//第一个&amp;意思是取址，第二个&amp;意思是引用，相当于std::ref(s)</span></div><div class="line">    <span class="comment">//thread oneobj(&amp;Data_::SaveMsh,s)传值也是可以的</span></div><div class="line">    <span class="comment">//在其他的构造函数中&amp;obj是不会代表引用的，会被当成取地址</span></div><div class="line">    <span class="function">thread <span class="title">oneobj</span><span class="params">(&amp;Data_::SaveMsh,&amp;s)</span></span>;</div><div class="line">    <span class="function">thread <span class="title">twoobj</span><span class="params">(&amp;Data_::GetMsg,&amp;s)</span></span>;</div><div class="line">    oneobj.join();</div><div class="line">    twoobj.join();</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/线程启动、结束，创建线程多法、join，detach/" data-id="ckb50n3k5000s38vwmjeop1el" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/大数据/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          大数据
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/互斥量概念、用法、死锁演示及解决详解/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">并发基本概念及实现，进程、线程基本概念</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>future其他成员函数、shared_future、atomic | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第十节 future其他成员函数、shared_future、atomic
+一、std::future 的成员函数1、std::future_status status = result.wait_for(std::chrono::seconds(几秒));卡住当前流程，等待std::async()的异步任务运行一段时间，然后返回其状态std::future_status。如果std::async">
+<meta property="og:type" content="article">
+<meta property="og:title" content="future其他成员函数、shared_future、atomic">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/future其他成员函数、shared-future、atomic/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第十节 future其他成员函数、shared_future、atomic
+一、std::future 的成员函数1、std::future_status status = result.wait_for(std::chrono::seconds(几秒));卡住当前流程，等待std::async()的异步任务运行一段时间，然后返回其状态std::future_status。如果std::async">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513105001636.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513105124529.png#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513105255690.png#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513105322661.png#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513105403722.png#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513105424860.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2020-06-07T11:53:43.803Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="future其他成员函数、shared_future、atomic">
+<meta name="twitter:description" content="第十节 future其他成员函数、shared_future、atomic
+一、std::future 的成员函数1、std::future_status status = result.wait_for(std::chrono::seconds(几秒));卡住当前流程，等待std::async()的异步任务运行一段时间，然后返回其状态std::future_status。如果std::async">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200513105001636.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="c++11并发与多线程笔记（10）-future其他成员函数、shared-future、atomic" class="article article-type-c++11并发与多线程笔记（10）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/future其他成员函数、shared-future、atomic/" class="article-date">
+  <time datetime="2020-06-07T11:53:27.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      future其他成员函数、shared_future、atomic
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第十节-future其他成员函数、shared-future、atomic"><a href="#第十节-future其他成员函数、shared-future、atomic" class="headerlink" title="第十节 future其他成员函数、shared_future、atomic"></a>第十节 future其他成员函数、shared_future、atomic</h2><p><img src="https://img-blog.csdnimg.cn/20200513105001636.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、std::future 的成员函数</strong><br>1、<strong>std::future_status status</strong> = result.<strong>wait_for</strong>(std::chrono::seconds(几秒));<br>卡住当前流程，等待std::async()的异步任务运行一段时间，然后返回其状态std::future_status。如果std::async()的参数是std::launch::deferred（延迟执行），则不会卡住主流程。<br>std::future_status是枚举类型，表示异步任务的执行状态。类型的取值有<br><strong>std::future_status::timeout<br>std::future_status::ready<br>std::future_status::deferred</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;future&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">mythread</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() start"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">dura</span><span class="params">(<span class="number">5000</span>)</span></span>;</div><div class="line">	<span class="built_in">std</span>::this_thread::sleep_for(dura);</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() end"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">5</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"main"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::future&lt;<span class="keyword">int</span>&gt; result = <span class="built_in">std</span>::async(mythread);</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"continue........"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="comment">//cout &lt;&lt; result1.get() &lt;&lt; endl; //卡在这里等待mythread()执行完毕，拿到结果</span></div><div class="line">	<span class="comment">//等待1秒</span></div><div class="line">   <span class="built_in">std</span>::future_status status = result.wait_for(<span class="built_in">std</span>::chrono::seconds(<span class="number">1</span>));</div><div class="line">	<span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::timeout) &#123;</div><div class="line">		<span class="comment">//超时：表示线程还没有执行完</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"超时了，线程还没有执行完"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="comment">//类成员函数</span></div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105124529.png#pic_center" alt="在这里插入图片描述"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;future&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">mythread</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() start"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="comment">//std::chrono::milliseconds dura(5000);</span></div><div class="line">	<span class="comment">//std::this_thread::sleep_for(dura);</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"mythread() end"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">5</span>;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"main"</span> &lt;&lt; <span class="string">"threadid = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">std</span>::future&lt;<span class="keyword">int</span>&gt; result = <span class="built_in">std</span>::async(<span class="built_in">std</span>::launch::deferred, mythread);</div><div class="line">	<span class="comment">//std::future&lt;int&gt; result = std::async(mythread);</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"continue........"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="comment">//cout &lt;&lt; result1.get() &lt;&lt; endl; //卡在这里等待mythread()执行完毕，拿到结果</span></div><div class="line">	<span class="built_in">std</span>::future_status status = result.wait_for(<span class="built_in">std</span>::chrono::seconds(<span class="number">6</span>));</div><div class="line">	<span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::timeout) &#123;</div><div class="line">		<span class="comment">//超时：表示线程还没有执行完</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"超时了，线程还没有执行完"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::ready) &#123;</div><div class="line">		<span class="comment">//表示线程成功放回</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"线程执行成功，返回"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; result.get() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::deferred) &#123;</div><div class="line">		<span class="comment">//如果设置 std::future&lt;int&gt; result = std::async(std::launch::deferred, mythread);，则本条件成立</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"线程延迟执行"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; result.get() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line"> </div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"good luck"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>get()只能使用一次，比如如果</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> a = result.get();</div><div class="line"><span class="built_in">cout</span> &lt;&lt; result.get() &lt;&lt; <span class="built_in">endl</span>;</div></pre></td></tr></table></figure>
+<p>就会报告异常<br>因为get()函数的设计是一个移动语义，相当于将result中的值移动到了a中，再次get就报告了异常。</p>
+<p><strong>二、std::shared_future：也是个类模板</strong><br>std::future的 get() 成员函数是转移数据</p>
+<p>std::shared_future 的 get()成员函数是复制数据</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">#include &lt;thread&gt;</div><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;future&gt;</div><div class="line">using namespace std;</div><div class="line"> </div><div class="line">int mythread() &#123;</div><div class="line">	cout &lt;&lt; "mythread() start" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	std::chrono::milliseconds dura(5000);</div><div class="line">	std::this_thread::sleep_for(dura);</div><div class="line">	cout &lt;&lt; "mythread() end" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	return 5;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main() &#123;</div><div class="line">	cout &lt;&lt; "main" &lt;&lt; "threadid = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">	std::packaged_task&lt;int()&gt; mypt(mythread);</div><div class="line">	std::thread t1(std::ref(mypt));</div><div class="line">	std::future&lt;int&gt; result = mypt.get_future();</div><div class="line">	</div><div class="line">	bool ifcanget = result.valid(); //判断future 中的值是不是一个有效值</div><div class="line">	std::shared_future&lt;int&gt; result_s(result.share()); //执行完毕后result_s里有值，而result里空了</div><div class="line">	//std::shared_future&lt;int&gt; result_s(std::move(result));</div><div class="line">   //通过get_future返回值直接构造一个shared_future对象</div><div class="line">   //std::shared_future&lt;int&gt; result_s(mypt.get_future());</div><div class="line">   t1.join();</div><div class="line">	</div><div class="line">	auto myresult1 = result_s.get();</div><div class="line">	auto myresult2 = result_s.get();</div><div class="line"> </div><div class="line">	cout &lt;&lt; "good luck" &lt;&lt; endl;</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>三、std::atomic原子操作</strong></p>
+<p><em>3.1 原子操作概念引出范例：</em><br>互斥量：多线程编程中 用于保护共享数据：先锁住， 操作共享数据， 解锁。</p>
+<p>有两个线程，对一个变量进行操作，一个线程读这个变量的值，一个线程往这个变量中写值。</p>
+<p>即使是一个简单变量的读取和写入操作，如果不加锁，也有可能会导致读写值混乱（一条C语句会被拆成3、4条汇编语句来执行，所以仍然有可能混乱）</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> g_count = <span class="number">0</span>;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">mythread1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</div><div class="line">		g_count++;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t1</span><span class="params">(mythread1)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t2</span><span class="params">(mythread1)</span></span>;</div><div class="line">	t1.join();</div><div class="line">	t2.join();</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"正常情况下结果应该是200 0000次，实际是"</span> &lt;&lt; g_count &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105255690.png#pic_center" alt="在这里插入图片描述"></p>
+<p>使用mutex解决这个问题</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">int</span> g_count = <span class="number">0</span>;</div><div class="line"><span class="built_in">std</span>::mutex mymutex;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">mythread1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</div><div class="line">		<span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; u1(mymutex);</div><div class="line">		g_count++;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t1</span><span class="params">(mythread1)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t2</span><span class="params">(mythread1)</span></span>;</div><div class="line">	t1.join();</div><div class="line">	t2.join();</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"正常情况下结果应该是200 0000次，实际是"</span> &lt;&lt; g_count &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105322661.png#pic_center" alt="在这里插入图片描述"></p>
+<p><em>3.2 基本的std::atomic用法范例</em><br>大家可以把原子操作理解成一种：不需要用到互斥量加锁（无锁）技术的多线程并发编程方式。</p>
+<p>原子操作：在多线程中不会被打断的程序执行片段。</p>
+<p>从效率上来说，原子操作要比互斥量的方式效率要高。</p>
+<p>互斥量的加锁一般是针对一个代码段，而原子操作针对的一般都是一个变量。</p>
+<p>原子操作，一般都是指“不可分割的操作”；也就是说这种操作状态要么是完成的，要么是没完成的，不可能出现半完成状态。</p>
+<p>std::atomic来代表原子操作，是个类模板。其实std::atomic是用来封装某个类型的值的</p>
+<p>需要添加#include <atomic>头文件</atomic></p>
+<p>范例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;atomic&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="built_in">std</span>::atomic&lt;<span class="keyword">int</span>&gt; g_count = <span class="number">0</span>; <span class="comment">//封装了一个类型为int的 对象（值）</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">mythread1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</div><div class="line">		g_count++;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t1</span><span class="params">(mythread1)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t2</span><span class="params">(mythread1)</span></span>;</div><div class="line">	t1.join();</div><div class="line">	t2.join();</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"正常情况下结果应该是200 0000次，实际是"</span> &lt;&lt; g_count &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105403722.png#pic_center" alt="在这里插入图片描述"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;atomic&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="built_in">std</span>::atomic&lt;<span class="keyword">bool</span>&gt; g_ifEnd = <span class="literal">false</span>; <span class="comment">//封装了一个类型为bool的 对象（值）</span></div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">mythread</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">dura</span><span class="params">(<span class="number">1000</span>)</span></span>;</div><div class="line">	<span class="keyword">while</span> (g_ifEnd == <span class="literal">false</span>) &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"thread id = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="string">"运行中"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">std</span>::this_thread::sleep_for(dura);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"thread id = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="string">"运行结束"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t1</span><span class="params">(mythread)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t2</span><span class="params">(mythread)</span></span>;</div><div class="line">	<span class="built_in">std</span>::chrono::<span class="function">milliseconds <span class="title">dura</span><span class="params">(<span class="number">5000</span>)</span></span>;</div><div class="line">	<span class="built_in">std</span>::this_thread::sleep_for(dura);</div><div class="line">	g_ifEnd = <span class="literal">true</span>;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"程序执行完毕"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	t1.join();</div><div class="line">	t2.join();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105424860.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>总结：</strong><br>1、原子操作一般用于计数或者统计（如累计发送多少个数据包，累计接收到了多少个数据包），多个线程一起统计，这种情况如果不使用原子操作会导致统计发生混乱。</p>
+<p>2、写商业代码时，如果不确定结果的影响，最好自己先写一小段代码调试。或者不要使用。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/future其他成员函数、shared-future、atomic/" data-id="ckb50n3jb000b38vw3yuzlhc6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/std-atomic续谈、std-async深入谈/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          std::atomic续谈、std::async深入谈
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/async、future、packaged-task、promise/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">async、future、packaged_task、promise</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

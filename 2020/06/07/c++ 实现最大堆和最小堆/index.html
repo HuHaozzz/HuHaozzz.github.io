@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>c++实现最大堆和最小堆 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="堆是具有以下特性的完全二叉树，每个结点的值都大于或等于其左右孩子结点的值，叫做最大堆；每个结点的值都小于或等于其左右孩子结点的值，叫做最小堆。
+一、用vector和push_heap、pop_heap实现堆（1）建堆1vector&amp;lt;int&amp;gt; nums = &amp;#123;9, 6, 2, 4, 7, 0, 1, 8, 3, 5&amp;#125;;
+1、如果使用nums构建最大堆：
+123make">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c++实现最大堆和最小堆">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/c++ 实现最大堆和最小堆/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="堆是具有以下特性的完全二叉树，每个结点的值都大于或等于其左右孩子结点的值，叫做最大堆；每个结点的值都小于或等于其左右孩子结点的值，叫做最小堆。
+一、用vector和push_heap、pop_heap实现堆（1）建堆1vector&amp;lt;int&amp;gt; nums = &amp;#123;9, 6, 2, 4, 7, 0, 1, 8, 3, 5&amp;#125;;
+1、如果使用nums构建最大堆：
+123make">
+<meta property="og:updated_time" content="2020-06-07T11:27:10.660Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c++实现最大堆和最小堆">
+<meta name="twitter:description" content="堆是具有以下特性的完全二叉树，每个结点的值都大于或等于其左右孩子结点的值，叫做最大堆；每个结点的值都小于或等于其左右孩子结点的值，叫做最小堆。
+一、用vector和push_heap、pop_heap实现堆（1）建堆1vector&amp;lt;int&amp;gt; nums = &amp;#123;9, 6, 2, 4, 7, 0, 1, 8, 3, 5&amp;#125;;
+1、如果使用nums构建最大堆：
+123make">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-c++ 实现最大堆和最小堆" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/c++ 实现最大堆和最小堆/" class="article-date">
+  <time datetime="2020-06-07T11:26:32.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      c++实现最大堆和最小堆
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>堆是具有以下特性的<em>完全二叉树</em>，每个结点的值都大于或等于其左右孩子结点的值，叫做最大堆；每个结点的值都小于或等于其左右孩子结点的值，叫做最小堆。</p>
+<h1 id="一、用vector和push-heap、pop-heap实现堆"><a href="#一、用vector和push-heap、pop-heap实现堆" class="headerlink" title="一、用vector和push_heap、pop_heap实现堆"></a>一、用vector和push_heap、pop_heap实现堆</h1><h2 id="（1）建堆"><a href="#（1）建堆" class="headerlink" title="（1）建堆"></a>（1）建堆</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; nums = &#123;<span class="number">9</span>, <span class="number">6</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">8</span>, <span class="number">3</span>, <span class="number">5</span>&#125;;</div></pre></td></tr></table></figure>
+<p>1、如果使用nums构建最大堆：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">make_heap(nums.begin(), nums.end());</div><div class="line"><span class="comment">//或</span></div><div class="line">make_heap(nums.begin(), nums.end(), less&lt;<span class="keyword">int</span>&gt;());</div></pre></td></tr></table></figure>
+<p>输出nums的结果为</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//最大堆是按照层序遍历的顺序存入vector的</span></div><div class="line"><span class="number">9</span> <span class="number">8</span> <span class="number">2</span> <span class="number">6</span> <span class="number">7</span> <span class="number">0</span> <span class="number">1</span> <span class="number">4</span> <span class="number">3</span> <span class="number">5</span></div></pre></td></tr></table></figure>
+<p>2、如果使用nums构建最小堆：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make_heap(nums.begin(), nums.end(), greater&lt;<span class="keyword">int</span>&gt;());</div></pre></td></tr></table></figure>
+<p>输出nums的结果为</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span> <span class="number">3</span> <span class="number">1</span> <span class="number">4</span> <span class="number">5</span> <span class="number">2</span> <span class="number">9</span> <span class="number">8</span> <span class="number">6</span> <span class="number">7</span></div></pre></td></tr></table></figure>
+<h2 id="（2）调整堆"><a href="#（2）调整堆" class="headerlink" title="（2）调整堆"></a>（2）调整堆</h2><p>当使用上述的make_heap()建完堆后，如果vector使用push_back()插入数据或pop_back()删除数据后，会破坏最大堆/最小堆的性质，所以需要调整堆，常用push_heap()和pop_heap()两个方法</p>
+<p>1、push_heap()用法是，vector先push_back()，后push_heap()：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">nums.push_back(<span class="number">10</span>);</div><div class="line">push_heap(nums.begin(), nums.end(), less&lt;<span class="keyword">int</span>&gt;());</div></pre></td></tr></table></figure>
+<p>输出nums的结果：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//原vector </span></div><div class="line"><span class="number">9</span> <span class="number">8</span> <span class="number">2</span> <span class="number">6</span> <span class="number">7</span> <span class="number">0</span> <span class="number">1</span> <span class="number">4</span> <span class="number">3</span> <span class="number">5</span> </div><div class="line"><span class="comment">//push_back()后</span></div><div class="line"><span class="number">9</span> <span class="number">8</span> <span class="number">2</span> <span class="number">6</span> <span class="number">7</span> <span class="number">0</span> <span class="number">1</span> <span class="number">4</span> <span class="number">3</span> <span class="number">5</span> <span class="number">10</span></div><div class="line"><span class="comment">//push_heap()后</span></div><div class="line"><span class="number">10</span> <span class="number">9</span> <span class="number">2</span> <span class="number">6</span> <span class="number">8</span> <span class="number">0</span> <span class="number">1</span> <span class="number">4</span> <span class="number">3</span> <span class="number">5</span> <span class="number">7</span></div></pre></td></tr></table></figure>
+<p>2、pop_heap()用法是，先pop_heap()，vector后pop_back()：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">pop_heap(nums.begin(), nums.end(), less&lt;<span class="keyword">int</span>&gt;());</div><div class="line">nums.pop_back();</div></pre></td></tr></table></figure>
+<p>输出nums的结果：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//原vector</span></div><div class="line"><span class="number">9</span> <span class="number">8</span> <span class="number">2</span> <span class="number">6</span> <span class="number">7</span> <span class="number">0</span> <span class="number">1</span> <span class="number">4</span> <span class="number">3</span> <span class="number">5</span> </div><div class="line"><span class="comment">//pop_heap()后</span></div><div class="line"><span class="number">8</span> <span class="number">7</span> <span class="number">2</span> <span class="number">6</span> <span class="number">5</span> <span class="number">0</span> <span class="number">1</span> <span class="number">4</span> <span class="number">3</span> <span class="number">9</span> </div><div class="line"><span class="comment">//pop_back()后</span></div><div class="line"><span class="number">8</span> <span class="number">7</span> <span class="number">2</span> <span class="number">6</span> <span class="number">5</span> <span class="number">0</span> <span class="number">1</span> <span class="number">4</span> <span class="number">3</span></div></pre></td></tr></table></figure>
+<p><strong>为什么pop_heap()的用法要反过来呢？</strong><br>要从我们的目的来考虑，使用pop_heap()的绝大部分目的是要把堆顶元素pop出堆中，因为它最大或最小。如果先用vector的pop_back()，它删除的不是堆顶元素（nums[0]），而是vector的最后一个元素。可见这不是我们想要的结果：对于最大堆，最后一个元素既不是最大，也不一定是最小；对于最小堆，最后一个元素既不是最小，也不一定是最大。pop出来没有意义。<br><strong>观察pop_heap()对堆做了什么？</strong><br>pop_heap()把堆顶元素放到了最后一位，然后对它前面的数字重建了堆。这样一来只要再使用pop_back()把最后一位元素删除，就得到了新的堆。</p>
+<h1 id="二、用priority-queue实现堆"><a href="#二、用priority-queue实现堆" class="headerlink" title="二、用priority_queue实现堆"></a>二、用priority_queue实现堆</h1><p><strong>priority_queue</strong><br>对于这个模板类priority_queue，它是STL所提供的一个非常有效的容器。<br>作为队列的一个延伸，优先队列包含在头文件 <queue> 中。</queue></p>
+<h2 id="（1）简述"><a href="#（1）简述" class="headerlink" title="（1）简述"></a>（1）简述</h2><p>优先队列时一种比较重要的数据结构，它是有二项队列编写而成的，可以以<strong>O(log n)</strong> 的效率查找一个队列中的最大值或者最小值，其中是最大值还是最小值是根据<strong>创建的优先队列的性质来决定的</strong>。</p>
+<h2 id="（2）模板参数"><a href="#（2）模板参数" class="headerlink" title="（2）模板参数"></a>（2）模板参数</h2><p>优先队列有三个参数，其声明形式为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">priority_queue&lt; type, container, function &gt;</div></pre></td></tr></table></figure>
+<p>这三个参数，后面两个可以省略，第一个不可以。<br>其中：</p>
+<ol>
+<li><strong>type</strong>：数据类型； </li>
+<li><strong>container</strong>：实现优先队列的底层容器； </li>
+<li><strong>function</strong>：元素之间的比较方式；</li>
+</ol>
+<p>对于<strong>container</strong>，要求必须是<strong>数组形式实现的容器</strong>，例如vector、deque，而不能使list。<br>在STL中，默认情况下（不加后面两个参数）是以<strong>vector</strong>为容器，以 <strong>operator&lt;</strong> 为比较方式，所以在只使用第一个参数时，优先队列默认是一个<strong>最大堆</strong>，每次输出的堆顶元素是此时堆中的最大元素。</p>
+<h2 id="（3）成员函数"><a href="#（3）成员函数" class="headerlink" title="（3）成员函数"></a>（3）成员函数</h2><p>假设type类型为<strong>int</strong>，则：</p>
+<ol>
+<li><strong>bool empty() const</strong><br>返回值为true，说明队列为空； </li>
+<li><strong>int size() const</strong><br>返回优先队列中元素的数量；</li>
+<li><strong>void pop()</strong><br>删除队列顶部的元素，也即根节点 </li>
+<li><strong>int top()</strong><br>返回队列中的顶部元素，但不删除该元素； </li>
+<li><strong>void push(int arg)</strong><br>将元素arg插入到队列之中；</li>
+</ol>
+<h2 id="（4）大顶堆和小顶堆"><a href="#（4）大顶堆和小顶堆" class="headerlink" title="（4）大顶堆和小顶堆"></a>（4）大顶堆和小顶堆</h2><ul>
+<li>大顶堆</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//构造一个空的优先队列（此优先队列默认为大顶堆）</span></div><div class="line">priority_queue&lt;<span class="keyword">int</span>&gt; big_heap;   </div><div class="line"></div><div class="line"><span class="comment">//另一种构建大顶堆的方法</span></div><div class="line">priority_queue&lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,less&lt;<span class="keyword">int</span>&gt; &gt; big_heap2;</div></pre></td></tr></table></figure>
+<ul>
+<li>小顶堆</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//构造一个空的优先队列,此优先队列是一个小顶堆</span></div><div class="line">priority_queue&lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,greater&lt;<span class="keyword">int</span>&gt; &gt; small_heap;</div></pre></td></tr></table></figure>
+<p>需要注意的是，如果使用<code>less&lt;int&gt;</code>和<code>less&lt;int&gt;</code>，需要头文件：<br><code>#include &lt;functional&gt;</code></p>
+<p>转载自文章<br><a href="https://www.jianshu.com/p/13a56502e217" target="_blank" rel="external">c++使用vector建立最大堆和最小堆
+</a></p>
+<p><a href="https://blog.csdn.net/lym940928/article/details/89635690" target="_blank" rel="external">C++中priority_queue理解与使用
+</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/c++ 实现最大堆和最小堆/" data-id="ckb50n3j6000838vwuzweok3h" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/下沉市场模式解析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          下沉市场模式解析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/C++ string的substr操作需要注意的地方/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">C++string的substr操作需要注意的地方</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

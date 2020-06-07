@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>std::atomic续谈、std::async深入谈 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第十一节 std::atomic续谈、std::async深入谈
+一、std::atomic续谈
+123456789101112131415161718192021#include &amp;lt;iostream&amp;gt;#include &amp;lt;thread&amp;gt;#include &amp;lt;atomic&amp;gt;using namespace std;std::atomic&amp;lt;int&amp;gt; g_co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="std::atomic续谈、std::async深入谈">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/std-atomic续谈、std-async深入谈/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第十一节 std::atomic续谈、std::async深入谈
+一、std::atomic续谈
+123456789101112131415161718192021#include &amp;lt;iostream&amp;gt;#include &amp;lt;thread&amp;gt;#include &amp;lt;atomic&amp;gt;using namespace std;std::atomic&amp;lt;int&amp;gt; g_co">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513105654641.png#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513105723318.png#pic_center">
+<meta property="og:updated_time" content="2020-06-07T11:57:39.812Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="std::atomic续谈、std::async深入谈">
+<meta name="twitter:description" content="第十一节 std::atomic续谈、std::async深入谈
+一、std::atomic续谈
+123456789101112131415161718192021#include &amp;lt;iostream&amp;gt;#include &amp;lt;thread&amp;gt;#include &amp;lt;atomic&amp;gt;using namespace std;std::atomic&amp;lt;int&amp;gt; g_co">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200513105654641.png#pic_center">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="c++11并发与多线程笔记（11）-std-atomic续谈、std-async深入谈" class="article article-type-c++11并发与多线程笔记（11）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/std-atomic续谈、std-async深入谈/" class="article-date">
+  <time datetime="2020-06-07T11:55:50.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      std::atomic续谈、std::async深入谈
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第十一节-std-atomic续谈、std-async深入谈"><a href="#第十一节-std-atomic续谈、std-async深入谈" class="headerlink" title="第十一节 std::atomic续谈、std::async深入谈"></a>第十一节 std::atomic续谈、std::async深入谈</h2><p><img src="https://img-blog.csdnimg.cn/20200513105654641.png#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、std::atomic续谈</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;atomic&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="built_in">std</span>::atomic&lt;<span class="keyword">int</span>&gt; g_count = <span class="number">0</span>; <span class="comment">//封装了一个类型为int的 对象（值）</span></div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">mythread1</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</div><div class="line">		 <span class="comment">//虽然g_count使用了原子操作模板，但是这种写法既读又写，</span></div><div class="line">		 <span class="comment">//会导致计数错误</span></div><div class="line">             g_count = g_count + <span class="number">1</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t1</span><span class="params">(mythread1)</span></span>;</div><div class="line">	<span class="built_in">std</span>::<span class="function">thread <span class="title">t2</span><span class="params">(mythread1)</span></span>;</div><div class="line">	t1.join();</div><div class="line">	t2.join();</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"正常情况下结果应该是200 0000次，实际是"</span> &lt;&lt; g_count &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200513105723318.png#pic_center" alt="在这里插入图片描述"></p>
+<p>一般atomic原子操作，针对++，–，+=，-=，&amp;=，|=，^=是支持的，其他操作不一定支持。</p>
+<p><strong>二、std::async深入理解</strong><br><em>2.1 std::async参数详述，async 用来创建一个异步任务</em></p>
+<p>延迟调用参数 std::launch::deferred【延迟调用】，std::launch::async【强制创建一个线程】</p>
+<p>std::async()我们一般不叫创建线程（他能够创建线程），我们一般叫它创建一个异步任务。</p>
+<p>std::async和std::thread最明显的不同，就是 async 有时候并不创建新线程。</p>
+<p>①如果用std::launch::deferred 来调用async？</p>
+<p>延迟到调用 get() 或者 wait() 时执行，如果不调用就不会执行</p>
+<p>②如果用std::launch::async来调用async？</p>
+<p>强制这个异步任务在新线程上执行，这意味着，系统必须要创建出新线程来运行入口函数。</p>
+<p>③如果同时用 std::launch::async | std::launch::deferred </p>
+<p>这里这个或者关系意味着async的行为可能是 std::launch::async 创建新线程立即执行， 也可能是 std::launch::deferred 没有创建新线程并且延迟到调用get()执行，由<strong>系统根据实际情况来决定采取</strong>哪种方案</p>
+<p>④不带额外参数 std::async(mythread)，只给async 一个入口函数名，此时的系统给的默认值是 std::launch::async | std::launch::deferred 和 ③  一样，有系统自行决定异步还是同步运行。</p>
+<p><em>2.2 std::async和std::thread()区别：</em></p>
+<p>std::thread()如果系统资源紧张可能出现创建线程失败的情况，如果创建线程失败那么程序就可能崩溃，而且不容易拿到函数返回值（不是拿不到）<br>std::async()创建异步任务。可能创建线程也可能不创建线程，并且容易拿到线程入口函数的返回值；</p>
+<p><em>由于系统资源限制：</em><br>①如果用std::thread创建的线程太多，则可能创建失败，系统报告异常，崩溃。</p>
+<p>②如果用std::async，一般就不会报异常，因为如果系统资源紧张，无法创建新线程的时候，async不加额外参数的调用方式就不会创建新线程。而是在后续调用get()请求结果时执行在这个调用get()的线程上。</p>
+<p>如果你强制async一定要创建新线程就要使用 std::launch::async 标记。承受的代价是，系统资源紧张时可能崩溃。</p>
+<p>③根据经验，一个程序中线程数量  不宜超过100~200 。</p>
+<p><em>2.3 async不确定性问题的解决</em><br>不加额外参数的async调用时让系统自行决定，是否创建新线程。</p>
+<p>std::future<int> result = std::async(mythread);<br>问题焦点在于这个写法，任务到底有没有被推迟执行。</int></p>
+<p>通过wait_for返回状态来判断：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::future_status status = result.wait_for(<span class="built_in">std</span>::chrono::seconds(<span class="number">6</span>));</div><div class="line"><span class="comment">//std::future_status status = result.wait_for(6s);</span></div><div class="line">	<span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::timeout) &#123;</div><div class="line">		<span class="comment">//超时：表示线程还没有执行完</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"超时了，线程还没有执行完"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::ready) &#123;</div><div class="line">		<span class="comment">//表示线程成功放回</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"线程执行成功，返回"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; result.get() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (status == <span class="built_in">std</span>::future_status::deferred) &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"线程延迟执行"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; result.get() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/std-atomic续谈、std-async深入谈/" data-id="ckb50n3jh000f38vwyr2d2pyy" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          windows临界区、其他各种mutex互斥量
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/future其他成员函数、shared-future、atomic/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">future其他成员函数、shared_future、atomic</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

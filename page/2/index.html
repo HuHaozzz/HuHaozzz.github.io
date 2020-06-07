@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="c++11并发与多线程笔记（4）-创建多个线程、数据共享问题分析、案例代码" class="article article-type-c++11并发与多线程笔记（4）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/创建多个线程、数据共享问题分析、案例代码/" class="article-date">
+  <time datetime="2020-06-07T11:43:41.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/创建多个线程、数据共享问题分析、案例代码/">创建多个线程、数据共享问题分析、案例代码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第四节-创建多个线程、数据共享问题分析、案例代码"><a href="#第四节-创建多个线程、数据共享问题分析、案例代码" class="headerlink" title="第四节 创建多个线程、数据共享问题分析、案例代码"></a>第四节 创建多个线程、数据共享问题分析、案例代码</h2><p><img src="https://img-blog.csdnimg.cn/20200513100626104.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、创建和等待多个线程</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">TextThread</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">     <span class="built_in">cout</span> &lt;&lt; <span class="string">"我是线程"</span> &lt;&lt; this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">     <span class="comment">/*  …  */</span></div><div class="line">     <span class="built_in">cout</span> &lt;&lt; <span class="string">"线程"</span> &lt;&lt; this_thread::get_id() &lt;&lt; <span class="string">"执行结束"</span> &lt;&lt; <span class="built_in">endl</span>; </div><div class="line">&#125;</div><div class="line"> <span class="comment">//main函数里     vector threadagg;</span></div><div class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</div><div class="line">     &#123;</div><div class="line">         threadagg.push_back(thread(TextThread));</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</div><div class="line">     &#123;</div><div class="line">         threadagg[i].join();</div><div class="line">     &#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>把thread对象放入到容器中管理，看起来像个thread对象数组，对一次创建大量的线程并对大量线程进行管理有好处</li>
+<li>多个线程执行顺序是乱的，跟操作系统内部对线程的运行调度机制有关</li>
+</ul>
+<p><strong>二：数据共享问题分析</strong><br><em>2.1 只读的数据</em></p>
+<ul>
+<li>是安全稳定的</li>
+</ul>
+<p><em>2.2 有读有写</em></p>
+<ul>
+<li>若不加处理，就会出错</li>
+<li>最简单的防止崩溃方法：读的时候不能写，写的时候不能读。</li>
+<li>写的动作分10小步，由于任务切换，导致各种诡异的事情发生（最可能的还是崩溃）</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/创建多个线程、数据共享问题分析、案例代码/" data-id="ckb50n3jw000n38vwqz3jej13" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="c++11并发与多线程笔记（3）-线程传参详解，detach-大坑，成员函数做线程函数" class="article article-type-c++11并发与多线程笔记（3）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/线程传参详解，detach-大坑，成员函数做线程函数/" class="article-date">
+  <time datetime="2020-06-07T11:42:42.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/线程传参详解，detach-大坑，成员函数做线程函数/">线程传参详解，detach()大坑，成员函数做线程函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第三节-线程传参详解，detach-大坑，成员函数做线程函数"><a href="#第三节-线程传参详解，detach-大坑，成员函数做线程函数" class="headerlink" title="第三节 线程传参详解，detach()大坑，成员函数做线程函数"></a>第三节 线程传参详解，detach()大坑，成员函数做线程函数</h2><p><img src="https://img-blog.csdnimg.cn/20200513100115719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、传递临时对象作为线程参数</strong><br><em>1.1要避免的陷阱1：</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">myPrint</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp;i, <span class="keyword">char</span>* pmybuf)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="comment">//如果线程从主线程detach了</span></div><div class="line">	<span class="comment">//i不是mvar真正的引用，实际上值传递，即使主线程运行完毕了，子线程用i仍然是安全的，但仍不推荐传递引用</span></div><div class="line">	<span class="comment">//推荐改为const int i</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="comment">//pmybuf还是指向原来的字符串，所以这么写是不安全的</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; pmybuf &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> mvar = <span class="number">1</span>;</div><div class="line">	<span class="keyword">int</span>&amp; mvary = mvar;</div><div class="line">	<span class="keyword">char</span> mybuf[] = <span class="string">"this is a test"</span>;</div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(myPrint, mvar, mybuf)</span></span>;<span class="comment">//第一个参数是函数名，后两个参数是函数的参数</span></div><div class="line">	myThread.join();</div><div class="line">	<span class="comment">//myThread.detach();</span></div><div class="line">	</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello World!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><em>1.2要避免的陷阱2：</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">myPrint</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> i, <span class="keyword">const</span> <span class="built_in">string</span>&amp; pmybuf)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; pmybuf &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> mvar = <span class="number">1</span>;</div><div class="line">	<span class="keyword">int</span>&amp; mvary = mvar;</div><div class="line">	<span class="keyword">char</span> mybuf[] = <span class="string">"this is a test"</span>;</div><div class="line">	<span class="comment">//如果detach了，这样仍然是不安全的</span></div><div class="line">	<span class="comment">//因为存在主线程运行完了，mybuf被回收了，系统采用mybuf隐式类型转换成string</span></div><div class="line">	<span class="comment">//推荐先创建一个临时对象thread myThread(myPrint, mvar, string(mybuf));就绝对安全了。。。。</span></div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(myPrint, mvar, mybuf)</span></span>;</div><div class="line">	myThread.join();</div><div class="line">	<span class="comment">//myThread.detach();</span></div><div class="line"></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello World!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><em>1.3总结</em></p>
+<ul>
+<li>如果传递int这种简单类型，推荐使用值传递，不要用引用</li>
+<li>如果传递类对象，避免使用隐式类型转换，全部都是创建线程这一行就创建出临时对象，然后在函数参数里，用引用来接，否则还会创建出一个对象</li>
+<li>终极结论：建议不使用detach</li>
+</ul>
+<p><strong>二、临时对象作为线程参数继续讲</strong><br><em>2.1线程id概念</em></p>
+<ul>
+<li>id是个数字，每个线程（不管是主线程还是子线程）实际上都对应着一个数字，而且每个线程对应的这个数字都不一样</li>
+<li>线程id可以用C++标准库里的函数来获取。std::this_thread::get_id()来获取</li>
+</ul>
+<p><strong>三、传递类对象、智能指针作为线程参数</strong><br><em>3.1</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="keyword">mutable</span> <span class="keyword">int</span> m_i; <span class="comment">//m_i即使实在const中也可以被修改</span></div><div class="line">	A(<span class="keyword">int</span> i) :m_i(i) &#123;&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">myPrint</span><span class="params">(<span class="keyword">const</span> A&amp; pmybuf)</span></span></div><div class="line">&#123;</div><div class="line">	pmybuf.m_i = <span class="number">199</span>;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"子线程myPrint的参数地址是"</span> &lt;&lt; &amp;pmybuf &lt;&lt; <span class="string">"thread = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="function">A <span class="title">myObj</span><span class="params">(<span class="number">10</span>)</span></span>;</div><div class="line">	<span class="comment">//myPrint(const A&amp; pmybuf)中引用不能去掉，如果去掉会多创建一个对象</span></div><div class="line">	<span class="comment">//const也不能去掉，去掉会出错</span></div><div class="line">	<span class="comment">//即使是传递的const引用，但在子线程中还是会调用拷贝构造函数构造一个新的对象，</span></div><div class="line">	<span class="comment">//所以在子线程中修改m_i的值不会影响到主线程</span></div><div class="line">	<span class="comment">//如果希望子线程中修改m_i的值影响到主线程，可以用thread myThread(myPrint, std::def(myObj));</span></div><div class="line">	<span class="comment">//这样const就是真的引用了，myPrint定义中的const就可以去掉了，类A定义中的mutable也可以去掉了</span></div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(myPrint, myObj)</span></span>;</div><div class="line">	myThread.join();</div><div class="line">	<span class="comment">//myThread.detach();</span></div><div class="line"></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello World!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><em>3.2</em></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;thread&gt;</div><div class="line">#include &lt;memory&gt;</div><div class="line">using namespace std;</div><div class="line"></div><div class="line">void myPrint(unique_ptr&lt;int&gt; ptn)</div><div class="line">&#123;</div><div class="line">	cout &lt;&lt; "thread = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	unique_ptr&lt;int&gt; up(new int(10));</div><div class="line">	//独占式指针只能通过std::move()才可以传递给另一个指针</div><div class="line">	//传递后up就指向空，新的ptn指向原来的内存</div><div class="line">	//所以这时就不能用detach了，因为如果主线程先执行完，ptn指向的对象就被释放了</div><div class="line">	thread myThread(myPrint, std::move(up));</div><div class="line">	myThread.join();</div><div class="line">	//myThread.detach();</div><div class="line"></div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>四、用成员函数指针做线程函数</strong><br>放在了2.2</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/线程传参详解，detach-大坑，成员函数做线程函数/" data-id="ckb50n3k8000u38vwq0dibtfg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-大数据" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/大数据/" class="article-date">
+  <time datetime="2020-06-07T11:42:18.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/大数据/">大数据</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>大数据是什么？：<br>全新的思维方式和商业模式</li>
+<li>大数据的定义：<br>广义：物理世界到数字世界的映射和提炼，发现数据的特征做出提升效率的决策行为<br>狭义：获取、储存、分析，从大数据中挖掘价值的全新技术架构</li>
+<li>明白三件事：<br>3.1大数据要做什么<br>获取、储存、分析数据<br>3.2对谁来做<br>对大容量数据操作<br>3.3目的是什么<br>挖掘价值</li>
+<li>大数据有多大：<br>大数据是PB和EB级别，1PB=1024TB，1EB=1024PB</li>
+<li>大数据的四个V<br>Volume-海量化<br>Variety-多样化<br>Velocity-时效性<br>Value-价值密度</li>
+<li>大数据的价值：<br>数据就是财富，大数据开始走进我们的生活，其价值的高度前所未有。<br>方面一：帮助企业了解用户<br>方面二：帮助企业了解自己</li>
+<li>大数据和云计算：<br>大数据本身是资产，云计算是为了挖掘资产价值提供合适的工具</li>
+<li>所需技能<br>学好基础和框架，学好java、python</li>
+<li>推荐书籍<br>《数据之巅》-徐子沛<br>《大数据时代》<br>《大数据技术原理与应用》-林子雨</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/大数据/" data-id="ckb50n3k0000p38vwhjnusbm4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="c++11并发与多线程笔记（2）-线程启动、结束，创建线程多法、join，detach" class="article article-type-c++11并发与多线程笔记（2）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/线程启动、结束，创建线程多法、join，detach/" class="article-date">
+  <time datetime="2020-06-07T11:41:04.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/线程启动、结束，创建线程多法、join，detach/">线程启动、结束，创建线程多法、join，detach</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第二节-线程启动、结束，创建线程多法、join，detach"><a href="#第二节-线程启动、结束，创建线程多法、join，detach" class="headerlink" title="第二节 线程启动、结束，创建线程多法、join，detach"></a>第二节 线程启动、结束，创建线程多法、join，detach</h2><p><img src="https://img-blog.csdnimg.cn/20200513095221587.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、范例演示线程运行的开始</strong></p>
+<ul>
+<li>程序运行起来，生成一个进程，该进程所属的主线程开始自动运行；当主线程从main（）函数返回，则整个进程执行完毕</li>
+<li>主线程从main（）开始执行，那么我们自己创建的线程，也需要从一个函数开始运行（初始函数），一旦这个函数运行完毕，线程也结束运行</li>
+<li>整个进程是否执行完毕的标志是：主线程是否执行完，如果主线程执行完毕了，就代表整个进程执行完毕了，此时如果其他子线程还没有执行完，也会被强行终止【此条有例外，以后会解释】</li>
+</ul>
+<p>创建一个线程：</p>
+<ol>
+<li>包含头文件thread </li>
+<li>写初始函数 </li>
+<li>在main中创建thread</li>
+</ol>
+<p>必须要明白：有两个线程在跑，相当于整个程序中有两条线在同时走，即使一条被阻塞，另一条也能运行</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">myPrint</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程开始运行"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="comment">//-------------</span></div><div class="line">	<span class="comment">//-------------</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程运行完毕"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="comment">//(1)创建了线程，线程执行起点（入口）是myPrint；(2)执行线程</span></div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(myPrint)</span></span>;</div><div class="line"></div><div class="line">	<span class="comment">//(2)阻塞主线程并等待myPrint执行完，当myPrint执行完毕，join()就执行完毕，主线程继续往下执行</span></div><div class="line">	<span class="comment">//join意为汇合，子线程和主线程回合</span></div><div class="line">	myThread.join();</div><div class="line"></div><div class="line">	<span class="comment">//设置断点可看到主线程等待子线程的过程</span></div><div class="line">	<span class="comment">//F11逐语句，就是每次执行一行语句，如果碰到函数调用，它就会进入到函数里面</span></div><div class="line">	<span class="comment">//F10逐过程，碰到函数时，不进入函数，把函数调用当成一条语句执行</span></div><div class="line"></div><div class="line">	<span class="comment">//(3)传统多线程程序中，主线程要等待子线程执行完毕，然后自己才能向下执行</span></div><div class="line">	<span class="comment">//detach:分离，主线程不再与子线程汇合，不再等待子线程</span></div><div class="line">	<span class="comment">//detach后，子线程和主线程失去关联，驻留在后台，由C++运行时库接管</span></div><div class="line">	<span class="comment">//myThread.detach();</span></div><div class="line"></div><div class="line">	<span class="comment">//(4)joinable()判断是否可以成功使用join()或者detach()</span></div><div class="line">	<span class="comment">//如果返回true，证明可以调用join()或者detach()</span></div><div class="line">	<span class="comment">//如果返回false，证明调用过join()或者detach()，join()和detach()都不能再调用了</span></div><div class="line">	<span class="keyword">if</span> (myThread.joinable())</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"可以调用可以调用join()或者detach()"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span></div><div class="line">	&#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"不能调用可以调用join()或者detach()"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello World!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="重要补充："><a href="#重要补充：" class="headerlink" title="重要补充："></a>重要补充：</h2><p><strong>线程类参数是一个可调用对象。</strong><br>一组可执行的语句称为可调用对象，c++中的可调用对象可以是<strong>函数、函数指针、lambda表达式、bind创建的对象或者重载了函数调用运算符的类对象。</strong></p>
+<p><strong>二、其他创建线程的方法</strong><br>①创建一个类，并编写圆括号重载函数，初始化一个该类的对象，把该对象作为线程入口地址</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Ta</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">()</span> <span class="comment">//不能带参数</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程开始运行"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="comment">//-------------</span></div><div class="line">		<span class="comment">//-------------</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程运行完毕"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">//main函数里的：</span></div><div class="line">	Ta ta;</div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(ta)</span></span>;</div><div class="line">	myThread.join();</div></pre></td></tr></table></figure>
+<p>②lambda表达式创建线程</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//main函数中</span></div><div class="line"><span class="keyword">auto</span> lambdaThread = [] &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程开始执行了"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="comment">//-------------</span></div><div class="line">		<span class="comment">//-------------</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"我的线程开始执行了"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	&#125;;</div><div class="line"></div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(lambdaThread)</span></span>;</div><div class="line">	myThread.join();</div></pre></td></tr></table></figure>
+<p>③把某个类中的某个函数作为线程的入口地址</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Data_</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">GetMsg</span><span class="params">()</span></span>&#123;&#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">SaveMsh</span><span class="params">()</span></span>&#123;&#125;</div><div class="line">&#125;;</div><div class="line"><span class="comment">//main函数里</span></div><div class="line">    Data_ s;</div><div class="line">    <span class="comment">//第一个&amp;意思是取址，第二个&amp;意思是引用，相当于std::ref(s)</span></div><div class="line">    <span class="comment">//thread oneobj(&amp;Data_::SaveMsh,s)传值也是可以的</span></div><div class="line">    <span class="comment">//在其他的构造函数中&amp;obj是不会代表引用的，会被当成取地址</span></div><div class="line">    <span class="function">thread <span class="title">oneobj</span><span class="params">(&amp;Data_::SaveMsh,&amp;s)</span></span>;</div><div class="line">    <span class="function">thread <span class="title">twoobj</span><span class="params">(&amp;Data_::GetMsg,&amp;s)</span></span>;</div><div class="line">    oneobj.join();</div><div class="line">    twoobj.join();</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/线程启动、结束，创建线程多法、join，detach/" data-id="ckb50n3k5000s38vwmjeop1el" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="c++11并发与多线程笔记（1）-互斥量概念、用法、死锁演示及解决详解" class="article article-type-c++11并发与多线程笔记（1）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/互斥量概念、用法、死锁演示及解决详解/" class="article-date">
+  <time datetime="2020-06-07T11:37:42.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/互斥量概念、用法、死锁演示及解决详解/">并发基本概念及实现，进程、线程基本概念</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第五节-互斥量概念、用法、死锁演示及解决详解"><a href="#第五节-互斥量概念、用法、死锁演示及解决详解" class="headerlink" title="第五节 互斥量概念、用法、死锁演示及解决详解"></a>第五节 互斥量概念、用法、死锁演示及解决详解</h2><p><img src="https://img-blog.csdnimg.cn/20200513101113721.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、互斥量（mutex）的基本概念</strong></p>
+<ul>
+<li>互斥量就是个类对象，可以理解为一把锁，多个线程尝试用lock()成员函数来加锁，只有一个线程能锁定成功，如果没有锁成功，那么流程将卡在lock()这里不断尝试去锁定。</li>
+<li>互斥量使用要小心，保护数据不多也不少，少了达不到效果，多了影响效率。</li>
+</ul>
+<p><strong>二、互斥量的用法</strong><br>包含#include <mutex>头文件<br><strong>2.1 lock()，unlock()</strong></mutex></p>
+<ul>
+<li>步骤：1.lock()，2.操作共享数据，3.unlock()。</li>
+<li>lock()和unlock()要成对使用</li>
+</ul>
+<p><strong>2.2 lock_guard类模板</strong></p>
+<ul>
+<li>lock_guard<mutex> sbguard(myMutex);取代lock()和unlock()</mutex></li>
+<li>lock_guard构造函数执行了mutex::lock();在作用域结束时，调用析构函数，执行mutex::unlock()</li>
+</ul>
+<p><strong>三、死锁</strong><br><em>3.1 死锁演示</em><br>死锁至少有两个互斥量mutex1，mutex2。</p>
+<ul>
+<li>a.线程A执行时，这个线程先锁mutex1，并且锁成功了，然后去锁mutex2的时候，出现了上下文切换。</li>
+<li>b.线程B执行，这个线程先锁mutex2，因为mutex2没有被锁，即mutex2可以被锁成功，然后线程B要去锁mutex1.</li>
+<li>c.此时，死锁产生了，A锁着mutex1，需要锁mutex2，B锁着mutex2，需要锁mutex1，两个线程没办法继续运行下去。。。</li>
+</ul>
+<p><em>3.2 死锁的一般解决方案：</em><br>只要保证多个互斥量上锁的顺序一样就不会造成死锁。</p>
+<p><em>3.3 std::lock()函数模板</em></p>
+<ul>
+<li>std::lock(mutex1,mutex2……); 一次锁定多个互斥量（一般这种情况很少），用于处理多个互斥量。</li>
+<li>如果互斥量中一个没锁住，它就等着，等所有互斥量都锁住，才能继续执行。如果有一个没锁住，就会把已经锁住的释放掉（要么互斥量都锁住，要么都没锁住，防止死锁）</li>
+</ul>
+<p><em>3.4 std::lock_guard的std::adopt_lock参数</em></p>
+<ul>
+<li>std::lock_guardstd::mutex my_guard(my_mutex,std::adopt_lock);<br>加入adopt_lock后，在调用lock_guard的构造函数时，不再进行lock();</li>
+<li>adopt_guard为结构体对象，起一个标记作用，表示这个互斥量已经lock()，不需要在lock()。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;list&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> A&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">inMsgRecvQueue</span><span class="params">()</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; ++i)</div><div class="line">		&#123;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"插插插插插插插插插插插插插插插插插插插插入一个元素"</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			&#123;</div><div class="line">				<span class="comment">//lock_guard&lt;mutex&gt; sbguard(myMutex1, adopt_lock);</span></div><div class="line">				lock(myMutex1, myMutex2);</div><div class="line">				<span class="comment">//myMutex2.lock();</span></div><div class="line">				<span class="comment">//myMutex1.lock();</span></div><div class="line">				msgRecvQueue.push_back(i);</div><div class="line">				myMutex1.unlock();</div><div class="line">				myMutex2.unlock();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">bool</span> <span class="title">outMsgLULProc</span><span class="params">()</span></span></div><div class="line">	&#123;</div><div class="line">		myMutex1.lock();</div><div class="line">		myMutex2.lock();</div><div class="line">		<span class="keyword">if</span> (!msgRecvQueue.empty())</div><div class="line">		&#123;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"删删删删删删删删删删删删删删删删删删删删删删删除元素"</span> &lt;&lt; msgRecvQueue.front() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			msgRecvQueue.pop_front();</div><div class="line">			myMutex2.unlock();</div><div class="line">			myMutex1.unlock();</div><div class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">		&#125;</div><div class="line">		myMutex2.unlock();</div><div class="line">		myMutex1.unlock();</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">outMsgRecvQueue</span><span class="params">()</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; ++i)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">if</span> (outMsgLULProc())</div><div class="line">			&#123;</div><div class="line"></div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span></div><div class="line">			&#123;</div><div class="line">				<span class="built_in">cout</span> &lt;&lt; <span class="string">"空空空空空空空空空空空空空空空空空空空空空空空空空空数组为空"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	<span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt; msgRecvQueue;</div><div class="line">	mutex myMutex1;</div><div class="line">	mutex myMutex2;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	A myobja;</div><div class="line">	mutex myMutex;</div><div class="line">	<span class="function">thread <span class="title">myOutMsgObj</span><span class="params">(&amp;A::outMsgRecvQueue, &amp;myobja)</span></span>;</div><div class="line">	<span class="function">thread <span class="title">myInMsgObj</span><span class="params">(&amp;A::inMsgRecvQueue, &amp;myobja)</span></span>;</div><div class="line">	myOutMsgObj.join();</div><div class="line">	myInMsgObj.join();</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/互斥量概念、用法、死锁演示及解决详解/" data-id="ckb50n3jr000k38vwltyoqzds" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="c++11并发与多线程笔记（1）-并发基本概念及实现，进程、线程基本概念" class="article article-type-c++11并发与多线程笔记（1）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/并发基本概念及实现，进程、线程基本概念/" class="article-date">
+  <time datetime="2020-06-07T11:37:42.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/并发基本概念及实现，进程、线程基本概念/">并发基本概念及实现，进程、线程基本概念</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一-并发基本概念及实现，进程、线程基本概念"><a href="#一-并发基本概念及实现，进程、线程基本概念" class="headerlink" title="一 并发基本概念及实现，进程、线程基本概念"></a>一 并发基本概念及实现，进程、线程基本概念</h2><p><img src="https://img-blog.csdnimg.cn/2020051309500927.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、并发、进程、线程的基本概念和综述</strong><br>并发，线程，进程要求必须掌握</p>
+<p><em>1.1 并发</em></p>
+<ul>
+<li>两个或者更多的任务（独立的活动）同时发生（进行）：一个程序同时执行多个独立的任务；</li>
+<li>以往计算机，单核cpu（中央处理器）：某一个时刻只能执行一个任务，由操作系统调度，每秒钟进行多次所谓的“任务切换”。并发的假象（不是真正的并发），切换（上下文切换）时要保存变量的状态、执行进度等，存在时间开销；</li>
+<li>随着硬件发展，出现了多处理器计算机：用于服务器和高性能计算领域。台式机：在一块芯片上有多核（一个CPU内有多个运算核心，对于操作系统来说，每个核心都是作为单独的CPU对待的）：双核，4核，8核，10核（自己的笔记本是4核8线程的）。能够实现真正的并行执行多个任务（硬件并发）</li>
+<li>使用并发的原因：主要就是同时可以干多个事，提高性能</li>
+</ul>
+<p><em>1.2 可执行程序</em> </p>
+<ul>
+<li>磁盘上的一个文件，windows下，扩展名为.exe；linux下，ls -la，rwx（可读可写可执行）</li>
+</ul>
+<p><em>1.3 进程</em></p>
+<ul>
+<li>运行一个可执行程序，在windows下，可双击；在linux下，./文件名</li>
+<li>进行，一个可执行程序运行起来了，就叫创建了一个进程。进程就是运行起来的可执行程序。</li>
+</ul>
+<p><em>1.4 线程</em><br>①</p>
+<ul>
+<li>a)每个进程（执行起来的可执行程序），都有唯一的一个主线程</li>
+<li>b)当执行可执行程序时，产生一个进程后，这个主线程就随着这个进程默默启动起来了</li>
+<li>ctrl+F5运行这个程序的时候，实际上是进程的主线程来执行（调用）这个main函数中的代码</li>
+<li>线程：用来执行代码的。线程这个东西，可以理解为一条代码的执行通路<br><img src="https://img-blog.csdnimg.cn/20200513094504846.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></li>
+</ul>
+<p>②</p>
+<ul>
+<li>除了主线程之外，可以通过写代码来创建其他线程，其他线程走的是别的道路，甚至区不同的地方</li>
+<li>每创建一个新线程，就可以在同一时刻，多干一个不同的事（多走一条不同的代码执行路径）</li>
+</ul>
+<p>③</p>
+<ul>
+<li>多线程（并发）</li>
+<li>线程并不是越多越好，每个线程，都需要一个独立的堆栈空间（大约1M），线程之间的切换要保存很多中间状态，切换也会耗费本该属于程序运行的时间</li>
+</ul>
+<p>必须使用多线程的案例<br><img src="https://img-blog.csdnimg.cn/20200513094548675.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200513094600721.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><em>1.5 学习心得</em></p>
+<ul>
+<li>开发多线程程序：一个是实力的体现，一个是商用的必须需求</li>
+<li>线程开发有一定难度</li>
+<li>C++线程会设计很多新概念</li>
+<li>网络方向：网络通讯、网络服务器，多线程是绝对绕不开的</li>
+</ul>
+<p><strong>二、并发的实现方法</strong></p>
+<p>实现并发的手段：<br>a）通过多个进程实现并发<br>b）在单独的进程中，写代码创建除了主线程之外的其他线程来实现并发</p>
+<p><em>2.1 多进程并发</em></p>
+<ul>
+<li>比如账号服务器一个进程，游戏服务器一个进程。</li>
+<li>服务器进程之间存在通信（同一个电脑上：管道，文件，消息队列，共享内存）；（不同电脑上：socket通信技术）</li>
+</ul>
+<p><em>2.2 多线程并发</em></p>
+<ul>
+<li>线程：感觉像是轻量级的进程。每个进程有自己独立的运行路径，但一个进程中的所有线程共享地址空间（共享内存），全局变量、全局内存、全局引用都可以在线程之间传递，所以多线程开销远远小于多进程</li>
+<li>多进程并发核多线程并发可以混合使用，但建议优先考虑多线程技术</li>
+<li>本课程中只讲多线程并发技术</li>
+</ul>
+<p><strong>三、C++11新标准线程库</strong><br><em>以往</em></p>
+<ul>
+<li>windows：CreateThread(), _beginthread(),_beginthreadexe()创建线程；linux：pthread_create()创建线程；不能跨平台</li>
+<li>临界区，互斥量</li>
+<li>POSIX thread(pthread):跨平台，但要做一番配置，也不方便</li>
+</ul>
+<p><em>C++11</em></p>
+<ul>
+<li>从C++11新标准，C++语言本身增加对多线程的支持，意味着可移植性（跨平台），这大大减少开发人员的工作量</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/并发基本概念及实现，进程、线程基本概念/" data-id="ckb50n3k3000r38vwfkxgyfnh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-socket编程学习笔记（2）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/socket编程学习笔记（2）/" class="article-date">
+  <time datetime="2020-06-07T11:35:56.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/socket编程学习笔记（2）/">socket编程学习笔记（2）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://img-blog.csdnimg.cn/20200509205103533.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509205112511.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>TCP客户/服务器模型<br><img src="https://img-blog.csdnimg.cn/20200509205124227.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509205137732.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509205148131.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509205157118.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>struct sockaddr是一个通用地址，如果用ipv4，需要将ipv4的地址结构struct sockaddr_in强制转换为通用的地址结构<br><img src="https://img-blog.csdnimg.cn/20200509205212971.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>套接字一旦传递给listen，就变成了被动套接字。主动套接字会调用connect()函数发起连接，被动套接字会调用accept()函数接受连接。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200509205227955.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509205243427.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509205256911.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509205308202.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>write() 的原型为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ssize_t</span> write(<span class="keyword">int</span> fd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> nbytes);</div></pre></td></tr></table></figure>
+<p>fd 为要写入的文件的描述符，buf 为要写入的数据的缓冲区地址，nbytes 为要写入的数据的字节数。<br>write() 函数会将缓冲区 buf 中的 nbytes 个字节写入文件 fd，成功则返回写入的字节数，失败则返回 -1。</p>
+<p>read() 的原型为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ssize_t</span> read(<span class="keyword">int</span> fd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> nbytes);</div></pre></td></tr></table></figure>
+<p>fd 为要读取的文件的描述符，buf 为要接收数据的缓冲区地址，nbytes 为要读取的数据的字节数。<br>read() 函数会从 fd 文件中读取 nbytes 个字节并保存到缓冲区 buf，成功则返回读取到的字节数（但遇到文件结尾则返回0），失败则返回 -1。</p>
+<p>close函数是用来关闭套接字</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">close</span><span class="params">(<span class="keyword">int</span> sockfd)</span></span>;</div></pre></td></tr></table></figure>
+<p>成功返回0，出错为-1</p>
+<p><img src="https://img-blog.csdnimg.cn/20200509205344519.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><strong>实现一对一的客户/服务器回射：</strong></p>
+<p>echosrv.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Created by hh on 20-05-08.</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ERR_EXIT(m) \</span></div><div class="line">        do  \</div><div class="line">        &#123;   \</div><div class="line">            perror(m);  \</div><div class="line">            exit(EXIT_FAILURE); \</div><div class="line">        &#125; while(0);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span> </span>&#123;</div><div class="line">    <span class="comment">// 1. 创建套接字</span></div><div class="line">    <span class="keyword">int</span> listenfd;</div><div class="line">	<span class="comment">//三个参数分别是通信协议族，socket类型，协议类型</span></div><div class="line">    <span class="keyword">if</span> ((listenfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) &lt; <span class="number">0</span>) &#123;</div><div class="line">        ERR_EXIT(<span class="string">"socket"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 分配套接字地址</span></div><div class="line">    <span class="keyword">struct</span> sockaddr_in servaddr;</div><div class="line">    <span class="built_in">memset</span>(&amp;servaddr, <span class="number">0</span>, <span class="keyword">sizeof</span> servaddr);</div><div class="line">    servaddr.sin_family = AF_INET; <span class="comment">//地址组</span></div><div class="line">    servaddr.sin_port = htons(<span class="number">5188</span>); <span class="comment">//端口号，端口号是2个字节，htons中的s(short)就表示32位</span></div><div class="line">    servaddr.sin_addr.s_addr = htonl(INADDR_ANY); <span class="comment">//ip地址,INADDR_ANY表示本机的任一地址</span></div><div class="line">    <span class="comment">// servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); //显式指定ip地址</span></div><div class="line">    <span class="comment">// inet_aton("127.0.0.1", &amp;servaddr.sin_addr); //和上一个效果相同</span></div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line">	int on = 1;</div><div class="line">    // 确保time_wait状态下同一端口仍可使用</div><div class="line">    if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &amp;on, sizeof on) &lt; 0)</div><div class="line">    &#123;</div><div class="line">        ERR_EXIT("setsockopt");</div><div class="line">    &#125;</div><div class="line">	*/</div><div class="line"></div><div class="line">    <span class="comment">// 2. 绑定套接字地址</span></div><div class="line">	<span class="comment">//三个参数分别是socket返回的套接字，要绑定的地址，地址长度</span></div><div class="line">    <span class="keyword">if</span> (bind(listenfd, (<span class="keyword">struct</span> sockaddr*)&amp;servaddr, <span class="keyword">sizeof</span> servaddr) &lt; <span class="number">0</span>) &#123;</div><div class="line">        ERR_EXIT(<span class="string">"bind"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 3. 等待连接请求状态</span></div><div class="line">	<span class="comment">//两个参数分别是socket返回的套接字，规定内核为此套接字排队的最大连接个数，可以填个数字</span></div><div class="line">    <span class="keyword">if</span> (listen(listenfd, SOMAXCONN) &lt; <span class="number">0</span>) &#123; <span class="comment">//SOMAXCONN表示队列的最大值</span></div><div class="line">        ERR_EXIT(<span class="string">"listen"</span>);</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">	<span class="comment">//定义一个对等方的套接字地址</span></div><div class="line">	<span class="keyword">struct</span> sockaddr_in peeraddr;</div><div class="line">    <span class="keyword">socklen_t</span> peerlen = <span class="keyword">sizeof</span> peeraddr;</div><div class="line">	</div><div class="line">    <span class="comment">// 4. 允许连接</span></div><div class="line">    <span class="keyword">int</span> connfd;</div><div class="line">	<span class="comment">//功能：从已完成连接队列返回第一个连接，如果已完成连接队列为空，则阻塞</span></div><div class="line">	<span class="comment">//可以这么理解，peeraddr有一个ip地址，很多端口，而连接的对象是ip地址和端口组成都套接字</span></div><div class="line">	<span class="comment">//返回的connfd就是已连接的套接字</span></div><div class="line">	<span class="comment">//三个参数分别是服务器套接字，返回对等方的套接字地址，返回对等方的套接字地址长度</span></div><div class="line">    <span class="keyword">if</span> ((connfd = accept(listenfd, (<span class="keyword">struct</span> sockaddr *)&amp;peeraddr, &amp;peerlen)) &lt; <span class="number">0</span>) &#123;</div><div class="line">        ERR_EXIT(<span class="string">"accept"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"id = %s, "</span>, inet_ntoa(peeraddr.sin_addr));</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"port = %d\n"</span>, ntohs(peeraddr.sin_port));</div><div class="line"></div><div class="line">    <span class="comment">// 5. 数据交换</span></div><div class="line">    <span class="keyword">char</span> recvbuf[<span class="number">1024</span>];</div><div class="line">    <span class="keyword">while</span> (<span class="number">1</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">memset</span>(recvbuf, <span class="number">0</span>, <span class="keyword">sizeof</span> recvbuf);</div><div class="line">		<span class="comment">//从connfd中读取sizeof(recvbuf)字节到把缓冲区recvbuf中，成功则返回写入的字节数，失败则返回 -1。</span></div><div class="line">        <span class="keyword">int</span> ret = read(connfd, recvbuf, <span class="keyword">sizeof</span> recvbuf);</div><div class="line">        <span class="keyword">if</span> (ret == <span class="number">0</span>)</div><div class="line">        &#123;</div><div class="line"></div><div class="line">        &#125; <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">        <span class="built_in">fputs</span>(recvbuf, <span class="built_in">stdout</span>);</div><div class="line">		<span class="comment">//把缓冲区recvbuf中的ret个字节写入connfd</span></div><div class="line">        write(connfd, recvbuf, ret);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 6. 断开连接</span></div><div class="line">    close(connfd);</div><div class="line">    close(listenfd);</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>echocli.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Created by hh on 20-05-08.</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ERR_EXIT(m) \</span></div><div class="line">        do  \</div><div class="line">        &#123;   \</div><div class="line">            perror(m);  \</div><div class="line">            exit(EXIT_FAILURE); \</div><div class="line">        &#125; while(0);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span> </span>&#123;</div><div class="line">    <span class="comment">// 1. 创建套接字</span></div><div class="line">    <span class="keyword">int</span> sock;</div><div class="line">	<span class="comment">//三个参数分别是通信协议族，socket类型，协议类型</span></div><div class="line">    <span class="keyword">if</span> ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) &lt; <span class="number">0</span>) &#123;</div><div class="line">        ERR_EXIT(<span class="string">"socket"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 分配套接字地址</span></div><div class="line">    <span class="keyword">struct</span> sockaddr_in servaddr;</div><div class="line">    <span class="built_in">memset</span>(&amp;servaddr, <span class="number">0</span>, <span class="keyword">sizeof</span> servaddr);</div><div class="line">    servaddr.sin_family = AF_INET; <span class="comment">//地址组</span></div><div class="line">    servaddr.sin_port = htons(<span class="number">5188</span>); <span class="comment">//端口号，端口号是2个字节，htons中的s(short)就表示32位</span></div><div class="line">    <span class="comment">//127.0.0.1是一个回送地址，指本地机，一般用来测试使用。</span></div><div class="line">    <span class="comment">//常用来ping 127.0.0.1来看本地ip/tcp正不正常，如能ping通即可正常使用。</span></div><div class="line">    servaddr.sin_addr.s_addr = inet_addr(<span class="string">"127.0.0.1"</span>); <span class="comment">//显式指定ip地址</span></div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">if</span> (connect(sock, (<span class="keyword">struct</span> sockaddr*)&amp;servaddr, <span class="keyword">sizeof</span>(servaddr)) &lt; <span class="number">0</span>)</div><div class="line">		ERR_EXIT(<span class="string">"connect lalala"</span>);</div><div class="line">	</div><div class="line">	<span class="keyword">char</span> sendbuf[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">	<span class="keyword">char</span> recvbuf[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">	<span class="keyword">while</span> (fgets(sendbuf, <span class="keyword">sizeof</span>(sendbuf), <span class="built_in">stdin</span>) != <span class="literal">NULL</span>)</div><div class="line">	&#123;</div><div class="line">		write(sock, sendbuf, <span class="built_in">strlen</span>(sendbuf));</div><div class="line">		read(sock, recvbuf, <span class="keyword">sizeof</span>(recvbuf));</div><div class="line">		</div><div class="line">		<span class="built_in">fputs</span>(recvbuf, <span class="built_in">stdout</span>);</div><div class="line">		</div><div class="line">		<span class="built_in">memset</span>(sendbuf, <span class="number">0</span>, <span class="keyword">sizeof</span>(sendbuf)); <span class="comment">//清空缓存区</span></div><div class="line">		<span class="built_in">memset</span>(recvbuf, <span class="number">0</span>, <span class="keyword">sizeof</span>(recvbuf));</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	close(sock);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Makefile</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">.PHONY:clean all</div><div class="line">CC=gcc</div><div class="line">CFLAGS=-Wall -g</div><div class="line">BIN=echosrv echocli</div><div class="line">all:$(BIN)</div><div class="line">%.o:%.c</div><div class="line">        $(CC) $(CFLAGS) -c $&lt; -o $@</div><div class="line">clean:</div><div class="line">        rm -f *.o $(BIN)</div></pre></td></tr></table></figure>
+<p>首先启动服务器echosrv，再启动客户端echocli。在客户端发送一行消息后，服务器会收到一条消息，随后服务器又会把消息原封不动的发回客户端。</p>
+<p>即在客户端发送一行消息，执行的是如图所示的过程<br><img src="https://img-blog.csdnimg.cn/20200509205457585.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="补充：send-recv-和write-read-：发送数据和接收数据"><a href="#补充：send-recv-和write-read-：发送数据和接收数据" class="headerlink" title="补充：send()/recv()和write()/read()：发送数据和接收数据"></a>补充：send()/recv()和write()/read()：发送数据和接收数据</h2><p>在 Linux 和 Windows 平台下，使用不同的函数发送和接收 socket 数据，下面我们分别讲解。</p>
+<p><strong>Linux下数据的接收和发送</strong><br>Linux 不区分套接字文件和普通文件，使用 write() 可以向套接字中写入数据，使用 read() 可以从套接字中读取数据。</p>
+<p>前面我们说过，两台计算机之间的通信相当于两个套接字之间的通信，在服务器端用 write() 向套接字写入数据，客户端就能收到，然后再使用 read() 从套接字中读取出来，就完成了一次通信。</p>
+<ul>
+<li>write() 的原型为：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ssize_t</span> write(<span class="keyword">int</span> fd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> nbytes);</div></pre></td></tr></table></figure>
+<p>fd 为要写入的文件的描述符，buf 为要写入的数据的缓冲区地址，nbytes 为要写入的数据的字节数。<br>size_t 是通过 typedef 声明的 unsigned int 类型；ssize_t 在 “size_t” 前面加了一个”s”，代表 signed，即 ssize_t 是通过 typedef 声明的 signed int 类型。<br>write() 函数会将缓冲区 buf 中的 nbytes 个字节写入文件 fd，成功则返回写入的字节数，失败则返回 -1。</p>
+<ul>
+<li>read() 的原型为：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ssize_t</span> read(<span class="keyword">int</span> fd, <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> nbytes);</div></pre></td></tr></table></figure>
+<p>fd 为要读取的文件的描述符，buf 为要接收数据的缓冲区地址，nbytes 为要读取的数据的字节数。</p>
+<p>read() 函数会从 fd 文件中读取 nbytes 个字节并保存到缓冲区 buf，成功则返回读取到的字节数（但遇到文件结尾则返回0），失败则返回 -1。</p>
+<p><strong>Windows下数据的接收和发送</strong><br>Windows 和 Linux 不同，Windows 区分普通文件和套接字，并定义了专门的接收和发送的函数。</p>
+<p>从服务器端发送数据使用 send() 函数，它的原型为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">send</span><span class="params">(SOCKET sock, <span class="keyword">const</span> <span class="keyword">char</span> *buf, <span class="keyword">int</span> len, <span class="keyword">int</span> flags)</span></span>;</div></pre></td></tr></table></figure>
+<p>sock 为要发送数据的套接字，buf 为要发送的数据的缓冲区地址，len 为要发送的数据的字节数，flags 为发送数据时的选项。</p>
+<p>返回值和前三个参数不再赘述，最后的 flags 参数一般设置为 0 或 NULL，初学者不必深究。</p>
+<p>在客户端接收数据使用 recv() 函数，它的原型为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">recv</span><span class="params">(SOCKET sock, <span class="keyword">char</span> *buf, <span class="keyword">int</span> len, <span class="keyword">int</span> flags)</span></span>;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/socket编程学习笔记（2）/" data-id="ckb50n3jf000d38vwrhvktq03" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-socket编程学习笔记（1）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/socket编程学习笔记（1）/" class="article-date">
+  <time datetime="2020-06-07T11:34:23.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/socket编程学习笔记（1）/">socket编程学习笔记（1）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://img-blog.csdnimg.cn/20200509203336221.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509203408525.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509203432917.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509203446788.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/2020050920350716.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/2020050920361976.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509203642188.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>大端字节序就是在内存中先存储数字的高位，这样数字的高位就存储在了内存的低地址处，小端字节序就是在内存中先存储数字的低位。<br>socket可以实现异构系统间通信，不同的硬件平台对整数的存放形式是不一样的，有的采用大端字节序，有的采用小端字节序。这时候必须统一字节序，统一的字节序称为网络字节序，先将发送方主机上的字节序转换为网络字节序，接收方收到后再转换为自己的字节序。</p>
+<p>补充：x86或80x86是intel首先开发制造的一种微处理器体系结构的泛称，而基于这种微处理器体系结构搭建起来的硬件平台就成为x86平台，windows和linux都是基于x86平台的。<br>补充：%0x和%x都是以十六进制格式输出<br>vim是vi的升级版本</p>
+<p><img src="https://img-blog.csdnimg.cn/20200509203720942.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200509203730754.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>把32位的主机字节序转换为网络字节序<br>把16位的主机字节序转换为网络字节序<br>把32位的网络字节序转换为主机字节序<br>把32位的网络字节序转换为主机字节序</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> x = <span class="number">0x12345678</span>;</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span>* p1 = (<span class="keyword">unsigned</span> <span class="keyword">char</span>*)&amp;x;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"%0x %0x %0x %0x\n"</span>, p1[<span class="number">0</span>], p1[<span class="number">1</span>], p1[<span class="number">2</span>], p1[<span class="number">3</span>]);</div><div class="line"></div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> y = htonl(x);</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span>* p2 = (<span class="keyword">unsigned</span> <span class="keyword">char</span>*)&amp;y;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"%0x %0x %0x %0x\n"</span>, p2[<span class="number">0</span>], p2[<span class="number">1</span>], p2[<span class="number">2</span>], p2[<span class="number">3</span>]);</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果是<br>78 56 34 12<br>12 34 56 78</p>
+<p><img src="https://img-blog.csdnimg.cn/2020050920375985.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>老版本的转换函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">inet_aton、inet_aton、inet_ntoa在点分十进制(如<span class="number">206.168</span><span class="number">.112</span><span class="number">.96</span>)与它长度为<span class="number">32</span>位的网络字节序二进制值间转换IPv4地址</div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"arpa/inet.h"</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">inet_aton</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *strptr,<span class="keyword">struct</span> in_addr *addrptr)</span></span>;       </div><div class="line"><span class="comment">/*若字符串有效返回1，否则返回0*/</span>                                  </div><div class="line"><span class="keyword">in_addr_t</span> inet_addr(<span class="keyword">const</span> <span class="keyword">char</span> *strptr);</div><div class="line"><span class="comment">/*若字符串有效则为32位二进制网络字节序的IPv4地址，否则为INADDR_NONE*/</span></div><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">inet_ntoa</span><span class="params">(<span class="keyword">struct</span> in_addr inadrr)</span></span>;</div><div class="line"><span class="comment">/*返回指向一个点分十进制数串的指针*/</span></div></pre></td></tr></table></figure>
+<p>现在使用inet_pton和inet_ntop函数<br>inet_pton 和 inet_ntop 这两个函数是随IPv6出现的新函数，对于IPv4地址和IPv6地址都适用。目前更多的是用这两函数进行地址转换。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200509203834685.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200509203847382.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/socket编程学习笔记（1）/" data-id="ckb50n3jg000e38vwr4ke56ja" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-gcc和Makefile" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/gcc和Makefile/" class="article-date">
+  <time datetime="2020-06-07T11:33:39.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/gcc和Makefile/">gcc和Makefile</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>makefile的作用就是帮助我们便捷的编译。</p>
+<p>掌握makefile首先要略懂gcc编译的一些简单指令</p>
+<p>gcc的编译选项可以记做          ESc（很像我们的离开键）</p>
+<pre><code>1.预处理，生成预编译文件（i.文件）：
+    gcc –E hello.c –o hello.i
+2.编译，生成汇编代码（.s文件）：
+    gcc –S hello.i –o hello.s
+3.汇编，生成目标文件（.o文件）：
+    gcc –c hello.s –o hello.o
+4.链接，生成可执行文件：
+    gcc hello.o –o hello
+</code></pre><p>如果不想搞这些东西当然也可以一步搞定，什么参数都不加，<br>gcc -o hello hello.c 或 gcc hello.c -o hello</p>
+<p>其实makefile就是让我们把这些东西写到一个文件里，并且你要有自己的逻辑顺序和关系，makefile根据这些逻辑关系决定执行哪些指令。</p>
+<p>还是以上面那个例子说明</p>
+<p>假设我们还是hello.c文件生成的目标文件是hello，如果使用makefile要这样做：<br>1.vim Makefile  或 gedit Makefile </p>
+<p>2.Makefile中这么写<br>hello:hello.c</p>
+<p><tab>gcc hello.c -o hello</tab></p>
+<p>3.make</p>
+<p>注意gcc前面是一个tab键,上面两行的意思是，（hello依赖hello.c文件，执行下一行命令）</p>
+<p>命令不止可以写一行，如我们在后面再加一行，touch hello（touch命令用于修改文件或者目录的时间属性，包括存取时间和更改时间。若文件不存在，系统会建立一个新的文件），虽然看起来是和编译毫不相干的命令，但是还是会执行</p>
+<pre><code> hello:hello.c                              #标签：依赖
+ &lt;tab&gt;gcc hello.c -o hello                     （tab） 终端要执行的命令（可以有多行）
+&lt;tab&gt; touch hello
+</code></pre><p>我们可以看到目录下面多了一个hello文件。</p>
+<p>现在我们懂了，makefile第一行  标签：依赖  的意思就是，生成标签 ,查看标签的依赖，如果依赖不是最新，编译该依赖的命令，如果依赖已经是最新，则执行这一个标签下的命令。</p>
+<p>如果我们make后面不接参数，则默认第一个标签。</p>
+<p>当然，makefile还有许多高级用法，如变量，函数之类，但是不是这里要细讲的内容，总之明白makefile的本质，并且精通gcc的命令，就可以建立一些小的工程。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/gcc和Makefile/" data-id="ckb50n3j8000938vwi4f7t8ox" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-C++顶层const和底层const" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/C++顶层const和底层const/" class="article-date">
+  <time datetime="2020-06-07T11:32:12.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/07/C++顶层const和底层const/">C++顶层const和底层const</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>顶层const表示对象本身是一个常量<br>底层const表示不能通过指针或引用改变所指向的对象</p>
+<p>例如<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> a = <span class="number">42</span>; <span class="comment">//顶层const，不能改变a的值，int只能有顶层const</span></div><div class="line"><span class="comment">//--------------------------指针------------------------------</span></div><div class="line"><span class="keyword">int</span> b = <span class="number">12</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span>* b1 = &amp;b; <span class="comment">//底层const，不能通过b1改变a的值</span></div><div class="line"><span class="keyword">int</span>* <span class="keyword">const</span> b2 = &amp;b; <span class="comment">//顶层const，b2的值本身不能改变，即不能指向其他对象</span></div><div class="line"><span class="comment">//--------------------------引用------------------------------</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span>&amp; c = a; <span class="comment">//底层const，不能通过引用改变a的值，用于声明引用的const都是底层const</span></div></pre></td></tr></table></figure></p>
+<p>第一个要注意的是</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//对于一个常量只能用指向const的指针指向它</span></div><div class="line"><span class="keyword">int</span>* b3 = &amp;a; <span class="comment">//错误</span></div><div class="line"></div><div class="line"><span class="comment">//对于一个常量也只能进行常量引用</span></div><div class="line"><span class="keyword">int</span>&amp; c2 = <span class="number">3</span>; <span class="comment">//错误</span></div><div class="line"><span class="keyword">int</span>&amp; c2 = <span class="number">3</span> * b; <span class="comment">//错误</span></div></pre></td></tr></table></figure>
+<p>第二个要注意的是</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//顶层const在声明是必须初始化</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> a；<span class="comment">//错误</span></div><div class="line"><span class="keyword">int</span>* <span class="keyword">const</span> b2; <span class="comment">//错误</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span>* b1;</div><div class="line">b1 = &amp;b; <span class="comment">//可以</span></div><div class="line"></div><div class="line"><span class="comment">//当然引用在声明是也必须初始化</span></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span>&amp; c; <span class="comment">// 错误</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/C++顶层const和底层const/" data-id="ckb50n3is000338vw7ssagphe" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">__('next') &raquo;</a>
+  </nav>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

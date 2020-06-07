@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>分水岭算法及其实现 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="１ - 算法描述1.1 分水岭算法的原理　　分水岭的概念是以三维方式来形象化一幅图像为基础的：两个空间坐标再加上强度。在这种“地形学”解释中，考虑三种类型的点：（a）局部最小值点，该点对应一个盆地的最低点，当我们在盆地里滴一滴水的时候，由于重力作用，水最终会汇聚到该点。注意：可能存在一个最小值面，该平面内的都是最小值点。（b）盆地的其它位置点，该位置滴的水滴会汇聚到局部最小点。（c）盆地的边缘点，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分水岭算法及其实现">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/分水岭算法及其实现/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="１ - 算法描述1.1 分水岭算法的原理　　分水岭的概念是以三维方式来形象化一幅图像为基础的：两个空间坐标再加上强度。在这种“地形学”解释中，考虑三种类型的点：（a）局部最小值点，该点对应一个盆地的最低点，当我们在盆地里滴一滴水的时候，由于重力作用，水最终会汇聚到该点。注意：可能存在一个最小值面，该平面内的都是最小值点。（b）盆地的其它位置点，该位置滴的水滴会汇聚到局部最小点。（c）盆地的边缘点，">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190813183020645.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190813184430908.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190813185335580.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190813185357370.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190813185836933.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190813185955642.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190813190003615.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190813190114471.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190813190120382.png">
+<meta property="og:updated_time" content="2020-06-07T11:20:06.016Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分水岭算法及其实现">
+<meta name="twitter:description" content="１ - 算法描述1.1 分水岭算法的原理　　分水岭的概念是以三维方式来形象化一幅图像为基础的：两个空间坐标再加上强度。在这种“地形学”解释中，考虑三种类型的点：（a）局部最小值点，该点对应一个盆地的最低点，当我们在盆地里滴一滴水的时候，由于重力作用，水最终会汇聚到该点。注意：可能存在一个最小值面，该平面内的都是最小值点。（b）盆地的其它位置点，该位置滴的水滴会汇聚到局部最小点。（c）盆地的边缘点，">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190813183020645.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-分水岭算法及其实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/分水岭算法及其实现/" class="article-date">
+  <time datetime="2020-06-07T11:15:32.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      分水岭算法及其实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>１ - 算法描述<br>1.1 分水岭算法的原理<br>　　分水岭的概念是以三维方式来形象化一幅图像为基础的：两个空间坐标再加上强度。在这种“地形学”解释中，考虑三种类型的点：（a）局部最小值点，该点对应一个盆地的最低点，当我们在盆地里滴一滴水的时候，由于重力作用，水最终会汇聚到该点。注意：可能存在一个最小值面，该平面内的都是最小值点。（b）盆地的其它位置点，该位置滴的水滴会汇聚到局部最小点。（c）盆地的边缘点，是该盆地和其它盆地交接点，在该点滴一滴水，会等概率的流向任何一个盆地。对于一个特定的区域最小值，满足条件（b）的点的集合称为该最小值的汇水盆地或分水岭。满足条件（c）的点形成地面的锋线，称为分割线或分水线。</p>
+<center><img src="https://img-blog.csdnimg.cn/20190813183020645.png"></center><br><center>图1 分水岭算法中三种类型的点</center>
+
+<p>&emsp;&emsp;基于这些概念的分割算法的主要目标是找出分水线。假设在每个区域的最小值上打一个洞，并且让水通过洞以均匀的速率上升，从低到高淹没整个地形。当不同汇水盆地中上升的水聚集时，修建一个水坝来阻止这种聚合。水将达到在水线上只能见到各个水坝的顶部的程度。这些大坝的边界对应于分水岭的分割线。因此，他们是由分水岭算法提取出来的边界。</p>
+<p>１.2 水坝构建<br>　　在实际操作中，水位的上升常利用灰度0-255的分层处理来实现，当处理到第N层时，灰度小于N的像素就会被淹没。对于大多数情况，聚水盆的生长速度是不定的，也许在第N-1次处理时，两个聚水盆之间还有相当的距离，而在第N次处理中他们就已经相互连通了，这为堤坝的建立带来了一定的难度。</p>
+<center><img src="https://img-blog.csdnimg.cn/20190813184430908.png"></center><br><center>图2 水坝构造示意图</center>
+
+<p>&emsp;&emsp;图2中a显示了两个相邻的聚水盆，其中颜色越深的区域海拔越低，当水位逐渐上升到第N-1阶段时，黑色区域首先被淹没，如图2中b所示，这时图中存在两个彼此分开的水域，他们之间还有相当一段距离。然而当水面继续上升至第N阶段时，图中的水域已经连通，如图2中c所示。<br>&emsp;&emsp;为了在水域之间适当的位置构建堤坝防止水域的连通，可以借助图像形态学处理中的膨胀方法。由于已知两个水域会在第N-1阶段至第N阶段间连通，回到第N-1阶段的图像如图2中b所示，尝试对图中不同水域分别进行膨胀操作，并在膨胀中寻找两个区域的交点。如图2中d所示为两个水域分别进行一次膨胀操作的结果，从结果中可以看出两个区域仍然没有交点，因此还不能形成堤坝。继续对两个水域进行膨胀操作，在对右边区域的膨胀操作中，两个区域出现了交点，标记这些交点并在交点处修建堤坝，如图2中e所示，其中堤坝位置用交叉图案表示。继续进行膨胀操作，并不断标记新的交点，最终就能够得到完整的水坝轮廓。值得注意的是，在算法实现中，应对每次膨胀结果与第N阶段的淹没区域进行比较，保证堤坝位置在第N阶段的淹没区域之内，算法一直进行直到经过膨胀的水域完全覆盖第N阶段中淹没区域为止。通过以上步骤就能够获得较为准确的堤坝位置，如图2中f所示。<br>　　由于实际中处理的图像往往比较复杂，图中灰度极小值点较多，这就导致聚水盆数目过多，从而造成图像的过度分割，比如下面的图3，这样的分割效果是毫无用处的。解决图像的过度分割问题最直接的方法就是进行区域的合并，如果在分水岭算法中定义聚水盆的最小深度，就能比较好地解决过度分割的问题。</p>
+<center><img src="https://img-blog.csdnimg.cn/20190813185335580.png"><img src="https://img-blog.csdnimg.cn/20190813185357370.png"></center><br><center>图3   过度分割的结果</center>
+
+<p>&emsp;&emsp;聚水盆的深度可以定义为盆地中海拔最低点与当前水面高度的差值，在计算时可以用当前已淹没的灰度值减去区域的灰度最小值来得到。当水位上升造成两个不同的水域连接时，判断两个水域所在聚水盆的深度是否都大于定义的最小深度，若是则在两个区域间构建堤坝，否则对两个水域进行合并。运用这样的方法，就可以通过改变最小深度的值来控制图像分割的程度，从而获得图像最有效的分割结果。</p>
+<p>２ - 分水岭算法的OpenCv实现<br>　　函数watershed实现的分水岭算法是基于标记的分割算法中的一种。在把图像传给函数之前，需要大致勾画标记出图像中的期望进行分割的区域，他们被标记为正指数。所以，每一个区域都会被标记为像素值1、2、3等，表示成为一个或者多个连接组件。这些标记的值可以使用findContours()函数和drawContours()函数由二进制的掩码检测出来。不难理解，这些标记就是即将绘制出来的分割区域的“种子”，而没有标记清楚的区域，被置为0。在函数输出中，每一个标记中的像素被设置为“种子”的值，而区域间的值被设置为-1。<br>　　C++: void watershed(InputArray image, InputOutputArray markers)<br>　　第一个参数，InputArray类型的src，输入图像，即原图像，填Mat类的对象即可，且需为8位三通道的彩色图像。<br>　　第二个参数，InputOutputArray类型的markers，函数调用后的运算结果存在这里，输入/输出32位单通道图像的标记结果。即这个参数用于存放函数调用后的输出结果，需和原图像有一样的尺寸和类型。</p>
+<center><img src="https://img-blog.csdnimg.cn/20190813185836933.png"></center><br><center>图4 原始图</center>
+
+<p>&emsp;&emsp;编写程序，对图4进行基于分水岭算法的图像分割。</p>
+<center><img src="https://img-blog.csdnimg.cn/20190813185955642.png"><img src="https://img-blog.csdnimg.cn/20190813190003615.png"></center><br><center>图5 期望分割的区域</center>
+
+<p>&emsp;&emsp;直接使用图像处理工具箱的提供的现成函数进行分割往往很难达到预期效果，而预先勾画标记出图像中期望进行分割的区域，在应用分水岭算法就会取得较好的分割效果。如图5所示，其中左图显示了原始图中期望进行分割的各个部分，右图更清楚的显示了期望分割部分的空间位置。</p>
+<center><img src="https://img-blog.csdnimg.cn/20190813190114471.png"><img src="https://img-blog.csdnimg.cn/20190813190120382.png"></center><br><center>图6 分割结果</center>
+
+<p>&emsp;&emsp;图6显示了分割的结果。分割的各个部分使用随机的颜色进行表示；若存在没有标记清楚的区域，则将此区域用纯黑色表示；用于划分区域的线条，即被设置为“种子”的像素值，用纯白色表示。左图显示了原始图像的分割结果，右图显示了分割结果和原始图按等比例进行混合的效果。</p>
+<p>3 - OpenCv代码</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div></pre></td><td class="code"><pre><div class="line">#include "opencv2/imgproc/imgproc.hpp"</div><div class="line">#include "opencv2/highgui/highgui.hpp"</div><div class="line">#include &lt;iostream&gt;</div><div class="line">using namespace cv;</div><div class="line">using namespace std;</div><div class="line"></div><div class="line">//-----------------------------------【宏定义部分】-------------------------------------------- </div><div class="line">//  描述：定义一些辅助宏 </div><div class="line">//------------------------------------------------------------------------------------------------ </div><div class="line">#define WINDOW_NAME1 "【程序窗口1】"        //为窗口标题定义的宏 </div><div class="line">#define WINDOW_NAME2 "【分水岭算法效果图】"        //为窗口标题定义的宏</div><div class="line"></div><div class="line">//-----------------------------------【全局函变量声明部分】--------------------------------------</div><div class="line">//		描述：全局变量的声明</div><div class="line">//-----------------------------------------------------------------------------------------------</div><div class="line">Mat g_maskImage, g_srcImage;</div><div class="line">Point prevPt(-1, -1);</div><div class="line"></div><div class="line">static void on_Mouse(int event, int x, int y, int flags, void*);</div><div class="line"></div><div class="line"></div><div class="line">int main(int argc, char** argv)</div><div class="line">&#123;</div><div class="line">	//【0】改变console字体颜色</div><div class="line">	system("color 6F");</div><div class="line"></div><div class="line"></div><div class="line">	//【1】载入原图并显示，初始化掩膜和灰度图</div><div class="line">	g_srcImage = imread("1.jpg", 1);</div><div class="line">	imshow(WINDOW_NAME1, g_srcImage);</div><div class="line">	Mat srcImage, grayImage;</div><div class="line">	g_srcImage.copyTo(srcImage);</div><div class="line">	cvtColor(g_srcImage, g_maskImage, COLOR_BGR2GRAY);</div><div class="line">	cvtColor(g_maskImage, grayImage, COLOR_GRAY2BGR);</div><div class="line">	g_maskImage = Scalar::all(0);</div><div class="line"></div><div class="line">	//【2】设置鼠标回调函数</div><div class="line">	setMouseCallback(WINDOW_NAME1, on_Mouse, 0);</div><div class="line"></div><div class="line">	//【3】轮询按键，进行处理</div><div class="line">	while (1)</div><div class="line">	&#123;</div><div class="line">		//获取键值</div><div class="line">		int c = waitKey(0);</div><div class="line"></div><div class="line">		//若按键键值为ESC时，退出</div><div class="line">		if ((char)c == 27)</div><div class="line">			break;</div><div class="line"></div><div class="line">		//按键键值为2时，恢复源图</div><div class="line">		if ((char)c == '2')</div><div class="line">		&#123;</div><div class="line">			g_maskImage = Scalar::all(0);</div><div class="line">			srcImage.copyTo(g_srcImage);</div><div class="line">			imshow("image", g_srcImage);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		//若检测到按键值为1或者空格，则进行处理</div><div class="line">		if ((char)c == '1' || (char)c == ' ')</div><div class="line">		&#123;</div><div class="line">			//定义一些参数</div><div class="line">			int i, j, compCount = 0;</div><div class="line">			vector&lt;vector&lt;Point&gt; &gt; contours;</div><div class="line">			vector&lt;Vec4i&gt; hierarchy;</div><div class="line"></div><div class="line">			//寻找轮廓</div><div class="line">			findContours(g_maskImage, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);</div><div class="line"></div><div class="line">			//轮廓为空时的处理</div><div class="line">			if (contours.empty())</div><div class="line">				continue;</div><div class="line"></div><div class="line">			//拷贝掩膜</div><div class="line">			Mat maskImage(g_maskImage.size(), CV_32S);</div><div class="line">			maskImage = Scalar::all(0);</div><div class="line"></div><div class="line">			//循环绘制出轮廓    //感觉这里绘制轮廓不重要，重要的是几个 因为后面又覆盖了maskImage watershed( srcImage, maskImage );</div><div class="line">			for (int index = 0; index &gt;= 0; index = hierarchy[index][0], compCount++)</div><div class="line">				drawContours(maskImage, contours, index, Scalar::all(compCount + 1), -1, 8, hierarchy, INT_MAX);</div><div class="line"></div><div class="line">			//compCount为零时的处理</div><div class="line">			if (compCount == 0)</div><div class="line">				continue;</div><div class="line"></div><div class="line">			//生成随机颜色</div><div class="line">			vector&lt;Vec3b&gt; colorTab;</div><div class="line">			for (i = 0; i &lt; compCount; i++)</div><div class="line">			&#123;</div><div class="line">				int b = theRNG().uniform(0, 255);</div><div class="line">				int g = theRNG().uniform(0, 255);</div><div class="line">				int r = theRNG().uniform(0, 255);</div><div class="line"></div><div class="line">				colorTab.push_back(Vec3b((uchar)b, (uchar)g, (uchar)r));</div><div class="line">			&#125;</div><div class="line"></div><div class="line">			//计算处理时间并输出到窗口中</div><div class="line">			double dTime = (double)getTickCount();</div><div class="line">			watershed(srcImage, maskImage);</div><div class="line">			dTime = (double)getTickCount() - dTime;</div><div class="line">			printf("\t处理时间 = %gms\n", dTime*1000. / getTickFrequency());</div><div class="line"></div><div class="line">			//双层循环，将分水岭图像遍历存入watershedImage中</div><div class="line">			Mat watershedImage(maskImage.size(), CV_8UC3);</div><div class="line">			for (i = 0; i &lt; maskImage.rows; i++)</div><div class="line">				for (j = 0; j &lt; maskImage.cols; j++)</div><div class="line">				&#123;</div><div class="line">					int index = maskImage.at&lt;int&gt;(i, j);           //不同的index用不同的index颜色</div><div class="line">					if (index == -1)</div><div class="line">						watershedImage.at&lt;Vec3b&gt;(i, j) = Vec3b(255, 255, 255);</div><div class="line">					else if (index &lt;= 0 || index &gt; compCount)</div><div class="line">						watershedImage.at&lt;Vec3b&gt;(i, j) = Vec3b(0, 0, 0);</div><div class="line">					else</div><div class="line">						watershedImage.at&lt;Vec3b&gt;(i, j) = colorTab[index - 1];</div><div class="line">				&#125;</div><div class="line"></div><div class="line">			//混合灰度图和分水岭效果图并显示最终的窗口</div><div class="line">			watershedImage = watershedImage * 0.5 + grayImage * 0.5;</div><div class="line">			imshow(WINDOW_NAME2, watershedImage);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">static void on_Mouse(int event, int x, int y, int flags, void*)</div><div class="line">&#123;</div><div class="line">	//处理鼠标不在窗口中的情况</div><div class="line">	if (x &lt; 0 || x &gt;= g_srcImage.cols || y &lt; 0 || y &gt;= g_srcImage.rows)</div><div class="line">		return;</div><div class="line"></div><div class="line">	//处理鼠标左键相关消息</div><div class="line">	if (event == CV_EVENT_LBUTTONUP || !(flags &amp; CV_EVENT_FLAG_LBUTTON))</div><div class="line">		prevPt = Point(-1, -1);</div><div class="line">	else if (event == CV_EVENT_LBUTTONDOWN)</div><div class="line">		prevPt = Point(x, y);</div><div class="line"></div><div class="line">	//鼠标左键按下并移动，绘制出白色线条</div><div class="line">	else if (event == CV_EVENT_MOUSEMOVE &amp;&amp; (flags &amp; CV_EVENT_FLAG_LBUTTON))</div><div class="line">	&#123;</div><div class="line">		Point pt(x, y);</div><div class="line">		if (prevPt.x &lt; 0)</div><div class="line">			prevPt = pt;</div><div class="line">		line(g_maskImage, prevPt, pt, Scalar::all(255), 5, 8, 0);</div><div class="line">		line(g_srcImage, prevPt, pt, Scalar::all(0), 5, 8, 0);</div><div class="line">		prevPt = pt;</div><div class="line">		imshow(WINDOW_NAME1, g_srcImage);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/分水岭算法及其实现/" data-id="ckb50n3ju000m38vwwvbitkkn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/矩阵伪逆的opencv实现/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          矩阵伪逆的opencv实现
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/Canny算子c++实现/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Canny算子c++实现</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

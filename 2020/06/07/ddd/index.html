@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>C++实现均值滤波器和中值滤波器 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="C++实现均值滤波器和中值滤波器
+代码实现均值滤波器和中值滤波器由于中值滤波器是非线性滤波，不是卷积，所以均值和中值滤波分开实现。opencv版本为3.4.5
+my_convolution.h
+123456789101112131415161718192021222324#ifndef MY_CONVOLUTION#define MY_CONVOLUTION#include &amp;lt;opencv2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++实现均值滤波器和中值滤波器">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/ddd/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="C++实现均值滤波器和中值滤波器
+代码实现均值滤波器和中值滤波器由于中值滤波器是非线性滤波，不是卷积，所以均值和中值滤波分开实现。opencv版本为3.4.5
+my_convolution.h
+123456789101112131415161718192021222324#ifndef MY_CONVOLUTION#define MY_CONVOLUTION#include &amp;lt;opencv2">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190528214511207.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70">
+<meta property="og:updated_time" content="2020-06-07T11:13:50.987Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++实现均值滤波器和中值滤波器">
+<meta name="twitter:description" content="C++实现均值滤波器和中值滤波器
+代码实现均值滤波器和中值滤波器由于中值滤波器是非线性滤波，不是卷积，所以均值和中值滤波分开实现。opencv版本为3.4.5
+my_convolution.h
+123456789101112131415161718192021222324#ifndef MY_CONVOLUTION#define MY_CONVOLUTION#include &amp;lt;opencv2">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190528214511207.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ddd" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/ddd/" class="article-date">
+  <time datetime="2020-06-07T11:13:09.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      C++实现均值滤波器和中值滤波器
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>C++实现均值滤波器和中值滤波器</p>
+<p>代码实现均值滤波器和中值滤波器<br><img src="https://img-blog.csdnimg.cn/20190528214511207.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>由于中值滤波器是非线性滤波，不是卷积，所以均值和中值滤波分开实现。opencv版本为3.4.5</p>
+<p>my_convolution.h</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> MY_CONVOLUTION</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MY_CONVOLUTION</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;opencv2/opencv.hpp&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">class</span> My_Convolution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	My_Convolution();</div><div class="line">	~My_Convolution();</div><div class="line">	<span class="function"><span class="keyword">bool</span> <span class="title">load_kernal</span><span class="params">(<span class="keyword">const</span> cv::Mat kernal)</span></span>;<span class="comment">//加载卷积核</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">convolute</span><span class="params">(<span class="keyword">const</span> cv::Mat &amp;image, cv::Mat &amp;dst)</span></span>;<span class="comment">//卷积操作</span></div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">	<span class="keyword">bool</span> kernal_loaded;<span class="comment">//是否已经加载卷积核</span></div><div class="line">	cv::Mat curr_kernal;<span class="comment">//当前卷积核</span></div><div class="line">	<span class="keyword">int</span> bios_x, bios_y;<span class="comment">//记录偏移量</span></div><div class="line"></div><div class="line">	<span class="comment">//计算每一个像素的掩模乘积之和</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">compute_sum_of_product</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j, <span class="keyword">int</span> chan, cv::Mat &amp;complete_image, cv::Mat &amp; dst)</span></span>;</div><div class="line">	<span class="comment">//将原图像转换成边框补全的图像</span></div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">complete_image_transform</span><span class="params">(<span class="keyword">const</span> cv::Mat &amp;image, cv::Mat &amp;dst)</span></span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// MY_CONVOLUTION</span></span></div></pre></td></tr></table></figure>
+<p>my_convolution.cpp</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"my_convolution.h"</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> cv;</div><div class="line"></div><div class="line">My_Convolution::My_Convolution() &#123;</div><div class="line">	kernal_loaded = <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line">My_Convolution::~My_Convolution() &#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">//加载卷积核</span></div><div class="line"><span class="keyword">bool</span> My_Convolution::load_kernal(<span class="keyword">const</span> Mat kernal) &#123;</div><div class="line">	<span class="keyword">if</span> (kernal.cols % <span class="number">2</span> == <span class="number">1</span> &amp;&amp; kernal.rows % <span class="number">2</span> == <span class="number">1</span>) &#123;</div><div class="line">		curr_kernal = kernal.clone();</div><div class="line">		bios_x = (kernal.cols - <span class="number">1</span>) / <span class="number">2</span>;</div><div class="line">		bios_y = (kernal.rows - <span class="number">1</span>) / <span class="number">2</span>;</div><div class="line">		kernal_loaded = <span class="literal">true</span>;</div><div class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"The size of kernal is not suitable!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//卷积操作</span></div><div class="line"><span class="keyword">void</span> My_Convolution::convolute(<span class="keyword">const</span> Mat &amp;image, Mat &amp;dst) &#123;</div><div class="line">	<span class="keyword">if</span> (!kernal_loaded) &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"kernal is empty!Please load the kernal first!"</span> &lt;&lt; <span class="built_in">endl</span>;<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	Mat complete_image;</div><div class="line">	complete_image_transform(image, complete_image);</div><div class="line">	dst = Mat::zeros(image.rows, image.cols, image.type());</div><div class="line">	<span class="keyword">int</span> channels = image.channels();<span class="comment">//获取图像的通道数</span></div><div class="line">	<span class="keyword">if</span> (channels == <span class="number">3</span>) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> chan = <span class="number">0</span>;chan &lt; channels;chan++) &#123;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; dst.rows;i++) &#123;</div><div class="line">				<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>;j &lt; dst.cols;j++) &#123;</div><div class="line">					compute_sum_of_product(i, j, chan, complete_image, dst);</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (channels == <span class="number">1</span>) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; dst.rows;i++) &#123;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>;j &lt; dst.cols;j++) &#123;</div><div class="line">				compute_sum_of_product(i, j, <span class="number">0</span>, complete_image, dst);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//计算掩模乘积之和</span></div><div class="line"><span class="keyword">void</span> My_Convolution::compute_sum_of_product(<span class="keyword">int</span> i, <span class="keyword">int</span> j, <span class="keyword">int</span> chan, Mat &amp;complete_image, Mat &amp;dst) &#123;</div><div class="line">	<span class="keyword">if</span> (complete_image.channels() == <span class="number">3</span>) &#123;</div><div class="line">		<span class="keyword">float</span> sum = <span class="number">0</span>;</div><div class="line">		<span class="keyword">int</span> bios_rows = i;</div><div class="line">		<span class="keyword">int</span> bios_cols = j;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> curr_rows = <span class="number">0</span>;curr_rows &lt; curr_kernal.rows;curr_rows++) &#123;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> curr_cols = <span class="number">0</span>;curr_cols &lt; curr_kernal.cols;curr_cols++) &#123;</div><div class="line">				<span class="keyword">float</span> a = curr_kernal.at&lt;<span class="keyword">float</span>&gt;(curr_rows, curr_cols)*complete_image.at&lt;Vec3b&gt;(curr_rows + bios_rows, curr_cols + bios_cols)[chan];</div><div class="line">				sum += a;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		dst.at&lt;Vec3b&gt;(i, j)[chan] = (<span class="keyword">int</span>)sum;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (complete_image.channels() == <span class="number">1</span>) &#123;</div><div class="line">			<span class="keyword">float</span> sum = <span class="number">0</span>;</div><div class="line">			<span class="keyword">int</span> bios_rows = i;</div><div class="line">			<span class="keyword">int</span> bios_cols = j;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> curr_rows = <span class="number">0</span>;curr_rows &lt; curr_kernal.rows;curr_rows++) &#123;</div><div class="line">				<span class="keyword">for</span> (<span class="keyword">int</span> curr_cols = <span class="number">0</span>;curr_cols &lt; curr_kernal.cols;curr_cols++) &#123;</div><div class="line">					<span class="keyword">float</span> a = curr_kernal.at&lt;<span class="keyword">float</span>&gt;(curr_rows, curr_cols)*complete_image.at&lt;uchar&gt;(curr_rows + bios_rows, curr_cols + bios_cols);</div><div class="line">					sum += a;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">			dst.at&lt;uchar&gt;(i, j) = (<span class="keyword">int</span>)sum;</div><div class="line">		&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">			<span class="built_in">cout</span> &lt;&lt; <span class="string">"the type of image is not suitable!"</span> &lt;&lt; <span class="built_in">endl</span>;<span class="keyword">return</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//边框像素补全</span></div><div class="line"><span class="keyword">void</span> My_Convolution::complete_image_transform(<span class="keyword">const</span> Mat &amp;image, Mat &amp;dst) &#123;</div><div class="line">	<span class="keyword">if</span> (!kernal_loaded) &#123;</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"kernal is empty!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="comment">//Mat的type（）成员函数生成CV_&lt;位数&gt;(S/U/F)C&lt;通道数&gt;</span></div><div class="line">	<span class="comment">//初始化一个补全图像的大小。</span></div><div class="line">	dst = Mat::zeros(<span class="number">2</span> * bios_y + image.rows, <span class="number">2</span> * bios_x + image.cols, image.type());</div><div class="line">	Rect real_roi_of_image = Rect(bios_x, bios_y, image.cols, image.rows);</div><div class="line">	Mat real_mat_of_image = dst(real_roi_of_image);</div><div class="line">	image.copyTo(real_mat_of_image);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>my_nedianfilter.h</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> MY_MEDIANFILTER</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MY_MEDIANFILTER</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;opencv2/opencv.hpp&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> cv;</div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">MedianFilter</span><span class="params">(Mat&amp; src, Mat&amp; dst, <span class="keyword">int</span> win_size)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Complete_Image_Transform</span><span class="params">(Mat &amp;src, Mat &amp;comp, <span class="keyword">int</span> size)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Calc_Median</span><span class="params">(Mat&amp; comp, Mat&amp; dst, <span class="keyword">int</span> r, <span class="keyword">int</span> c, <span class="keyword">int</span> s)</span></span>;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>my_nedianfilter.cpp</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"my_medianfilter.h"</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">MedianFilter</span><span class="params">(Mat&amp; src, Mat&amp; dst, <span class="keyword">int</span> win_size)</span> </span>&#123;</div><div class="line">	Mat comp = src.clone();</div><div class="line">	Complete_Image_Transform(src, comp, win_size);</div><div class="line"></div><div class="line">	<span class="keyword">int</span> rows = comp.rows, cols = comp.cols;</div><div class="line">	<span class="keyword">int</span> start = win_size / <span class="number">2</span>;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (comp.channels() &gt; <span class="number">1</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="comment">//彩色图片通道分离</span></div><div class="line">		<span class="built_in">vector</span>&lt;Mat&gt; channels_c, channels_d;</div><div class="line">		split(comp, channels_c);</div><div class="line">		split(comp, channels_d);</div><div class="line">		<span class="comment">//滤波</span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</div><div class="line">			Calc_Median(channels_c[i], channels_d[i], rows, cols, start);</div><div class="line"></div><div class="line">		<span class="comment">//合并彩色通道</span></div><div class="line">		merge(channels_d, dst);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span></div><div class="line">		Calc_Median(comp, dst, rows, cols, start);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//边框像素补全</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Complete_Image_Transform</span><span class="params">(Mat &amp;src, Mat &amp;comp, <span class="keyword">int</span> size)</span> </span>&#123;</div><div class="line">	</div><div class="line">	<span class="comment">//初始化一个补全图像的大小</span></div><div class="line">	comp = Mat::zeros(<span class="number">2</span> * (size / <span class="number">2</span>) + src.rows, <span class="number">2</span> * (size / <span class="number">2</span>) + src.cols, src.type());</div><div class="line">	Rect real_roi_of_image = Rect((size / <span class="number">2</span>), (size / <span class="number">2</span>), src.cols, src.rows);</div><div class="line">	Mat real_mat_of_image = comp(real_roi_of_image);</div><div class="line">	src.copyTo(real_mat_of_image);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Calc_Median</span><span class="params">(Mat&amp; comp, Mat&amp; dst, <span class="keyword">int</span> r, <span class="keyword">int</span> c, <span class="keyword">int</span> s)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> m = s; m &lt; r - s; m++) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> n = s; n &lt; c - s; n++) &#123;</div><div class="line">			<span class="built_in">vector</span>&lt;uchar&gt; model;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = -s + m; i &lt;= s + m; i++) &#123;</div><div class="line">				<span class="keyword">for</span> (<span class="keyword">int</span> j = -s + n; j &lt;= s + n; j++) &#123;</div><div class="line">					<span class="comment">//cout &lt;&lt; int(src.at&lt;uchar&gt;(i, j)) &lt;&lt; endl;</span></div><div class="line">					model.push_back(comp.at&lt;uchar&gt;(i, j));</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">			sort(model.begin(), model.end());     <span class="comment">//采用快速排序进行</span></div><div class="line">			dst.at&lt;uchar&gt;(m - s, n - s) = model[(s * <span class="number">2</span> + <span class="number">1</span>) * (s * <span class="number">2</span> + <span class="number">1</span>) / <span class="number">2</span>];</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/ddd/" data-id="ckb4yxula00003wvwfqh713dy" class="article-share-link">Delen</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/06/07/firstBlog/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ouder</strong>
+      <div class="article-nav-title">C++默认初始化和值初始化、 直接初始化和拷贝初始化</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archieven</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recente berichten</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/ddd/">C++实现均值滤波器和中值滤波器</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/firstBlog/">C++默认初始化和值初始化、 直接初始化和拷贝初始化</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/myFirstBlog/">分布式和集中式的版本控制的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

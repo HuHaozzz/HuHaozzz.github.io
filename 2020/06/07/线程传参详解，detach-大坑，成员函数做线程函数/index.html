@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>线程传参详解，detach()大坑，成员函数做线程函数 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第三节 线程传参详解，detach()大坑，成员函数做线程函数
+一、传递临时对象作为线程参数1.1要避免的陷阱1：
+12345678910111213141516171819202122232425#include &amp;lt;iostream&amp;gt;#include &amp;lt;thread&amp;gt;using namespace std;void myPrint(const int &amp;amp;i, ch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程传参详解，detach()大坑，成员函数做线程函数">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/线程传参详解，detach-大坑，成员函数做线程函数/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第三节 线程传参详解，detach()大坑，成员函数做线程函数
+一、传递临时对象作为线程参数1.1要避免的陷阱1：
+12345678910111213141516171819202122232425#include &amp;lt;iostream&amp;gt;#include &amp;lt;thread&amp;gt;using namespace std;void myPrint(const int &amp;amp;i, ch">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200513100115719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2020-06-07T11:43:13.930Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="线程传参详解，detach()大坑，成员函数做线程函数">
+<meta name="twitter:description" content="第三节 线程传参详解，detach()大坑，成员函数做线程函数
+一、传递临时对象作为线程参数1.1要避免的陷阱1：
+12345678910111213141516171819202122232425#include &amp;lt;iostream&amp;gt;#include &amp;lt;thread&amp;gt;using namespace std;void myPrint(const int &amp;amp;i, ch">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200513100115719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="c++11并发与多线程笔记（3）-线程传参详解，detach-大坑，成员函数做线程函数" class="article article-type-c++11并发与多线程笔记（3）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/线程传参详解，detach-大坑，成员函数做线程函数/" class="article-date">
+  <time datetime="2020-06-07T11:42:42.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      线程传参详解，detach()大坑，成员函数做线程函数
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第三节-线程传参详解，detach-大坑，成员函数做线程函数"><a href="#第三节-线程传参详解，detach-大坑，成员函数做线程函数" class="headerlink" title="第三节 线程传参详解，detach()大坑，成员函数做线程函数"></a>第三节 线程传参详解，detach()大坑，成员函数做线程函数</h2><p><img src="https://img-blog.csdnimg.cn/20200513100115719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>一、传递临时对象作为线程参数</strong><br><em>1.1要避免的陷阱1：</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">myPrint</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp;i, <span class="keyword">char</span>* pmybuf)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="comment">//如果线程从主线程detach了</span></div><div class="line">	<span class="comment">//i不是mvar真正的引用，实际上值传递，即使主线程运行完毕了，子线程用i仍然是安全的，但仍不推荐传递引用</span></div><div class="line">	<span class="comment">//推荐改为const int i</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="comment">//pmybuf还是指向原来的字符串，所以这么写是不安全的</span></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; pmybuf &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> mvar = <span class="number">1</span>;</div><div class="line">	<span class="keyword">int</span>&amp; mvary = mvar;</div><div class="line">	<span class="keyword">char</span> mybuf[] = <span class="string">"this is a test"</span>;</div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(myPrint, mvar, mybuf)</span></span>;<span class="comment">//第一个参数是函数名，后两个参数是函数的参数</span></div><div class="line">	myThread.join();</div><div class="line">	<span class="comment">//myThread.detach();</span></div><div class="line">	</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello World!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><em>1.2要避免的陷阱2：</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">myPrint</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> i, <span class="keyword">const</span> <span class="built_in">string</span>&amp; pmybuf)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; pmybuf &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> mvar = <span class="number">1</span>;</div><div class="line">	<span class="keyword">int</span>&amp; mvary = mvar;</div><div class="line">	<span class="keyword">char</span> mybuf[] = <span class="string">"this is a test"</span>;</div><div class="line">	<span class="comment">//如果detach了，这样仍然是不安全的</span></div><div class="line">	<span class="comment">//因为存在主线程运行完了，mybuf被回收了，系统采用mybuf隐式类型转换成string</span></div><div class="line">	<span class="comment">//推荐先创建一个临时对象thread myThread(myPrint, mvar, string(mybuf));就绝对安全了。。。。</span></div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(myPrint, mvar, mybuf)</span></span>;</div><div class="line">	myThread.join();</div><div class="line">	<span class="comment">//myThread.detach();</span></div><div class="line"></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello World!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><em>1.3总结</em></p>
+<ul>
+<li>如果传递int这种简单类型，推荐使用值传递，不要用引用</li>
+<li>如果传递类对象，避免使用隐式类型转换，全部都是创建线程这一行就创建出临时对象，然后在函数参数里，用引用来接，否则还会创建出一个对象</li>
+<li>终极结论：建议不使用detach</li>
+</ul>
+<p><strong>二、临时对象作为线程参数继续讲</strong><br><em>2.1线程id概念</em></p>
+<ul>
+<li>id是个数字，每个线程（不管是主线程还是子线程）实际上都对应着一个数字，而且每个线程对应的这个数字都不一样</li>
+<li>线程id可以用C++标准库里的函数来获取。std::this_thread::get_id()来获取</li>
+</ul>
+<p><strong>三、传递类对象、智能指针作为线程参数</strong><br><em>3.1</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thread&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="keyword">mutable</span> <span class="keyword">int</span> m_i; <span class="comment">//m_i即使实在const中也可以被修改</span></div><div class="line">	A(<span class="keyword">int</span> i) :m_i(i) &#123;&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">myPrint</span><span class="params">(<span class="keyword">const</span> A&amp; pmybuf)</span></span></div><div class="line">&#123;</div><div class="line">	pmybuf.m_i = <span class="number">199</span>;</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"子线程myPrint的参数地址是"</span> &lt;&lt; &amp;pmybuf &lt;&lt; <span class="string">"thread = "</span> &lt;&lt; <span class="built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="function">A <span class="title">myObj</span><span class="params">(<span class="number">10</span>)</span></span>;</div><div class="line">	<span class="comment">//myPrint(const A&amp; pmybuf)中引用不能去掉，如果去掉会多创建一个对象</span></div><div class="line">	<span class="comment">//const也不能去掉，去掉会出错</span></div><div class="line">	<span class="comment">//即使是传递的const引用，但在子线程中还是会调用拷贝构造函数构造一个新的对象，</span></div><div class="line">	<span class="comment">//所以在子线程中修改m_i的值不会影响到主线程</span></div><div class="line">	<span class="comment">//如果希望子线程中修改m_i的值影响到主线程，可以用thread myThread(myPrint, std::def(myObj));</span></div><div class="line">	<span class="comment">//这样const就是真的引用了，myPrint定义中的const就可以去掉了，类A定义中的mutable也可以去掉了</span></div><div class="line">	<span class="function">thread <span class="title">myThread</span><span class="params">(myPrint, myObj)</span></span>;</div><div class="line">	myThread.join();</div><div class="line">	<span class="comment">//myThread.detach();</span></div><div class="line"></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello World!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><em>3.2</em></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;thread&gt;</div><div class="line">#include &lt;memory&gt;</div><div class="line">using namespace std;</div><div class="line"></div><div class="line">void myPrint(unique_ptr&lt;int&gt; ptn)</div><div class="line">&#123;</div><div class="line">	cout &lt;&lt; "thread = " &lt;&lt; std::this_thread::get_id() &lt;&lt; endl;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	unique_ptr&lt;int&gt; up(new int(10));</div><div class="line">	//独占式指针只能通过std::move()才可以传递给另一个指针</div><div class="line">	//传递后up就指向空，新的ptn指向原来的内存</div><div class="line">	//所以这时就不能用detach了，因为如果主线程先执行完，ptn指向的对象就被释放了</div><div class="line">	thread myThread(myPrint, std::move(up));</div><div class="line">	myThread.join();</div><div class="line">	//myThread.detach();</div><div class="line"></div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>四、用成员函数指针做线程函数</strong><br>放在了2.2</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/线程传参详解，detach-大坑，成员函数做线程函数/" data-id="ckb50n3k8000u38vwq0dibtfg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/创建多个线程、数据共享问题分析、案例代码/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          创建多个线程、数据共享问题分析、案例代码
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/大数据/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">大数据</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

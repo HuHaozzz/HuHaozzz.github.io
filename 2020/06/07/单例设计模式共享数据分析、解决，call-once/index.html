@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>单例设计模式共享数据分析、解决，call_once | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第七节 单例设计模式共享数据分析、解决，call_once
+1.设计模式
+
+程序灵活，维护起来可能方便，用设计模式理念写出来的代码很晦涩，但是别人接管、阅读代码都会很痛苦
+老外应付特别大的项目时，把项目的开发经验、模块划分经验，总结整理成设计模式
+中国零几年设计模式刚开始火时，总喜欢拿一个设计模式往上套，导致一个小小的项目总要加几个设计模式，本末倒置
+设计模式有其独特的优点，要活学活用，不要深陷其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单例设计模式共享数据分析、解决，call_once">
+<meta property="og:url" content="http://yoursite.com/2020/06/07/单例设计模式共享数据分析、解决，call-once/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第七节 单例设计模式共享数据分析、解决，call_once
+1.设计模式
+
+程序灵活，维护起来可能方便，用设计模式理念写出来的代码很晦涩，但是别人接管、阅读代码都会很痛苦
+老外应付特别大的项目时，把项目的开发经验、模块划分经验，总结整理成设计模式
+中国零几年设计模式刚开始火时，总喜欢拿一个设计模式往上套，导致一个小小的项目总要加几个设计模式，本末倒置
+设计模式有其独特的优点，要活学活用，不要深陷其">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020051310305989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2020-06-07T11:51:16.875Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单例设计模式共享数据分析、解决，call_once">
+<meta name="twitter:description" content="第七节 单例设计模式共享数据分析、解决，call_once
+1.设计模式
+
+程序灵活，维护起来可能方便，用设计模式理念写出来的代码很晦涩，但是别人接管、阅读代码都会很痛苦
+老外应付特别大的项目时，把项目的开发经验、模块划分经验，总结整理成设计模式
+中国零几年设计模式刚开始火时，总喜欢拿一个设计模式往上套，导致一个小小的项目总要加几个设计模式，本末倒置
+设计模式有其独特的优点，要活学活用，不要深陷其">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/2020051310305989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="c++11并发与多线程笔记（7）-单例设计模式共享数据分析、解决，call-once" class="article article-type-c++11并发与多线程笔记（7）" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/06/07/单例设计模式共享数据分析、解决，call-once/" class="article-date">
+  <time datetime="2020-06-07T11:51:01.000Z" itemprop="datePublished">2020-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      单例设计模式共享数据分析、解决，call_once
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="第七节-单例设计模式共享数据分析、解决，call-once"><a href="#第七节-单例设计模式共享数据分析、解决，call-once" class="headerlink" title="第七节 单例设计模式共享数据分析、解决，call_once"></a>第七节 单例设计模式共享数据分析、解决，call_once</h2><p><img src="https://img-blog.csdnimg.cn/2020051310305989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4MjMxNzEz,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>1.设计模式</strong></p>
+<ul>
+<li>程序灵活，维护起来可能方便，用设计模式理念写出来的代码很晦涩，但是别人接管、阅读代码都会很痛苦</li>
+<li>老外应付特别大的项目时，把项目的开发经验、模块划分经验，总结整理成设计模式</li>
+<li>中国零几年设计模式刚开始火时，总喜欢拿一个设计模式往上套，导致一个小小的项目总要加几个设计模式，本末倒置</li>
+<li>设计模式有其独特的优点，要活学活用，不要深陷其中，生搬硬套</li>
+</ul>
+<p><strong>2.单例设计模式：</strong><br>整个项目中，有某个或者某些特殊的类，只能创建一个属于该类的对象。<br>单例类：只能生成一个对象。</p>
+<p><strong>3.单例设计模式共享数据分析、解决</strong><br>面临问题：需要在自己创建的线程中来创建单例类的对象，这种线程可能不止一个。我们可能面临GetInstance()这种成员函数需要互斥。<br>可以在加锁前判断m_instance是否为空，否则每次调用Singelton::getInstance()都要加锁，十分影响效率。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;	</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mutex&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span>	<span class="built_in">std</span>;</div><div class="line"></div><div class="line">mutex myMutex;</div><div class="line"><span class="comment">//懒汉模式</span></div><div class="line"><span class="keyword">class</span> Singelton</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="keyword">static</span> Singelton * <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">         <span class="comment">//双重锁定 提高效率</span></div><div class="line">		<span class="keyword">if</span> (instance == <span class="literal">NULL</span>) &#123;</div><div class="line">			lock_guard&lt;mutex&gt; myLockGua(myMutex);</div><div class="line">			<span class="keyword">if</span> (instance == <span class="literal">NULL</span>) &#123;</div><div class="line">				instance = <span class="keyword">new</span> Singelton;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> instance;</div><div class="line">	&#125;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	Singelton() &#123;&#125;</div><div class="line">	<span class="keyword">static</span> Singelton *instance;</div><div class="line">&#125;;</div><div class="line">Singelton * Singelton::instance = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line"><span class="comment">//饿汉模式</span></div><div class="line"><span class="keyword">class</span> Singelton2 &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="keyword">static</span> Singelton2* <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> instance;</div><div class="line">	&#125;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	Singelton2() &#123;&#125;</div><div class="line">	<span class="keyword">static</span> Singelton2 * instance;</div><div class="line">&#125;;</div><div class="line">Singelton2 * Singelton2::instance = <span class="keyword">new</span> Singelton2;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">	Singelton * singer = Singelton::getInstance();</div><div class="line">	Singelton * singer2 = Singelton::getInstance();</div><div class="line">	<span class="keyword">if</span> (singer == singer2)</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"二者是同一个实例"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">else</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"二者不是同一个实例"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"></div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"----------		以下 是 饿汉式	------------"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	Singelton2 * singer3 = Singelton2::getInstance();</div><div class="line">	Singelton2 * singer4 = Singelton2::getInstance();</div><div class="line">	<span class="keyword">if</span> (singer3 == singer4)</div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"二者是同一个实例"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">	<span class="keyword">else</span></div><div class="line">		<span class="built_in">cout</span> &lt;&lt; <span class="string">"二者不是同一个实例"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果觉得在单例模式new了一个对象，而没有自己delete掉，这样不合理。可以增加一个类中类CGarhuishou，new一个单例类时创建一个静态的CGarhuishou对象，这样在程序结束时会调用CGarhuishou的析构函数，释放掉new出来的单例对象。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> Singelton</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">	<span class="function"><span class="keyword">static</span> Singelton * <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">         <span class="keyword">if</span> (instance == <span class="literal">NULL</span>) &#123;</div><div class="line">		<span class="keyword">static</span> CGarhuishou huishou;</div><div class="line">		instance = <span class="keyword">new</span> Singelton;</div><div class="line">         &#125;</div><div class="line">         <span class="keyword">return</span> instance;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">class</span> CGarhuishou &#123;</div><div class="line">	<span class="keyword">public</span>:</div><div class="line">		~CGarhuishou()</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">if</span> (Singelton::instance)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">delete</span> Singelton::instance;</div><div class="line">				Singelton::instance = <span class="literal">NULL</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	Singelton() &#123;&#125;</div><div class="line">	<span class="keyword">static</span> Singelton *instance;</div><div class="line">&#125;;</div><div class="line">Singelton * Singelton::instance = <span class="literal">NULL</span>;</div></pre></td></tr></table></figure>
+<p><strong>4.std::call_once()：</strong><br>函数模板，该函数的第一个参数为标记，第二个参数是一个函数名（如a()）。<br>功能：能够保证函数a()只被调用一次。具备互斥量的能力，而且比互斥量消耗的资源更少，更高效。<br>call_once()需要与一个标记结合使用，这个标记为std::once_flag；其实once_flag是一个结构，call_once()就是通过标记来决定函数是否执行，调用成功后，就把标记设置为一种已调用状态。</p>
+<p>多个线程同时执行时，一个线程会等待另一个线程先执行。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">once_flag g_flag;</div><div class="line"><span class="keyword">class</span> Singelton</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CreateInstance</span><span class="params">()</span><span class="comment">//call_once保证其只被调用一次</span></span></div><div class="line">    &#123;</div><div class="line">        instance = <span class="keyword">new</span> Singelton;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//两个线程同时执行到这里，其中一个线程要等另外一个线程执行完毕</span></div><div class="line">	<span class="function"><span class="keyword">static</span> Singelton * <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">         call_once(g_flag, CreateInstance);</div><div class="line">         <span class="keyword">return</span> instance;</div><div class="line">	&#125;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">	Singelton() &#123;&#125;</div><div class="line">	<span class="keyword">static</span> Singelton *instance;</div><div class="line">&#125;;</div><div class="line">Singelton * Singelton::instance = <span class="literal">NULL</span>;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/06/07/单例设计模式共享数据分析、解决，call-once/" data-id="ckb50n3jy000o38vwac6i7aib" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/07/condition-variable、wait、notify-one、notify-all/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          condition_variable、wait、notify_one、notify_all
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/07/unique-lock（类模板）详解/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">unique_lock（类模板）详解</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/06/07/c++创建对象带括号和不带括号的区别/">c++创建对象带括号和不带括号的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/补充知识、线程池浅谈、数量谈、总结/">补充知识、线程池浅谈、数量谈、总结</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/windows临界区、其他各种mutex互斥量/">windows临界区、其他各种mutex互斥量</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/std-atomic续谈、std-async深入谈/">std::atomic续谈、std::async深入谈</a>
+          </li>
+        
+          <li>
+            <a href="/2020/06/07/future其他成员函数、shared-future、atomic/">future其他成员函数、shared_future、atomic</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
